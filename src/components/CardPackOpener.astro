@@ -1,0 +1,1228 @@
+---
+/**
+ * CardPackOpener.astro
+ *
+ * An immersive card pack opening experience with animations, effects, and sound.
+ * Products are revealed one by one with animations based on their rarity,
+ * creating a game-like unboxing experience.
+ */
+ import ItemCard from './ItemCard.astro';
+
+interface Product {
+  id: string;
+  title: string;
+  price: number;
+  image: string;
+  rarity: 'common' | 'rare' | 'mystic' | 'legendary';
+  description?: string;
+  stats?: Record<string, number>;
+}
+
+interface Props {
+  packName: string;
+  packImage: string;
+  products: Product[];
+  class?: string;
+  onOpenCallback?: string; // JavaScript function name to call after opening
+}
+
+const {
+  packName,
+  packImage,
+  products,
+  class: className = '',
+  onOpenCallback
+} = Astro.props;
+
+// Generate unique ID for this pack opener
+const id = `pack-opener-${Math.random().toString(36).substring(2, 9)}`;
+
+// Sort products by rarity for dramatic effect (low to high)
+const rarityOrder = {
+  'common': 0,
+  'rare': 1,
+  'mystic': 2,
+  'legendary': 3
+};
+
+const sortedProducts = [...products].sort(
+  (a, b) => rarityOrder[a.rarity] - rarityOrder[b.rarity]
+);
+
+// Get card counts by rarity
+const rarityCount = {
+  common: sortedProducts.filter(p => p.rarity === 'common').length,
+  rare: sortedProducts.filter(p => p.rarity === 'rare').length,
+  mystic: sortedProducts.filter(p => p.rarity === 'mystic').length,
+  legendary: sortedProducts.filter(p => p.rarity === 'legendary').length
+};
+
+// Get most valuable rarity in pack
+const highestRarity = sortedProducts.length > 0
+  ? sortedProducts[sortedProducts.length - 1].rarity
+  : 'common';
+
+// Determine pack rarity tier based on contents
+let packTier = 'standard';
+if (rarityCount.legendary > 0) {
+  packTier = 'legendary';
+} else if (rarityCount.mystic > 0) {
+  packTier = 'mystic';
+} else if (rarityCount.rare > 0) {
+  packTier = 'rare';
+}
+---
+
+<div id={id} class:list={["pack-opener", `pack-opener--${packTier}`, className]}>
+  <!-- Background particles effect -->
+  <div class="pack-opener__particles"></div>
+
+  <!-- Initial closed pack state -->
+  <div class="pack-opener__closed-state">
+    <div class="pack-opener__pack">
+      <div class="pack-opener__pack-visual">
+        <div class="pack-opener__pack-glow"></div>
+        <img src={packImage} alt={packName} class="pack-opener__pack-image" />
+
+        <!-- Rarity indicators -->
+        <div class="pack-opener__rarity-indicators">
+          {rarityCount.common > 0 && (
+            <div class="pack-opener__rarity-dot pack-opener__rarity-dot--common">
+              <span class="pack-opener__rarity-count">{rarityCount.common}</span>
+            </div>
+          )}
+          {rarityCount.rare > 0 && (
+            <div class="pack-opener__rarity-dot pack-opener__rarity-dot--rare">
+              <span class="pack-opener__rarity-count">{rarityCount.rare}</span>
+            </div>
+          )}
+          {rarityCount.mystic > 0 && (
+            <div class="pack-opener__rarity-dot pack-opener__rarity-dot--mystic">
+              <span class="pack-opener__rarity-count">{rarityCount.mystic}</span>
+            </div>
+          )}
+          {rarityCount.legendary > 0 && (
+            <div class="pack-opener__rarity-dot pack-opener__rarity-dot--legendary">
+              <span class="pack-opener__rarity-count">{rarityCount.legendary}</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <h3 class="pack-opener__pack-name">{packName}</h3>
+      <p class="pack-opener__pack-count">{products.length} items inside</p>
+
+      <button class="pack-opener__open-button">
+        <span class="pack-opener__button-text">Open Pack</span>
+        <span class="pack-opener__button-shine"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Opening animation state -->
+  <div class="pack-opener__opening-state" style="display: none;">
+    <div class="pack-opener__animation">
+      <div class="pack-opener__pack-front">
+        <img src={packImage} alt={packName} class="pack-opener__pack-image" />
+      </div>
+      <div class="pack-opener__pack-shine"></div>
+
+      <!-- Energy beams -->
+      <div class="pack-opener__energy-beams">
+        {Array(12).fill(0).map((_, i) => (
+          <div
+            class="pack-opener__energy-beam"
+            style={`--beam-angle: ${i * 30}deg; --beam-delay: ${i * 50}ms;`}
+          ></div>
+        ))}
+      </div>
+
+      <div class="pack-opener__energy-burst"></div>
+    </div>
+  </div>
+
+  <!-- Revealed items state -->
+  <div class="pack-opener__revealed-state" style="display: none;">
+    <div class="pack-opener__reveal-header">
+      <h2 class="pack-opener__reveal-title">Items Obtained</h2>
+      <div class="pack-opener__reveal-subtitle">{packName}</div>
+    </div>
+
+    <div class="pack-opener__items">
+      {sortedProducts.map((product, index) => (
+        <div
+          class="pack-opener__item"
+          data-index={index}
+          data-rarity={product.rarity}
+          style={`--reveal-delay: ${index * 600}ms`}
+        >
+          <div class="pack-opener__item-container">
+            <ItemCard
+              id={product.id}
+              title={product.title}
+              price={product.price}
+              image={product.image}
+              rarity={product.rarity}
+              description={product.description}
+              stats={product.stats}
+              animateIn={false}
+              showActions={false}
+            />
+          </div>
+
+          <!-- Reveal effect overlays -->
+          <div class="pack-opener__reveal-effects">
+            <div class="pack-opener__reveal-flash"></div>
+            <div class="pack-opener__reveal-particles"></div>
+            {product.rarity === 'legendary' && (
+              <div class="pack-opener__legendary-effect"></div>
+            )}
+            {product.rarity === 'mystic' && (
+              <div class="pack-opener__mystic-effect"></div>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="pack-opener__summary">
+      <div class="pack-opener__rarity-summary">
+        {rarityCount.common > 0 && (
+          <div class="pack-opener__rarity-badge pack-opener__rarity-badge--common">
+            <span class="pack-opener__rarity-badge-icon"></span>
+            <span class="pack-opener__rarity-badge-count">{rarityCount.common}x Common</span>
+          </div>
+        )}
+        {rarityCount.rare > 0 && (
+          <div class="pack-opener__rarity-badge pack-opener__rarity-badge--rare">
+            <span class="pack-opener__rarity-badge-icon"></span>
+            <span class="pack-opener__rarity-badge-count">{rarityCount.rare}x Rare</span>
+          </div>
+        )}
+        {rarityCount.mystic > 0 && (
+          <div class="pack-opener__rarity-badge pack-opener__rarity-badge--mystic">
+            <span class="pack-opener__rarity-badge-icon"></span>
+            <span class="pack-opener__rarity-badge-count">{rarityCount.mystic}x Mystic</span>
+          </div>
+        )}
+        {rarityCount.legendary > 0 && (
+          <div class="pack-opener__rarity-badge pack-opener__rarity-badge--legendary">
+            <span class="pack-opener__rarity-badge-icon"></span>
+            <span class="pack-opener__rarity-badge-count">{rarityCount.legendary}x Legendary</span>
+          </div>
+        )}
+      </div>
+
+      <button class="pack-opener__done-button">
+        <span class="pack-opener__button-text">Continue Shopping</span>
+        <span class="pack-opener__button-shine"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ id, onOpenCallback, packTier }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const packOpener = document.getElementById(id);
+    if (!packOpener) return;
+
+    const closedState = packOpener.querySelector('.pack-opener__closed-state');
+    const openingState = packOpener.querySelector('.pack-opener__opening-state');
+    const revealedState = packOpener.querySelector('.pack-opener__revealed-state');
+    const openButton = packOpener.querySelector('.pack-opener__open-button');
+    const doneButton = packOpener.querySelector('.pack-opener__done-button');
+    const items = packOpener.querySelectorAll('.pack-opener__item');
+
+    // Audio elements for sound effects
+    const createAudio = (src, volume = 0.5) => {
+      // In production, these would be actual paths to audio files
+      // For this demo, we'll just create the audio elements
+      const audio = new Audio(src);
+      audio.volume = volume;
+      return audio;
+    };
+
+    // Sound effects - these paths should be updated to actual audio files
+    const sounds = {
+      packOpen: createAudio('/sounds/pack-open.mp3', 0.6),
+      cardFlip: createAudio('/sounds/card-flip.mp3', 0.4),
+      rarityCommon: createAudio('/sounds/rarity-common.mp3', 0.3),
+      rarityRare: createAudio('/sounds/rarity-rare.mp3', 0.4),
+      rarityMystic: createAudio('/sounds/rarity-mystic.mp3', 0.5),
+      rarityLegendary: createAudio('/sounds/rarity-legendary.mp3', 0.7),
+      packComplete: createAudio('/sounds/pack-complete.mp3', 0.5)
+    };
+
+    // Function to play a sound with fallback if audio fails
+    const playSound = (soundKey) => {
+      try {
+        if (sounds[soundKey]) {
+          sounds[soundKey].currentTime = 0;
+          sounds[soundKey].play().catch(err => console.log('Audio play prevented:', err));
+        }
+      } catch (error) {
+        console.log('Error playing sound:', error);
+      }
+    };
+
+    // Open pack animation sequence
+    const openPack = () => {
+      // Hide the closed state
+      closedState.style.display = 'none';
+
+      // Show and animate the opening state
+      openingState.style.display = 'flex';
+
+      // Play pack opening sound
+      playSound('packOpen');
+
+      // Add animation class to start the sequence
+      const packAnimation = openingState.querySelector('.pack-opener__animation');
+      packAnimation.classList.add('pack-opener__animation--active');
+
+      // Special effects based on packTier
+      if (packTier === 'legendary') {
+        packOpener.classList.add('pack-opener--legendary-opening');
+      } else if (packTier === 'mystic') {
+        packOpener.classList.add('pack-opener--mystic-opening');
+      }
+
+      // After animation completes, show the revealed items
+      setTimeout(() => {
+        openingState.style.display = 'none';
+        revealedState.style.display = 'block';
+
+        // Reveal items one by one
+        revealItems();
+
+        // Call callback if provided
+        if (onOpenCallback && typeof window[onOpenCallback] === 'function') {
+          window[onOpenCallback]();
+        }
+      }, 2500); // Match this to CSS animation duration
+    };
+
+    // Reveal items with sequential animations
+    const revealItems = () => {
+      items.forEach((item, index) => {
+        setTimeout(() => {
+          item.classList.add('pack-opener__item--revealing');
+
+          // After card flip completes, show the item
+          setTimeout(() => {
+            item.classList.add('pack-opener__item--revealed');
+
+            // Play sound based on rarity
+            const rarity = item.dataset.rarity;
+            switch(rarity) {
+              case 'legendary':
+                playSound('rarityLegendary');
+                break;
+              case 'mystic':
+                playSound('rarityMystic');
+                break;
+              case 'rare':
+                playSound('rarityRare');
+                break;
+              default:
+                playSound('rarityCommon');
+            }
+
+            // If this is the last item, play completion sound
+            if (index === items.length - 1) {
+              setTimeout(() => {
+                playSound('packComplete');
+                packOpener.classList.add('pack-opener--complete');
+              }, 1000);
+            }
+          }, 600); // Half of reveal animation time
+
+        }, 600 * index); // Stagger the reveals
+      });
+    };
+
+    // Event listeners
+    if (openButton) {
+      openButton.addEventListener('click', openPack);
+    }
+
+    if (doneButton) {
+      doneButton.addEventListener('click', () => {
+        // You might want to redirect or close a modal here
+        packOpener.style.display = 'none';
+
+        // If we're in a full page context, you could redirect
+        // window.location.href = '/shop';
+
+        // Dispatch an event that the pack opener is closed
+        const closeEvent = new CustomEvent('packOpenerClosed', {
+          detail: { id }
+        });
+        document.dispatchEvent(closeEvent);
+      });
+    }
+
+    // Handle clicking on a revealed item to highlight it
+    items.forEach(item => {
+      item.addEventListener('click', () => {
+        const isHighlighted = item.classList.contains('pack-opener__item--highlighted');
+
+        // Remove highlight from all items
+        items.forEach(i => i.classList.remove('pack-opener__item--highlighted'));
+
+        // Add highlight to clicked item if it wasn't already highlighted
+        if (!isHighlighted) {
+          item.classList.add('pack-opener__item--highlighted');
+        }
+      });
+    });
+
+    // Handle esc key to close
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (doneButton) {
+          doneButton.click();
+        }
+      }
+    });
+  });
+</script>
+
+<style>
+  /* Main container */
+  .pack-opener {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    z-index: var(--z-modal, 1000);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1200px;
+    overflow: hidden;
+  }
+
+  /* Background particle effect */
+  .pack-opener__particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.5;
+    z-index: 0;
+    background-image: radial-gradient(
+      circle at center,
+      rgba(255, 255, 255, 0.8) 0%,
+      rgba(255, 255, 255, 0) 0.5%
+    );
+    background-size: 2% 2%;
+    background-repeat: space;
+    animation: twinkle 3s infinite alternate;
+  }
+
+  /* Different background colors based on pack tier */
+  .pack-opener--rare {
+    background-color: rgba(0, 51, 102, 0.85);
+  }
+
+  .pack-opener--mystic {
+    background-color: rgba(51, 0, 102, 0.85);
+  }
+
+  .pack-opener--legendary {
+    background-color: rgba(102, 51, 0, 0.85);
+  }
+
+  /* Closed pack state */
+  .pack-opener__closed-state {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: var(--space-xl, 2rem);
+    max-width: 90%;
+  }
+
+  .pack-opener__pack {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: var(--space-xl, 2rem);
+    border-radius: var(--radius-lg, 1rem);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    max-width: 400px;
+    transition: transform 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+  }
+
+  .pack-opener__pack:hover {
+    transform: translateY(-5px) scale(1.02);
+  }
+
+  .pack-opener__pack-visual {
+    position: relative;
+    width: 100%;
+    margin-bottom: var(--space-l, 1.5rem);
+  }
+
+  .pack-opener__pack-image {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-lg, 1rem);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  }
+
+  .pack-opener__pack-glow {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-lg, 1rem);
+    opacity: 0.7;
+    z-index: -1;
+    transition: opacity 0.3s ease;
+  }
+
+  .pack-opener--rare .pack-opener__pack-glow {
+    box-shadow: 0 0 30px var(--color-rarity-rare, #64b5f6);
+    animation: pulse-glow 2s infinite alternate;
+  }
+
+  .pack-opener--mystic .pack-opener__pack-glow {
+    box-shadow: 0 0 40px var(--color-rarity-mystic, #ce93d8);
+    animation: pulse-glow 2s infinite alternate;
+  }
+
+  .pack-opener--legendary .pack-opener__pack-glow {
+    box-shadow: 0 0 50px var(--color-rarity-legendary, #ffd54f);
+    animation: pulse-glow 2s infinite alternate;
+  }
+
+  /* Rarity indicators */
+  .pack-opener__rarity-indicators {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    padding: 5px 15px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1;
+  }
+
+  .pack-opener__rarity-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #000;
+  }
+
+  .pack-opener__rarity-dot--common {
+    background-color: var(--color-rarity-common, #b0bec5);
+  }
+
+  .pack-opener__rarity-dot--rare {
+    background-color: var(--color-rarity-rare, #64b5f6);
+    box-shadow: 0 0 5px var(--color-rarity-rare, #64b5f6);
+  }
+
+  .pack-opener__rarity-dot--mystic {
+    background-color: var(--color-rarity-mystic, #ce93d8);
+    box-shadow: 0 0 10px var(--color-rarity-mystic, #ce93d8);
+  }
+
+  .pack-opener__rarity-dot--legendary {
+    background-color: var(--color-rarity-legendary, #ffd54f);
+    box-shadow: 0 0 15px var(--color-rarity-legendary, #ffd54f);
+    animation: pulse 2s infinite alternate;
+  }
+
+  .pack-opener__pack-name {
+    font-size: var(--size-step-2, 1.5rem);
+    color: var(--theme-text-primary, white);
+    margin-bottom: var(--space-s, 0.75rem);
+    font-family: var(--font-primary, sans-serif);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .pack-opener__pack-count {
+    font-size: var(--size-step-0, 1rem);
+    color: var(--theme-text-secondary, rgba(255, 255, 255, 0.7));
+    margin-bottom: var(--space-l, 1.5rem);
+    font-family: var(--font-secondary, sans-serif);
+  }
+
+  .pack-opener__open-button {
+    position: relative;
+    padding: var(--space-s, 0.75rem) var(--space-xl, 2rem);
+    background-color: var(--theme-primary, #3d5e91);
+    color: var(--theme-text-primary, white);
+    border: none;
+    border-radius: var(--radius-button, 0.5rem);
+    font-size: var(--size-step-0, 1rem);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all var(--transition-standard, 0.3s ease);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+  }
+
+  /* Special button styles based on pack tier */
+  .pack-opener--rare .pack-opener__open-button {
+    background-color: var(--color-rarity-rare, #64b5f6);
+    color: rgba(0, 0, 0, 0.9);
+  }
+
+  .pack-opener--mystic .pack-opener__open-button {
+    background-color: var(--color-rarity-mystic, #ce93d8);
+    color: rgba(0, 0, 0, 0.9);
+  }
+
+  .pack-opener--legendary .pack-opener__open-button {
+    background-color: var(--color-rarity-legendary, #ffd54f);
+    color: rgba(0, 0, 0, 0.9);
+  }
+
+  .pack-opener__open-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Button shine effect */
+  .pack-opener__button-shine {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      to bottom right,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0) 45%,
+      rgba(255, 255, 255, 0.7) 50%,
+      rgba(255, 255, 255, 0) 55%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    transform: rotate(30deg);
+    animation: shineEffect 3s infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Opening animation state */
+  .pack-opener__opening-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 2;
+  }
+
+  .pack-opener__animation {
+    position: relative;
+    width: 300px;
+    height: 400px;
+    transform-style: preserve-3d;
+    transform: rotateY(0deg);
+  }
+
+  .pack-opener__animation--active {
+    animation: packOpenAnimation 2.5s ease-out forwards;
+  }
+
+  .pack-opener__pack-front {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: var(--radius-lg, 1rem);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+
+  .pack-opener__pack-shine {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      to bottom right,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0) 45%,
+      rgba(255, 255, 255, 0.7) 50%,
+      rgba(255, 255, 255, 0) 55%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    transform: rotate(30deg);
+    animation: packShineEffect 2.5s ease-out forwards;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Energy beams for opening animation */
+  .pack-opener__energy-beams {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+  }
+
+  .pack-opener__energy-beam {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 0;
+    background-color: var(--theme-primary, #3d5e91);
+    border-radius: 5px;
+    transform-origin: 0 0;
+    transform: rotate(var(--beam-angle)) translateX(0);
+    opacity: 0;
+    animation: beamGrow 1s ease-out forwards;
+    animation-delay: var(--beam-delay);
+  }
+
+  .pack-opener--rare .pack-opener__energy-beam {
+    background-color: var(--color-rarity-rare, #64b5f6);
+    box-shadow: 0 0 5px var(--color-rarity-rare, #64b5f6);
+  }
+
+  .pack-opener--mystic .pack-opener__energy-beam {
+    background-color: var(--color-rarity-mystic, #ce93d8);
+    box-shadow: 0 0 8px var(--color-rarity-mystic, #ce93d8);
+  }
+
+  .pack-opener--legendary .pack-opener__energy-beam {
+    background-color: var(--color-rarity-legendary, #ffd54f);
+    box-shadow: 0 0 12px var(--color-rarity-legendary, #ffd54f);
+  }
+
+  .pack-opener__energy-burst {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(
+      circle at center,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 0.8) 30%,
+      rgba(255, 255, 255, 0) 70%
+    );
+    opacity: 0;
+    animation: burstAnimation 0.5s ease-out 1.5s forwards;
+    z-index: 2;
+  }
+
+  /* Revealed items state */
+  .pack-opener__revealed-state {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: var(--space-xl, 2rem);
+  }
+
+  .pack-opener__reveal-header {
+    text-align: center;
+    margin-bottom: var(--space-xl, 2rem);
+    opacity: 0;
+    animation: fadeIn 0.5s ease-out 0.5s forwards;
+  }
+
+  .pack-opener__reveal-title {
+    font-size: var(--size-step-3, 2rem);
+    color: var(--theme-text-primary, white);
+    margin-bottom: var(--space-xs, 0.5rem);
+    font-family: var(--font-primary, sans-serif);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .pack-opener__reveal-subtitle {
+    font-size: var(--size-step-1, 1.2rem);
+    color: var(--theme-text-secondary, rgba(255, 255, 255, 0.7));
+    font-family: var(--font-secondary, sans-serif);
+  }
+
+  .pack-opener__items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-xl, 2rem);
+    margin-bottom: var(--space-2xl, 3rem);
+  }
+
+  .pack-opener__item {
+    position: relative;
+    perspective: 1000px;
+    opacity: 0;
+    transform: scale(0.8);
+    animation-delay: var(--reveal-delay);
+    transition: transform 0.3s ease;
+  }
+
+  .pack-opener__item--revealing {
+    animation: cardRevealIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .pack-opener__item--revealed .pack-opener__item-container {
+    transform: rotateY(0deg);
+  }
+
+  .pack-opener__item--highlighted {
+    transform: scale(1.05) translateY(-10px);
+    z-index: 10;
+  }
+
+  .pack-opener__item-container {
+    transform: rotateY(180deg);
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Special effects for card reveals */
+  .pack-opener__reveal-effects {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .pack-opener__reveal-flash {
+    position: absolute;
+    inset: 0;
+    background-color: white;
+    opacity: 0;
+  }
+
+  .pack-opener__item--revealed .pack-opener__reveal-flash {
+    animation: flashEffect 0.5s ease-out forwards;
+  }
+
+  .pack-opener__reveal-particles {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+
+  .pack-opener__item--revealed .pack-opener__reveal-particles {
+    animation: fadeIn 0.3s ease-out 0.2s forwards;
+  }
+
+  .pack-opener__legendary-effect {
+    position: absolute;
+    inset: -20px;
+    border-radius: var(--radius-lg, 1rem);
+    background: radial-gradient(
+      circle at center,
+      rgba(255, 213, 79, 0.7) 0%,
+      rgba(255, 213, 79, 0) 70%
+    );
+    opacity: 0;
+    animation: legendaryEffect 3s ease-out 0.3s forwards;
+    z-index: -1;
+  }
+
+  .pack-opener__mystic-effect {
+    position: absolute;
+    inset: -15px;
+    border-radius: var(--radius-lg, 1rem);
+    background: radial-gradient(
+      circle at center,
+      rgba(206, 147, 216, 0.5) 0%,
+      rgba(206, 147, 216, 0) 70%
+    );
+    opacity: 0;
+    animation: mysticEffect 2s ease-out 0.3s forwards;
+    z-index: -1;
+  }
+
+  /* Summary section */
+  .pack-opener__summary {
+    text-align: center;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-out 0.5s forwards;
+  }
+
+  .pack-opener__rarity-summary {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-s, 0.75rem);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-xl, 2rem);
+  }
+
+  .pack-opener__rarity-badge {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs, 0.5rem);
+    padding: var(--space-xs, 0.5rem) var(--space-s, 0.75rem);
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: var(--radius-full, 9999px);
+    font-size: 0.85rem;
+  }
+
+  .pack-opener__rarity-badge-icon {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .pack-opener__rarity-badge--common .pack-opener__rarity-badge-icon {
+    background-color: var(--color-rarity-common, #b0bec5);
+  }
+
+  .pack-opener__rarity-badge--common .pack-opener__rarity-badge-count {
+    color: var(--color-rarity-common, #b0bec5);
+  }
+
+  .pack-opener__rarity-badge--rare .pack-opener__rarity-badge-icon {
+    background-color: var(--color-rarity-rare, #64b5f6);
+    box-shadow: 0 0 5px var(--color-rarity-rare, #64b5f6);
+  }
+
+  .pack-opener__rarity-badge--rare .pack-opener__rarity-badge-count {
+    color: var(--color-rarity-rare, #64b5f6);
+  }
+
+  .pack-opener__rarity-badge--mystic .pack-opener__rarity-badge-icon {
+    background-color: var(--color-rarity-mystic, #ce93d8);
+    box-shadow: 0 0 8px var(--color-rarity-mystic, #ce93d8);
+  }
+
+  .pack-opener__rarity-badge--mystic .pack-opener__rarity-badge-count {
+    color: var(--color-rarity-mystic, #ce93d8);
+  }
+
+  .pack-opener__rarity-badge--legendary .pack-opener__rarity-badge-icon {
+    background-color: var(--color-rarity-legendary, #ffd54f);
+    box-shadow: 0 0 12px var(--color-rarity-legendary, #ffd54f);
+    animation: pulse 2s infinite alternate;
+  }
+
+  .pack-opener__rarity-badge--legendary .pack-opener__rarity-badge-count {
+    color: var(--color-rarity-legendary, #ffd54f);
+  }
+
+  .pack-opener__done-button {
+    position: relative;
+    padding: var(--space-s, 0.75rem) var(--space-xl, 2rem);
+    background-color: var(--theme-primary, #3d5e91);
+    color: var(--theme-text-primary, white);
+    border: none;
+    border-radius: var(--radius-button, 0.5rem);
+    font-size: var(--size-step-0, 1rem);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all var(--transition-standard, 0.3s ease);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: var(--space-xl, 2rem);
+    overflow: hidden;
+  }
+
+  .pack-opener__done-button:hover {
+    background-color: var(--theme-secondary, #1e3f72);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Special styling for when pack opening is complete */
+  .pack-opener--complete .pack-opener__items {
+    animation: itemsComplete 0.5s ease-out forwards;
+  }
+
+  /* Animations */
+  @keyframes packOpenAnimation {
+    0% {
+      transform: rotateY(0deg) scale(1);
+    }
+    40% {
+      transform: rotateY(180deg) scale(1.2);
+    }
+    70% {
+      transform: rotateY(180deg) scale(1.1);
+    }
+    100% {
+      transform: rotateY(720deg) scale(0);
+    }
+  }
+
+  @keyframes packShineEffect {
+    0% {
+      transform: rotate(30deg) translateX(-100%);
+      opacity: 0;
+    }
+    25% {
+      opacity: 1;
+    }
+    50% {
+      transform: rotate(30deg) translateX(100%);
+      opacity: 0;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes beamGrow {
+    0% {
+      height: 0;
+      opacity: 0;
+    }
+    30% {
+      opacity: 1;
+    }
+    100% {
+      height: 500px;
+      opacity: 0;
+    }
+  }
+
+  @keyframes burstAnimation {
+    0% {
+      width: 0;
+      height: 0;
+      opacity: 0;
+    }
+    50% {
+      width: 600px;
+      height: 600px;
+      opacity: 1;
+    }
+    100% {
+      width: 1000px;
+      height: 1000px;
+      opacity: 0;
+    }
+  }
+
+  @keyframes cardRevealIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.8) translateY(50px);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  @keyframes flashEffect {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes legendaryEffect {
+    0% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+    100% {
+      opacity: 0.5;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes mysticEffect {
+    0% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    50% {
+      opacity: 0.7;
+      transform: scale(1.1);
+    }
+    100% {
+      opacity: 0.4;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes shineEffect {
+    0% {
+      transform: rotate(30deg) translateX(-100%);
+      opacity: 0;
+    }
+    25% {
+      opacity: 0.7;
+    }
+    50% {
+      transform: rotate(30deg) translateX(100%);
+      opacity: 0;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(1.2);
+      opacity: 1;
+    }
+  }
+
+  @keyframes pulse-glow {
+    0% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 0.8;
+    }
+  }
+
+  @keyframes twinkle {
+    0% {
+      opacity: 0.3;
+    }
+    100% {
+      opacity: 0.7;
+    }
+  }
+
+  @keyframes itemsComplete {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.03);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .pack-opener__pack {
+      max-width: 300px;
+      padding: var(--space-l, 1.5rem);
+    }
+
+    .pack-opener__animation {
+      width: 250px;
+      height: 350px;
+    }
+
+    .pack-opener__items {
+      gap: var(--space-l, 1.5rem);
+    }
+
+    .pack-opener__reveal-title {
+      font-size: var(--size-step-2, 1.5rem);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .pack-opener__revealed-state {
+      padding: var(--space-m, 1rem);
+    }
+
+    .pack-opener__reveal-title {
+      font-size: var(--size-step-1, 1.2rem);
+    }
+
+    .pack-opener__items {
+      gap: var(--space-m, 1rem);
+    }
+
+    .pack-opener__rarity-summary {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .pack-opener__animation--active,
+    .pack-opener__pack-shine,
+    .pack-opener__energy-beam,
+    .pack-opener__energy-burst,
+    .pack-opener__button-shine,
+    .pack-opener__rarity-dot--legendary,
+    .pack-opener__rarity-badge--legendary .pack-opener__rarity-badge-icon,
+    .pack-opener__particles,
+    .pack-opener__legendary-effect,
+    .pack-opener__mystic-effect,
+    .pack-opener__reveal-flash,
+    .pack-opener__reveal-particles,
+    .pack-opener__pack-glow {
+      animation: none;
+    }
+
+    .pack-opener__item--revealing {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+
+    .pack-opener__item--revealed .pack-opener__item-container {
+      transform: none;
+      transition: none;
+    }
+
+    .pack-opener__reveal-header,
+    .pack-opener__summary {
+      opacity: 1;
+      animation: none;
+    }
+
+    .pack-opener__item {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .pack-opener__opening-state {
+      display: none !important;
+    }
+  }
+</style>

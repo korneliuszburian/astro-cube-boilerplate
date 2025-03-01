@@ -1,0 +1,1173 @@
+---
+/**
+ * ShoppingCart.astro
+ * A game-like shopping cart interface that displays products as inventory items
+ * with special effects and transitions based on rarity.
+ */
+
+ interface CartItem {
+  id: string;
+  title: string;
+  price: number;
+  image: string;
+  quantity: number;
+  rarity: 'common' | 'rare' | 'mystic' | 'legendary';
+}
+
+interface Props {
+  items?: CartItem[];
+  isOpen?: boolean;
+  class?: string;
+}
+
+const {
+  items = [],
+  isOpen = false,
+  class: className = ''
+} = Astro.props;
+
+// Calculate totals
+const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+const tax = subtotal * 0.08; // Example tax rate of 8%
+const shipping = subtotal > 0 ? 4.99 : 0;
+const total = subtotal + tax + shipping;
+
+// Format currency
+const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD'
+  }).format(amount);
+};
+
+// Determine if cart has any legendary items
+const hasLegendaryItems = items.some(item => item.rarity === 'legendary');
+
+// Get highest rarity in cart
+const getRarityValue = (rarity: string) => {
+  switch (rarity) {
+    case 'legendary': return 4;
+    case 'mystic': return 3;
+    case 'rare': return 2;
+    case 'common':
+    default: return 1;
+  }
+};
+
+const highestRarity = items.length > 0
+  ? items.reduce((highest, item) => {
+      const itemRarityValue = getRarityValue(item.rarity);
+      return itemRarityValue > getRarityValue(highest) ? item.rarity : highest;
+    }, 'common')
+  : 'common';
+
+// Generate unique ID for this cart instance
+const cartId = 'cart-' + Math.random().toString(36).substring(2, 9);
+---
+
+<div
+  id={cartId}
+  class:list={[
+    'shopping-cart',
+    { 'shopping-cart--open': isOpen },
+    `shopping-cart--rarity-${highestRarity}`,
+    className
+  ]}
+  aria-hidden={!isOpen}
+>
+  <div class="shopping-cart__backdrop"></div>
+
+  <div class="shopping-cart__container">
+    <div class="shopping-cart__header">
+      <h2 class="shopping-cart__title">Your Inventory</h2>
+      <button class="shopping-cart__close-button" aria-label="Close cart">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="shopping-cart__body">
+      {items.length > 0 ? (
+        <div class="shopping-cart__items">
+          {items.map((item, index) => (
+            <div
+              class:list={[
+                'shopping-cart__item',
+                `shopping-cart__item--${item.rarity}`
+              ]}
+              data-item-id={item.id}
+              data-rarity={item.rarity}
+              style={`--item-index: ${index};`}
+            >
+              <div class="shopping-cart__item-image-container">
+                <img src={item.image} alt={item.title} class="shopping-cart__item-image" />
+                <div class="shopping-cart__item-rarity-badge">
+                  <span class="shopping-cart__item-rarity-icon"></span>
+                  <span class="shopping-cart__item-rarity-label">{item.rarity}</span>
+                </div>
+              </div>
+
+              <div class="shopping-cart__item-details">
+                <h3 class="shopping-cart__item-title">{item.title}</h3>
+                <div class="shopping-cart__item-price">{formatCurrency(item.price)}</div>
+
+                <div class="shopping-cart__item-quantity">
+                  <button
+                    class="shopping-cart__quantity-button"
+                    data-action="decrease"
+                    data-item-id={item.id}
+                    aria-label="Decrease quantity"
+                  >
+                    -
+                  </button>
+                  <span class="shopping-cart__quantity-value">{item.quantity}</span>
+                  <button
+                    class="shopping-cart__quantity-button"
+                    data-action="increase"
+                    data-item-id={item.id}
+                    aria-label="Increase quantity"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              <div class="shopping-cart__item-subtotal">
+                <span class="shopping-cart__item-subtotal-label">Subtotal:</span>
+                <span class="shopping-cart__item-subtotal-value">
+                  {formatCurrency(item.price * item.quantity)}
+                </span>
+              </div>
+
+              <button
+                class="shopping-cart__item-remove"
+                data-item-id={item.id}
+                aria-label="Remove item"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  <line x1="10" y1="11" x2="10" y2="17"></line>
+                  <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+              </button>
+
+              {/* Special effect for legendary items */}
+              {item.rarity === 'legendary' && (
+                <div class="shopping-cart__item-legendary-effect"></div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div class="shopping-cart__summary">
+          <div class="shopping-cart__summary-row">
+            <span>Subtotal</span>
+            <span>{formatCurrency(subtotal)}</span>
+          </div>
+          <div class="shopping-cart__summary-row">
+            <span>Tax</span>
+            <span>{formatCurrency(tax)}</span>
+          </div>
+          <div class="shopping-cart__summary-row">
+            <span>Shipping</span>
+            <span>{formatCurrency(shipping)}</span>
+          </div>
+          <div class="shopping-cart__summary-row shopping-cart__summary-row--total">
+            <span>Total</span>
+            <span>{formatCurrency(total)}</span>
+          </div>
+
+          <div class="shopping-cart__rarity-bonus">
+            {highestRarity !== 'common' && (
+              <div class="shopping-cart__rarity-bonus-message">
+                <div class="shopping-cart__rarity-bonus-icon" data-rarity={highestRarity}></div>
+                <div class="shopping-cart__rarity-bonus-text">
+                  {highestRarity === 'legendary' ? (
+                    'Legendary item bonus: Free shipping'
+                  ) : highestRarity === 'mystic' ? (
+                    'Mystic item bonus: 10% off next purchase'
+                  ) : (
+                    'Rare item bonus: Special sticker pack'
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <button class="shopping-cart__checkout-button">
+            Proceed to Checkout
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </div>
+      ) : (
+        <div class="shopping-cart__empty">
+          <div class="shopping-cart__empty-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+          </div>
+          <h3 class="shopping-cart__empty-title">Your inventory is empty</h3>
+          <p class="shopping-cart__empty-text">Discover unique items and add them to your collection</p>
+          <button class="shopping-cart__continue-button">
+            Continue Shopping
+          </button>
+        </div>
+      )}
+    </div>
+  </div>
+</div>
+
+<script>
+  class ShoppingCart {
+    cartElement: HTMLElement | null;
+    items: any[] = [];
+
+    constructor(cartId: string) {
+      this.cartElement = document.getElementById(cartId);
+
+      if (!this.cartElement) return;
+
+      this.init();
+    }
+
+    init() {
+      this.setupEventListeners();
+      this.loadCartFromStorage();
+      this.updateCartUI();
+
+      // Setup cart item entrance animation
+      this.animateCartItems();
+    }
+
+    setupEventListeners() {
+      if (!this.cartElement) return;
+
+      // Close cart button
+      const closeButton = this.cartElement.querySelector('.shopping-cart__close-button');
+      if (closeButton) {
+        closeButton.addEventListener('click', () => this.closeCart());
+      }
+
+      // Click outside to close
+      const backdrop = this.cartElement.querySelector('.shopping-cart__backdrop');
+      if (backdrop) {
+        backdrop.addEventListener('click', () => this.closeCart());
+      }
+
+      // Continue shopping button
+      const continueButton = this.cartElement.querySelector('.shopping-cart__continue-button');
+      if (continueButton) {
+        continueButton.addEventListener('click', () => this.closeCart());
+      }
+
+      // Item quantity buttons
+      this.cartElement.querySelectorAll('.shopping-cart__quantity-button').forEach(button => {
+        button.addEventListener('click', (e) => {
+          const target = e.currentTarget as HTMLElement;
+          const itemId = target.dataset.itemId;
+          const action = target.dataset.action;
+
+          if (itemId && action) {
+            if (action === 'increase') {
+              this.updateItemQuantity(itemId, 1);
+            } else if (action === 'decrease') {
+              this.updateItemQuantity(itemId, -1);
+            }
+          }
+        });
+      });
+
+      // Remove item buttons
+      this.cartElement.querySelectorAll('.shopping-cart__item-remove').forEach(button => {
+        button.addEventListener('click', (e) => {
+          const target = e.currentTarget as HTMLElement;
+          const itemId = target.dataset.itemId;
+
+          if (itemId) {
+            this.removeItem(itemId);
+          }
+        });
+      });
+
+      // Global event listener for adding items to cart
+      document.addEventListener('addToCart', ((e: CustomEvent) => {
+        const { productId, quantity, rarity } = e.detail;
+        this.addItem(productId, quantity, rarity);
+      }) as EventListener);
+    }
+
+    loadCartFromStorage() {
+      const storedCart = localStorage.getItem('voyager-cart');
+      if (storedCart) {
+        try {
+          this.items = JSON.parse(storedCart);
+        } catch (e) {
+          console.error('Error loading cart from storage:', e);
+          this.items = [];
+        }
+      }
+    }
+
+    saveCartToStorage() {
+      localStorage.setItem('voyager-cart', JSON.stringify(this.items));
+    }
+
+    updateCartUI() {
+      if (!this.cartElement) return;
+
+      // Update cart count in header
+      const cartCount = document.querySelector('.shop-actions__badge');
+      if (cartCount) {
+        const totalItems = this.items.reduce((sum, item) => sum + item.quantity, 0);
+        cartCount.textContent = totalItems.toString();
+
+        // Show/hide based on items
+        if (totalItems > 0) {
+          cartCount.classList.add('shop-actions__badge--visible');
+        } else {
+          cartCount.classList.remove('shop-actions__badge--visible');
+        }
+      }
+
+      // Update highest rarity class
+      const highestRarity = this.getHighestRarity();
+
+      // Remove existing rarity classes
+      this.cartElement.classList.remove(
+        'shopping-cart--rarity-common',
+        'shopping-cart--rarity-rare',
+        'shopping-cart--rarity-mystic',
+        'shopping-cart--rarity-legendary'
+      );
+
+      // Add new highest rarity class
+      this.cartElement.classList.add(`shopping-cart--rarity-${highestRarity}`);
+
+      // Refresh the entire cart (in a real implementation, we might update more selectively)
+      // But for this example, we'll just reload the page which will re-render the component
+      // with the updated cart data from localStorage
+      if (this.cartElement.classList.contains('shopping-cart--open')) {
+        location.reload();
+      }
+    }
+
+    getHighestRarity() {
+      if (this.items.length === 0) return 'common';
+
+      const rarityOrder = {
+        'common': 1,
+        'rare': 2,
+        'mystic': 3,
+        'legendary': 4
+      };
+
+      return this.items.reduce((highest, item) => {
+        const itemRarityValue = rarityOrder[item.rarity as keyof typeof rarityOrder] || 1;
+        const highestValue = rarityOrder[highest as keyof typeof rarityOrder] || 1;
+
+        return itemRarityValue > highestValue ? item.rarity : highest;
+      }, 'common');
+    }
+
+    addItem(productId: string, quantity: number, rarity: string) {
+      // In a real implementation, you would fetch the product details from an API
+      // For this example, we'll just add a placeholder item
+      const existingItem = this.items.find(item => item.id === productId);
+
+      if (existingItem) {
+        existingItem.quantity += quantity;
+      } else {
+        // Simulate fetching product details (in a real app, this would come from an API)
+        const newItem = {
+          id: productId,
+          title: `Product ${productId}`,
+          price: 49.99,
+          image: '/img/products/placeholder.jpg',
+          quantity: quantity,
+          rarity: rarity || 'common'
+        };
+
+        this.items.push(newItem);
+      }
+
+      this.saveCartToStorage();
+      this.updateCartUI();
+
+      // Open the cart
+      this.openCart();
+    }
+
+    updateItemQuantity(itemId: string, change: number) {
+      const item = this.items.find(item => item.id === itemId);
+
+      if (item) {
+        item.quantity += change;
+
+        // Remove item if quantity is zero or less
+        if (item.quantity <= 0) {
+          this.removeItem(itemId);
+          return;
+        }
+
+        this.saveCartToStorage();
+        this.updateCartUI();
+      }
+    }
+
+    removeItem(itemId: string) {
+      // Find the item to remove
+      const itemIndex = this.items.findIndex(item => item.id === itemId);
+
+      if (itemIndex !== -1) {
+        // Find the item element
+        const itemElement = this.cartElement?.querySelector(`.shopping-cart__item[data-item-id="${itemId}"]`);
+
+        if (itemElement) {
+          // Add removal animation
+          itemElement.classList.add('shopping-cart__item--removing');
+
+          // Remove item from array after animation
+          setTimeout(() => {
+            this.items.splice(itemIndex, 1);
+            this.saveCartToStorage();
+            this.updateCartUI();
+          }, 500); // Match animation duration
+        } else {
+          // No element found, just remove immediately
+          this.items.splice(itemIndex, 1);
+          this.saveCartToStorage();
+          this.updateCartUI();
+        }
+      }
+    }
+
+    openCart() {
+      if (!this.cartElement) return;
+
+      this.cartElement.classList.add('shopping-cart--open');
+      document.body.classList.add('cart-open');
+
+      // Animate items entrance
+      this.animateCartItems();
+    }
+
+    closeCart() {
+      if (!this.cartElement) return;
+
+      this.cartElement.classList.remove('shopping-cart--open');
+      document.body.classList.remove('cart-open');
+    }
+
+    animateCartItems() {
+      if (!this.cartElement) return;
+
+      const itemElements = this.cartElement.querySelectorAll('.shopping-cart__item');
+
+      // Reset animations
+      itemElements.forEach(item => {
+        item.classList.remove('shopping-cart__item--animate-in');
+      });
+
+      // Trigger animations with staggered delay
+      setTimeout(() => {
+        itemElements.forEach(item => {
+          item.classList.add('shopping-cart__item--animate-in');
+        });
+      }, 100);
+    }
+  }
+
+  // Initialize all shopping carts on the page
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.shopping-cart').forEach(cart => {
+      new ShoppingCart(cart.id);
+    });
+
+    // Global cart toggle buttons
+    const cartToggleButtons = document.querySelectorAll('[data-action="toggle-cart"]');
+    cartToggleButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const cart = document.querySelector('.shopping-cart');
+        if (cart && cart.id) {
+          if (cart.classList.contains('shopping-cart--open')) {
+            cart.classList.remove('shopping-cart--open');
+            document.body.classList.remove('cart-open');
+          } else {
+            cart.classList.add('shopping-cart--open');
+            document.body.classList.add('cart-open');
+
+            // Initialize this specific cart
+            new ShoppingCart(cart.id);
+          }
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  /* Main container */
+  .shopping-cart {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    z-index: var(--z-modal);
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0.3s, opacity 0.3s;
+  }
+
+  .shopping-cart--open {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  /* Backdrop */
+  .shopping-cart__backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+    transition: opacity 0.3s;
+    opacity: 0;
+  }
+
+  .shopping-cart--open .shopping-cart__backdrop {
+    opacity: 1;
+  }
+
+  /* Cart container */
+  .shopping-cart__container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    max-width: 480px;
+    height: 100%;
+    background-color: var(--theme-surface);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    backdrop-filter: var(--card-backdrop-filter);
+  }
+
+  .shopping-cart--open .shopping-cart__container {
+    transform: translateX(0);
+  }
+
+  /* Cart header */
+  .shopping-cart__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-m) var(--space-l);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .shopping-cart__title {
+    font-size: var(--size-step-2);
+    margin: 0;
+    color: var(--theme-text-primary);
+    font-family: var(--font-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .shopping-cart__close-button {
+    background: none;
+    border: none;
+    color: var(--theme-text-primary);
+    cursor: pointer;
+    padding: var(--space-xs);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-standard);
+  }
+
+  .shopping-cart__close-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: rotate(90deg);
+  }
+
+  /* Cart body */
+  .shopping-cart__body {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-l);
+  }
+
+  /* Cart items */
+  .shopping-cart__items {
+    margin-bottom: var(--space-xl);
+  }
+
+  .shopping-cart__item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    grid-template-areas:
+      "image details remove"
+      "image details subtotal";
+    gap: var(--space-s);
+    padding: var(--space-m);
+    margin-bottom: var(--space-m);
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    transform: translateX(50px);
+    opacity: 0;
+    animation-delay: calc(var(--item-index, 0) * 0.1s);
+  }
+
+  .shopping-cart__item--animate-in {
+    animation: slideInCartItem 0.5s forwards;
+  }
+
+  .shopping-cart__item--removing {
+    animation: removeCartItem 0.5s forwards;
+  }
+
+  /* Item variants based on rarity */
+  .shopping-cart__item--common {
+    border-left: 3px solid var(--color-rarity-common);
+  }
+
+  .shopping-cart__item--rare {
+    border-left: 3px solid var(--color-rarity-rare);
+    box-shadow: 0 0 10px rgba(100, 181, 246, 0.2);
+  }
+
+  .shopping-cart__item--mystic {
+    border-left: 3px solid var(--color-rarity-mystic);
+    box-shadow: 0 0 15px rgba(206, 147, 216, 0.3);
+  }
+
+  .shopping-cart__item--legendary {
+    border-left: 3px solid var(--color-rarity-legendary);
+    box-shadow: 0 0 20px rgba(255, 213, 79, 0.4);
+    overflow: hidden;
+  }
+
+  .shopping-cart__item-image-container {
+    grid-area: image;
+    position: relative;
+  }
+
+  .shopping-cart__item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+  }
+
+  .shopping-cart__item-rarity-badge {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 6px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 0 var(--radius-sm) 0 var(--radius-sm);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+  }
+
+  .shopping-cart__item-rarity-icon {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .shopping-cart__item--common .shopping-cart__item-rarity-icon {
+    background-color: var(--color-rarity-common);
+  }
+
+  .shopping-cart__item--common .shopping-cart__item-rarity-label {
+    color: var(--color-rarity-common);
+  }
+
+  .shopping-cart__item--rare .shopping-cart__item-rarity-icon {
+    background-color: var(--color-rarity-rare);
+    box-shadow: 0 0 3px var(--color-rarity-rare);
+  }
+
+  .shopping-cart__item--rare .shopping-cart__item-rarity-label {
+    color: var(--color-rarity-rare);
+  }
+
+  .shopping-cart__item--mystic .shopping-cart__item-rarity-icon {
+    background-color: var(--color-rarity-mystic);
+    box-shadow: 0 0 5px var(--color-rarity-mystic);
+  }
+
+  .shopping-cart__item--mystic .shopping-cart__item-rarity-label {
+    color: var(--color-rarity-mystic);
+  }
+
+  .shopping-cart__item--legendary .shopping-cart__item-rarity-icon {
+    background-color: var(--color-rarity-legendary);
+    box-shadow: 0 0 7px var(--color-rarity-legendary);
+    animation: pulse 2s infinite alternate;
+  }
+
+  .shopping-cart__item--legendary .shopping-cart__item-rarity-label {
+    color: var(--color-rarity-legendary);
+  }
+
+  .shopping-cart__item-details {
+    grid-area: details;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .shopping-cart__item-title {
+    font-size: var(--size-step-0);
+    margin: 0 0 var(--space-2xs);
+    color: var(--theme-text-primary);
+    font-family: var(--font-primary);
+  }
+
+  .shopping-cart__item-price {
+    font-size: 0.9rem;
+    color: var(--theme-text-secondary);
+    margin-bottom: var(--space-s);
+  }
+
+  .shopping-cart__item-quantity {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  .shopping-cart__quantity-button {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--theme-text-primary);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-standard);
+  }
+
+  .shopping-cart__quantity-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .shopping-cart__quantity-value {
+    min-width: 20px;
+    text-align: center;
+    font-family: var(--font-secondary);
+  }
+
+  .shopping-cart__item-subtotal {
+    grid-area: subtotal;
+    text-align: right;
+    align-self: end;
+    font-size: 0.9rem;
+  }
+
+  .shopping-cart__item-subtotal-label {
+    color: var(--theme-text-secondary);
+    margin-right: var(--space-2xs);
+  }
+
+  .shopping-cart__item-subtotal-value {
+    font-weight: bold;
+    color: var(--theme-text-primary);
+  }
+
+  .shopping-cart__item-remove {
+    grid-area: remove;
+    background: none;
+    border: none;
+    color: var(--theme-text-secondary);
+    cursor: pointer;
+    padding: var(--space-2xs);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-standard);
+    align-self: start;
+    justify-self: end;
+  }
+
+  .shopping-cart__item-remove:hover {
+    color: var(--theme-text-primary);
+    background-color: rgba(255, 0, 0, 0.1);
+  }
+
+  /* Legendary item effect */
+  .shopping-cart__item-legendary-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: linear-gradient(
+      45deg,
+      rgba(255, 213, 79, 0) 0%,
+      rgba(255, 213, 79, 0.1) 50%,
+      rgba(255, 213, 79, 0) 100%
+    );
+    animation: legendaryGlow 3s infinite alternate;
+  }
+
+  /* Order summary */
+  .shopping-cart__summary {
+    padding: var(--space-l);
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius-md);
+    animation: fadeIn 0.5s 0.3s forwards;
+    opacity: 0;
+  }
+
+  .shopping-cart__summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--space-s);
+    font-size: 0.95rem;
+    color: var(--theme-text-secondary);
+  }
+
+  .shopping-cart__summary-row--total {
+    font-size: var(--size-step-1);
+    font-weight: bold;
+    color: var(--theme-text-primary);
+    padding-top: var(--space-s);
+    margin-top: var(--space-s);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Rarity bonus section */
+  .shopping-cart__rarity-bonus {
+    margin-top: var(--space-m);
+    min-height: 40px;
+  }
+
+  .shopping-cart__rarity-bonus-message {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    padding: var(--space-s);
+    border-radius: var(--radius-sm);
+    background-color: rgba(0, 0, 0, 0.2);
+    margin-bottom: var(--space-l);
+    animation: fadeIn 0.5s 0.4s forwards;
+    opacity: 0;
+  }
+
+  .shopping-cart__rarity-bonus-icon {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+  }
+
+  .shopping-cart__rarity-bonus-icon[data-rarity="rare"] {
+    background-color: var(--color-rarity-rare);
+    box-shadow: 0 0 5px var(--color-rarity-rare);
+  }
+
+  .shopping-cart__rarity-bonus-icon[data-rarity="mystic"] {
+    background-color: var(--color-rarity-mystic);
+    box-shadow: 0 0 8px var(--color-rarity-mystic);
+  }
+
+  .shopping-cart__rarity-bonus-icon[data-rarity="legendary"] {
+    background-color: var(--color-rarity-legendary);
+    box-shadow: 0 0 12px var(--color-rarity-legendary);
+    animation: pulse 2s infinite alternate;
+  }
+
+  .shopping-cart__rarity-bonus-text {
+    font-size: 0.9rem;
+    color: var(--theme-text-primary);
+  }
+
+  .shopping-cart__checkout-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-s);
+    padding: var(--space-m);
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: var(--font-primary);
+    font-weight: bold;
+    font-size: var(--size-step-0);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all var(--transition-standard);
+    animation: fadeIn 0.5s 0.5s forwards;
+    opacity: 0;
+  }
+
+  .shopping-cart__checkout-button .icon {
+    transition: transform var(--transition-standard);
+  }
+
+  .shopping-cart__checkout-button:hover .icon {
+    transform: translateX(4px);
+  }
+
+  /* Theme-specific cart styles */
+  .shopping-cart--rarity-common .shopping-cart__checkout-button {
+    background-color: var(--theme-primary);
+    color: white;
+  }
+
+  .shopping-cart--rarity-common .shopping-cart__checkout-button:hover {
+    background-color: var(--theme-secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .shopping-cart--rarity-rare .shopping-cart__checkout-button {
+    background-color: var(--color-rarity-rare);
+    color: black;
+  }
+
+  .shopping-cart--rarity-rare .shopping-cart__checkout-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 0 15px rgba(100, 181, 246, 0.4);
+  }
+
+  .shopping-cart--rarity-mystic .shopping-cart__checkout-button {
+    background-color: var(--color-rarity-mystic);
+    color: black;
+  }
+
+  .shopping-cart--rarity-mystic .shopping-cart__checkout-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 0 20px rgba(206, 147, 216, 0.5);
+  }
+
+  .shopping-cart--rarity-legendary .shopping-cart__checkout-button {
+    background-color: var(--color-rarity-legendary);
+    color: black;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shopping-cart--rarity-legendary .shopping-cart__checkout-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 0 25px rgba(255, 213, 79, 0.6);
+  }
+
+  .shopping-cart--rarity-legendary .shopping-cart__checkout-button::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      to bottom right,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0) 45%,
+      rgba(255, 255, 255, 0.7) 50%,
+      rgba(255, 255, 255, 0) 55%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    transform: rotate(30deg);
+    animation: shineEffect 3s infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Empty cart */
+  .shopping-cart__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+    padding: var(--space-xl);
+    animation: fadeIn 0.5s forwards;
+  }
+
+  .shopping-cart__empty-icon {
+    color: var(--theme-text-secondary);
+    opacity: 0.5;
+    margin-bottom: var(--space-l);
+  }
+
+  .shopping-cart__empty-title {
+    font-size: var(--size-step-1);
+    margin-bottom: var(--space-s);
+    color: var(--theme-text-primary);
+    font-family: var(--font-primary);
+  }
+
+  .shopping-cart__empty-text {
+    color: var(--theme-text-secondary);
+    margin-bottom: var(--space-xl);
+    max-width: 300px;
+  }
+
+  .shopping-cart__continue-button {
+    padding: var(--space-s) var(--space-l);
+    background-color: var(--theme-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: var(--font-primary);
+    cursor: pointer;
+    transition: all var(--transition-standard);
+  }
+
+  .shopping-cart__continue-button:hover {
+    background-color: var(--theme-secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Animations */
+  @keyframes slideInCartItem {
+    0% {
+      transform: translateX(50px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes removeCartItem {
+    0% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(50px);
+      opacity: 0;
+    }
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(1.5); opacity: 1; }
+  }
+
+  @keyframes legendaryGlow {
+    0% {
+      opacity: 0.3;
+    }
+    100% {
+      opacity: 0.7;
+    }
+  }
+
+  @keyframes shineEffect {
+    0% {
+      transform: rotate(30deg) translateX(-100%);
+      opacity: 0;
+    }
+    20% {
+      opacity: 0.5;
+    }
+    30% {
+      transform: rotate(30deg) translateX(100%);
+      opacity: 0;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 480px) {
+    .shopping-cart__container {
+      max-width: 100%;
+    }
+
+    .shopping-cart__item {
+      grid-template-columns: 60px 1fr;
+      grid-template-areas:
+        "image details"
+        "image details"
+        "subtotal subtotal"
+        "remove remove";
+      gap: var(--space-xs);
+    }
+
+    .shopping-cart__item-image {
+      width: 60px;
+      height: 60px;
+    }
+
+    .shopping-cart__item-subtotal,
+    .shopping-cart__item-remove {
+      justify-self: flex-end;
+      margin-top: var(--space-xs);
+    }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .shopping-cart__container {
+      transition: transform 0.1s ease;
+    }
+
+    .shopping-cart__item--animate-in,
+    .shopping-cart__item--removing {
+      animation: none;
+      transform: none;
+      opacity: 1;
+    }
+
+    .shopping-cart__item-legendary-effect,
+    .shopping-cart--rarity-legendary .shopping-cart__checkout-button::after,
+    .shopping-cart__item--legendary .shopping-cart__item-rarity-icon {
+      animation: none;
+    }
+
+    .shopping-cart__summary,
+    .shopping-cart__rarity-bonus-message,
+    .shopping-cart__checkout-button {
+      animation: none;
+      opacity: 1;
+    }
+  }
+</style>

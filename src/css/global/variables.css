@@ -1,8 +1,370 @@
-:root {
+/* src/css/global/variables.css */
+
+/**
+ * Voyager Design System: Base Variables
+ * These variables define the structure and shared properties across all themes
+ */
+
+ :root {
+  /* Core spacing variables - adapted from the existing Astro Cube Boilerplate */
   --gutter: var(--space-s-l);
+  --flow-space: var(--space-m);
+
+  /* Typography */
+  --font-primary: 'Exo 2', var(--font-base);
+  --font-secondary: 'Kode Mono', monospace;
+  --leading-standard: 1.5;
+
+  /* Transitions & Animation */
   --transition-base: 250ms ease;
   --transition-movement: 200ms linear;
   --transition-fade: 300ms ease;
   --transition-bounce: 500ms cubic-bezier(0.5, 0.05, 0.2, 1.5);
-  --leading-standard: 1.5;
+
+  /* Visual styles */
+  --radius-card: 10px;
+  --radius-button: 6px;
+  --radius-badge: 9999px;
+
+  /* Game-specific variables */
+  --card-hover-lift: 10px;
+  --card-parallax-depth: 10px;
+
+  /* Card effects */
+  --card-glow-intensity-common: 0.2;
+  --card-glow-intensity-rare: 0.4;
+  --card-glow-intensity-mystic: 0.6;
+  --card-glow-intensity-legendary: 0.8;
+  --card-backdrop-filter: blur(8px);
+
+  /* Z-index layers */
+  --z-below: -1;
+  --z-base: 0;
+  --z-above: 1;
+  --z-header: 10;
+  --z-overlay: 20;
+  --z-modal: 30;
+  --z-toast: 40;
+  --z-tooltip: 50;
+
+  /* Common component structural definitions */
+  --card-padding: var(--space-m);
+  --card-border-width: var(--border-width-default, 2px);
+  --button-padding: var(--space-s) var(--space-l);
+  --nav-height: 4rem;
+  --nav-padding: var(--space-m);
+  --header-height: 6rem;
+  --footer-padding: var(--space-xl);
+  --modal-padding: var(--space-l);
+  --input-padding: var(--space-xs) var(--space-s);
+
+  /* Parallax Variables */
+  --parallax-depth-1: 0.1;
+  --parallax-depth-2: 0.2;
+  --parallax-depth-3: 0.3;
+  --parallax-depth-4: 0.4;
+  --parallax-depth-5: 0.5;
+
+  /* Rarity Colors - These stay constant across themes */
+  --color-rarity-common: #b0bec5;
+  --color-rarity-rare: #64b5f6;
+  --color-rarity-mystic: #ce93d8;
+  --color-rarity-legendary: #ffd54f;
+
+  /* Default Theme Variables - Will be overridden by theme-specific CSS */
+  --theme-background: linear-gradient(180deg, #0b1733 0%, #203a6d 100%);
+  --theme-primary: #7aa4e3;
+  --theme-secondary: #3d5e91;
+  --theme-accent: #a6c9ff;
+  --theme-surface: rgba(16, 37, 72, 0.8);
+  --theme-text-primary: #ffffff;
+  --theme-text-secondary: #a3c1ff;
+
+  /* Default Card backgrounds - Will be overridden by theme-specific CSS */
+  --card-bg-common: linear-gradient(135deg, #62728a 0%, #2e3b4f 100%);
+  --card-bg-rare: linear-gradient(135deg, #315a82 0%, #1a304d 100%);
+  --card-bg-mystic: linear-gradient(135deg, #6b45a4 0%, #2e1d45 100%);
+  --card-bg-legendary: linear-gradient(135deg, #b4883b 0%, #5d4010 100%);
+
+  /* Theme-specific effects */
+  --ambient-animation: "snowfall"; /* Default */
+  --particle-density: 60;
+  --theme-accent-pattern: url("/img/patterns/default-pattern.svg");
+}
+
+/* ------ THEME: ICELAND ------ */
+[data-theme="iceland"] {
+  /* Main Colors */
+  --theme-background: linear-gradient(180deg, #0b1733 0%, #203a6d 100%);
+  --theme-primary: #7aa4e3;
+  --theme-secondary: #3d5e91;
+  --theme-accent: #a6c9ff;
+  --theme-surface: rgba(16, 37, 72, 0.8);
+  --theme-text-primary: #ffffff;
+  --theme-text-secondary: #a3c1ff;
+
+  /* Card Backgrounds */
+  --card-bg-common: linear-gradient(135deg, #62728a 0%, #2e3b4f 100%);
+  --card-bg-rare: linear-gradient(135deg, #315a82 0%, #1a304d 100%);
+  --card-bg-mystic: linear-gradient(135deg, #6b45a4 0%, #2e1d45 100%);
+  --card-bg-legendary: linear-gradient(135deg, #b4883b 0%, #5d4010 100%);
+
+  /* Button Styles */
+  --button-bg-primary: #3d5e91;
+  --button-bg-secondary: transparent;
+  --button-text: #ffffff;
+  --button-border: #7aa4e3;
+
+  /* Special Effects */
+  --ambient-animation: "snowfall";
+  --particle-density: 60;
+  --theme-accent-pattern: url("/img/patterns/iceland-pattern.svg");
+  --accent-noise: url("/img/textures/ice-noise.png");
+
+  /* Modal/Dialog styling */
+  --modal-backdrop: rgba(11, 23, 51, 0.8);
+  --modal-bg: linear-gradient(135deg, #1c3258 0%, #0b1733 100%);
+  --modal-border: rgba(122, 164, 227, 0.3);
+
+  /* Custom scrollbar */
+  --scrollbar-thumb: #3d5e91;
+  --scrollbar-track: #0b1733;
+}
+
+/* ------ THEME: THAILAND ------ */
+[data-theme="thailand"] {
+  /* Main Colors */
+  --theme-background: linear-gradient(180deg, #0a3e2b 0%, #1e6e55 100%);
+  --theme-primary: #4caf50;
+  --theme-secondary: #1b5e20;
+  --theme-accent: #81c784;
+  --theme-surface: rgba(13, 63, 43, 0.8);
+  --theme-text-primary: #ffffff;
+  --theme-text-secondary: #b9e4bc;
+
+  /* Card Backgrounds */
+  --card-bg-common: linear-gradient(135deg, #4f8a4f 0%, #2e4f2e 100%);
+  --card-bg-rare: linear-gradient(135deg, #31824b 0%, #1a4d27 100%);
+  --card-bg-mystic: linear-gradient(135deg, #45a488 0%, #1d4539 100%);
+  --card-bg-legendary: linear-gradient(135deg, #b49a3b 0%, #5d4c10 100%);
+
+  /* Button Styles */
+  --button-bg-primary: #1b5e20;
+  --button-bg-secondary: transparent;
+  --button-text: #ffffff;
+  --button-border: #4caf50;
+
+  /* Special Effects */
+  --ambient-animation: "rainforest";
+  --particle-density: 20;
+  --theme-accent-pattern: url("/img/patterns/thailand-pattern.svg");
+  --accent-noise: url("/img/textures/leaf-noise.png");
+
+  /* Modal/Dialog styling */
+  --modal-backdrop: rgba(10, 62, 43, 0.8);
+  --modal-bg: linear-gradient(135deg, #1e6e55 0%, #0a3e2b 100%);
+  --modal-border: rgba(76, 175, 80, 0.3);
+
+  /* Custom scrollbar */
+  --scrollbar-thumb: #1b5e20;
+  --scrollbar-track: #0a3e2b;
+}
+
+/* ------ THEME: BERLIN (Diablo 2 inspired) ------ */
+[data-theme="berlin"] {
+  /* Main Colors */
+  --theme-background: linear-gradient(180deg, #1a0e0c 0%, #3d1a17 100%);
+  --theme-primary: #e53935;
+  --theme-secondary: #7f1614;
+  --theme-accent: #ff6e40;
+  --theme-surface: rgba(41, 19, 16, 0.8);
+  --theme-text-primary: #ffffff;
+  --theme-text-secondary: #ffccbc;
+
+  /* Card Backgrounds */
+  --card-bg-common: linear-gradient(135deg, #5d4948 0%, #2b2221 100%);
+  --card-bg-rare: linear-gradient(135deg, #824b31 0%, #4d2a1a 100%);
+  --card-bg-mystic: linear-gradient(135deg, #a44545 0%, #451d1d 100%);
+  --card-bg-legendary: linear-gradient(135deg, #b47d3b 0%, #5d3e10 100%);
+
+  /* Button Styles */
+  --button-bg-primary: #7f1614;
+  --button-bg-secondary: transparent;
+  --button-text: #ffffff;
+  --button-border: #e53935;
+
+  /* Special Effects */
+  --ambient-animation: "embers";
+  --particle-density: 25;
+  --theme-accent-pattern: url("/img/patterns/berlin-pattern.svg");
+  --accent-noise: url("/img/textures/fire-noise.png");
+
+  /* Modal/Dialog styling */
+  --modal-backdrop: rgba(26, 14, 12, 0.8);
+  --modal-bg: linear-gradient(135deg, #3d1a17 0%, #1a0e0c 100%);
+  --modal-border: rgba(229, 57, 53, 0.3);
+
+  /* Custom scrollbar */
+  --scrollbar-thumb: #7f1614;
+  --scrollbar-track: #1a0e0c;
+}
+
+/* ------ THEME: SPAIN ------ */
+[data-theme="spain"] {
+  /* Main Colors */
+  --theme-background: linear-gradient(180deg, #5f2c82 0%, #49a09d 100%);
+  --theme-primary: #ba68c8;
+  --theme-secondary: #7b1fa2;
+  --theme-accent: #f48fb1;
+  --theme-surface: rgba(95, 44, 130, 0.8);
+  --theme-text-primary: #ffffff;
+  --theme-text-secondary: #e1bee7;
+
+  /* Card Backgrounds */
+  --card-bg-common: linear-gradient(135deg, #7e57c2 0%, #4527a0 100%);
+  --card-bg-rare: linear-gradient(135deg, #5e35b1 0%, #311b92 100%);
+  --card-bg-mystic: linear-gradient(135deg, #8e24aa 0%, #4a148c 100%);
+  --card-bg-legendary: linear-gradient(135deg, #d81b60 0%, #880e4f 100%);
+
+  /* Button Styles */
+  --button-bg-primary: #7b1fa2;
+  --button-bg-secondary: transparent;
+  --button-text: #ffffff;
+  --button-border: #ba68c8;
+
+  /* Special Effects */
+  --ambient-animation: "stardust";
+  --particle-density: 35;
+  --theme-accent-pattern: url("/img/patterns/spain-pattern.svg");
+  --accent-noise: url("/img/textures/wave-noise.png");
+
+  /* Modal/Dialog styling */
+  --modal-backdrop: rgba(95, 44, 130, 0.8);
+  --modal-bg: linear-gradient(135deg, #5f2c82 0%, #49a09d 100%);
+  --modal-border: rgba(186, 104, 200, 0.3);
+
+  /* Custom scrollbar */
+  --scrollbar-thumb: #7b1fa2;
+  --scrollbar-track: #5f2c82;
+}
+
+/* Custom Scrollbar Styling */
+@media (min-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 14px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: var(--scrollbar-track);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border-radius: 7px;
+    border: 3px solid var(--scrollbar-track);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--theme-primary);
+  }
+}
+
+/* Theme transition animations */
+@keyframes theme-fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Apply theme transitions if supported */
+.supports-view-transitions [data-theme] {
+  view-transition-name: theme;
+}
+
+/* Fallback for browsers that don't support view transitions */
+:not(.supports-view-transitions) [data-theme] {
+  animation: theme-fade-in 0.5s ease-out;
+}
+
+/* Ambient background animations */
+@keyframes snowfall {
+  0% {
+    background-position: 0 0;
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    background-position: 0 100vh;
+    opacity: 0;
+  }
+}
+
+@keyframes rainforest {
+  0% {
+    background-position: 0 -100vh;
+    transform: rotate(0deg);
+  }
+  100% {
+    background-position: 100vw 100vh;
+    transform: rotate(10deg);
+  }
+}
+
+@keyframes embers {
+  0% {
+    background-position: 0 0;
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    background-position: 100vw -100vh;
+    opacity: 0.2;
+  }
+}
+
+@keyframes stardust {
+  0% {
+    opacity: 0.1;
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0.1;
+    transform: translateY(100vh) rotate(360deg);
+  }
+}
+
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .item-card:hover {
+    transform: none !important;
+  }
+
+  .item-card__inner {
+    transform: none !important;
+  }
+
+  .item-card[data-rarity="legendary"] {
+    animation: none !important;
+  }
+
+  .item-card__shine {
+    display: none !important;
+  }
 }

@@ -1,0 +1,326 @@
+---
+/**
+ * AmbientEffects.astro
+ * Creates theme-specific ambient background effects that change
+ * based on the current theme.
+ */
+
+ interface Props {
+  class?: string;
+  particleDensity?: number;
+  animationSpeed?: number;
+  disableOnMobile?: boolean;
+}
+
+const {
+  class: className = '',
+  particleDensity = 40, // Default particle density
+  animationSpeed = 1, // Animation speed multiplier
+  disableOnMobile = true
+} = Astro.props;
+---
+
+<div class:list={["ambient-effects", className]} data-disable-mobile={disableOnMobile}>
+  <div class="ambient-effects__container">
+    <div class="ambient-effects__layer ambient-effects__particles"></div>
+    <div class="ambient-effects__layer ambient-effects__overlay"></div>
+    <div class="ambient-effects__layer ambient-effects__noise"></div>
+  </div>
+</div>
+
+<script define:vars={{ particleDensity, animationSpeed }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.querySelector('.ambient-effects');
+    if (!container) return;
+
+    const particlesLayer = container.querySelector('.ambient-effects__particles');
+    const noiseLayer = container.querySelector('.ambient-effects__noise');
+    const overlayLayer = container.querySelector('.ambient-effects__overlay');
+
+    // Skip setup on mobile if disabled
+    if (container.dataset.disableMobile === 'true' && window.innerWidth < 768) {
+      container.style.display = 'none';
+      return;
+    }
+
+    // Get current theme and animation
+    const updateThemeEffects = () => {
+      const html = document.documentElement;
+      const currentTheme = html.dataset.theme || 'iceland';
+      const animationType = getComputedStyle(html).getPropertyValue('--ambient-animation').trim().replace(/"/g, '');
+      const themeParticleDensity = parseInt(getComputedStyle(html).getPropertyValue('--particle-density') || `${particleDensity}`);
+
+      // Set appropriate animation class
+      if (particlesLayer) {
+        // Reset animations
+        particlesLayer.className = 'ambient-effects__layer ambient-effects__particles';
+
+        // Apply current theme animation
+        particlesLayer.classList.add(`ambient-effects__particles--${animationType}`);
+
+        // Create particles based on theme
+        createParticles(particlesLayer, themeParticleDensity, animationType);
+
+        // Apply animation speed
+        const animationElements = particlesLayer.querySelectorAll('.ambient-effects__particle');
+        animationElements.forEach(el => {
+          const currentDuration = parseFloat(getComputedStyle(el).animationDuration);
+          el.style.animationDuration = `${currentDuration / animationSpeed}s`;
+        });
+      }
+
+      // Set theme-specific noise texture
+      if (noiseLayer) {
+        const noiseTexture = getComputedStyle(html).getPropertyValue('--accent-noise').trim();
+        if (noiseTexture && noiseTexture !== 'none') {
+          noiseLayer.style.backgroundImage = noiseTexture;
+          noiseLayer.style.opacity = '0.1'; // Set to visible
+        } else {
+          noiseLayer.style.opacity = '0'; // Hide if no texture
+        }
+      }
+
+      // Apply theme-specific overlay gradient
+      if (overlayLayer) {
+        let gradient;
+
+        switch (currentTheme) {
+          case 'iceland':
+            gradient = 'radial-gradient(circle at 70% 20%, rgba(122, 164, 227, 0.1) 0%, transparent 50%)';
+            break;
+          case 'thailand':
+            gradient = 'radial-gradient(circle at 30% 70%, rgba(76, 175, 80, 0.1) 0%, transparent 60%)';
+            break;
+          case 'berlin':
+            gradient = 'radial-gradient(circle at 50% 30%, rgba(229, 57, 53, 0.1) 0%, transparent 40%)';
+            break;
+          case 'spain':
+            gradient = 'radial-gradient(circle at 20% 60%, rgba(186, 104, 200, 0.1) 0%, transparent 50%)';
+            break;
+          default:
+            gradient = 'none';
+        }
+
+        overlayLayer.style.background = gradient;
+      }
+    };
+
+    // Create particles for different animation types
+    function createParticles(container, count, type) {
+      // Clear existing particles
+      container.innerHTML = '';
+
+      // Create new particles
+      for (let i = 0; i < count; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('ambient-effects__particle');
+
+        // Apply animation-specific styles
+        if (type === 'snowfall') {
+          // Snowflake particle
+          particle.classList.add('ambient-effects__particle--snow');
+          particle.style.left = `${Math.random() * 100}%`;
+          particle.style.animationDelay = `${Math.random() * 15}s`;
+          particle.style.animationDuration = `${10 + Math.random() * 20}s`;
+          particle.style.opacity = `${0.1 + Math.random() * 0.7}`;
+          particle.style.width = `${2 + Math.random() * 6}px`;
+          particle.style.height = particle.style.width;
+        }
+        else if (type === 'rainforest') {
+          // Leaf particle
+          particle.classList.add('ambient-effects__particle--leaf');
+          particle.style.left = `${Math.random() * 100}%`;
+          particle.style.top = `${Math.random() * -100}%`;
+          particle.style.animationDelay = `${Math.random() * 20}s`;
+          particle.style.animationDuration = `${15 + Math.random() * 30}s`;
+          particle.style.opacity = `${0.1 + Math.random() * 0.5}`;
+          particle.style.width = `${5 + Math.random() * 15}px`;
+          particle.style.height = `${parseInt(particle.style.width) * 0.8}px`;
+          particle.style.transform = `rotate(${Math.random() * 360}deg)`;
+        }
+        else if (type === 'embers') {
+          // Ember particle
+          particle.classList.add('ambient-effects__particle--ember');
+          particle.style.left = `${Math.random() * 100}%`;
+          particle.style.bottom = `-${10 + Math.random() * 10}px`;
+          particle.style.animationDelay = `${Math.random() * 10}s`;
+          particle.style.animationDuration = `${3 + Math.random() * 6}s`;
+          particle.style.opacity = `${0.1 + Math.random() * 0.6}`;
+          particle.style.width = `${2 + Math.random() * 3}px`;
+          particle.style.height = particle.style.width;
+        }
+        else if (type === 'stardust') {
+          // Stardust particle
+          particle.classList.add('ambient-effects__particle--stardust');
+          particle.style.left = `${Math.random() * 100}%`;
+          particle.style.top = `${Math.random() * 100}%`;
+          particle.style.animationDelay = `${Math.random() * 10}s`;
+          particle.style.animationDuration = `${4 + Math.random() * 8}s`;
+          particle.style.opacity = `${0.1 + Math.random() * 0.6}`;
+          particle.style.width = `${1 + Math.random() * 3}px`;
+          particle.style.height = particle.style.width;
+        }
+
+        container.appendChild(particle);
+      }
+    }
+
+    // Initialize with current theme
+    updateThemeEffects();
+
+    // Update on theme change
+    window.addEventListener('themeChanged', updateThemeEffects);
+
+    // Update on resize (for responsive behavior)
+    window.addEventListener('resize', () => {
+      if (container.dataset.disableMobile === 'true') {
+        if (window.innerWidth < 768) {
+          container.style.display = 'none';
+        } else {
+          container.style.display = 'block';
+          updateThemeEffects();
+        }
+      }
+    });
+  });
+</script>
+
+<style>
+  .ambient-effects {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: var(--z-below, -1);
+    overflow: hidden;
+  }
+
+  .ambient-effects__container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .ambient-effects__layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .ambient-effects__noise {
+    background-size: 200px 200px;
+    opacity: 0.1;
+    mix-blend-mode: overlay;
+  }
+
+  .ambient-effects__overlay {
+    background-size: cover;
+    background-position: center;
+  }
+
+  /* Particles - Snowfall */
+  .ambient-effects__particles--snowfall .ambient-effects__particle--snow {
+    position: absolute;
+    background-color: white;
+    border-radius: 50%;
+    filter: blur(1px);
+    animation: snowfall linear infinite;
+  }
+
+  @keyframes snowfall {
+    0% {
+      transform: translateY(-10px) rotate(0deg);
+      opacity: 0;
+    }
+    20% {
+      opacity: var(--particle-opacity, 0.7);
+    }
+    100% {
+      transform: translateY(calc(100vh + 10px)) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  /* Particles - Rainforest */
+  .ambient-effects__particles--rainforest .ambient-effects__particle--leaf {
+    position: absolute;
+    background-color: #4caf50;
+    border-radius: 40% 70% 60% 30% / 30% 30% 70% 70%;
+    filter: blur(0.5px);
+    animation: rainforest linear infinite;
+  }
+
+  @keyframes rainforest {
+    0% {
+      transform: translateY(-10px) rotate(0deg);
+      opacity: 0;
+    }
+    20% {
+      opacity: var(--particle-opacity, 0.5);
+    }
+    100% {
+      transform: translateY(calc(100vh + 10px)) translateX(100px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  /* Particles - Embers */
+  .ambient-effects__particles--embers .ambient-effects__particle--ember {
+    position: absolute;
+    background-color: #ff6e40;
+    box-shadow: 0 0 4px #ff6e40;
+    border-radius: 50%;
+    filter: blur(0.5px);
+    animation: embers ease-out infinite;
+  }
+
+  @keyframes embers {
+    0% {
+      transform: translateY(0) translateX(0);
+      opacity: 0;
+    }
+    20% {
+      opacity: var(--particle-opacity, 0.6);
+    }
+    100% {
+      transform: translateY(-100px) translateX(calc(30px - 60px * var(--random, 0.5)));
+      opacity: 0;
+    }
+  }
+
+  /* Particles - Stardust */
+  .ambient-effects__particles--stardust .ambient-effects__particle--stardust {
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 0 4px rgba(186, 104, 200, 0.8);
+    border-radius: 50%;
+    filter: blur(0.5px);
+    animation: stardust ease-in-out infinite;
+  }
+
+  @keyframes stardust {
+    0% {
+      transform: scale(0) rotate(0deg);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.5) rotate(180deg);
+      opacity: var(--particle-opacity, 0.6);
+    }
+    100% {
+      transform: scale(0) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .ambient-effects {
+      display: none;
+    }
+  }
+</style>

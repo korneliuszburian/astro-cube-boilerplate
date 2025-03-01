@@ -1,0 +1,189 @@
+---
+/**
+ * StackMotion.astro
+ * A component that creates a 3D stacked effect when scrolling
+ * through a collection of items.
+ */
+
+ interface Props {
+  id?: string;
+  class?: string;
+  itemSelector?: string; // CSS selector for stack items
+  perspective?: number; // Perspective value in pixels
+  maxTilt?: number; // Maximum tilt angle in degrees
+  transitionSpeed?: number; // Transition speed in ms
+}
+
+const {
+  id = 'stack-motion-' + Math.random().toString(36).substring(2, 9),
+  class: className = '',
+  itemSelector = '.stack__item',
+  perspective = 1000,
+  maxTilt = 5,
+  transitionSpeed = 300,
+} = Astro.props;
+---
+
+<div id={id} class:list={["stack-container", className]}>
+  <div class="stack-container__content">
+    <slot />
+  </div>
+</div>
+
+<script define:vars={{ id, itemSelector, perspective, maxTilt, transitionSpeed }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById(id);
+    if (!container) return;
+
+    const items = container.querySelectorAll(itemSelector);
+    if (!items.length) return;
+
+    // Set stack container perspective
+    container.style.perspective = `${perspective}px`;
+
+    // Set initial styles on items
+    items.forEach((item, index) => {
+      item.style.transition = `transform ${transitionSpeed}ms ease`;
+      item.dataset.stackIndex = index.toString();
+      item.style.zIndex = (items.length - index).toString();
+    });
+
+    // Track scroll position for calculations
+    let lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    let ticking = false;
+
+    function updateStackEffect() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollDirection = scrollTop > lastScrollTop ? 'down' : 'up';
+      const scrollDelta = Math.abs(scrollTop - lastScrollTop);
+      const scrollFactor = Math.min(scrollDelta / 100, 1); // Normalize scroll amount
+
+      items.forEach((item) => {
+        const index = parseInt(item.dataset.stackIndex);
+        const depthFactor = index * 0.15; // Deeper items move more
+
+        // Calculate transform based on scroll direction and depth
+        let rotateX = 0;
+        let translateZ = 0;
+        let translateY = 0;
+
+        if (scrollDirection === 'down') {
+          rotateX = -maxTilt * scrollFactor * depthFactor;
+          translateZ = -30 * scrollFactor * depthFactor;
+          translateY = 20 * scrollFactor * depthFactor;
+        } else {
+          rotateX = maxTilt * scrollFactor * depthFactor;
+          translateZ = -30 * scrollFactor * depthFactor;
+          translateY = -20 * scrollFactor * depthFactor;
+        }
+
+        // Apply the transform with easing
+        item.style.transform = `
+          rotateX(${rotateX}deg)
+          translateZ(${translateZ}px)
+          translateY(${translateY}px)
+        `;
+      });
+
+      lastScrollTop = scrollTop;
+      ticking = false;
+    }
+
+    // Handle scroll events with requestAnimationFrame for performance
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateStackEffect();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+
+    // Initialize
+    updateStackEffect();
+
+    // Handle resize events
+    window.addEventListener('resize', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateStackEffect();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+
+    // Reset on page leave to avoid visual glitches
+    window.addEventListener('beforeunload', () => {
+      items.forEach((item) => {
+        item.style.transform = 'none';
+      });
+    });
+
+    // Handle mouse movement for additional effect when not scrolling
+    container.addEventListener('mousemove', (e) => {
+      if (window.innerWidth < 768) return; // Skip on mobile
+
+      const containerRect = container.getBoundingClientRect();
+      const centerX = containerRect.width / 2;
+      const centerY = containerRect.height / 2;
+
+      const mouseX = e.clientX - containerRect.left;
+      const mouseY = e.clientY - containerRect.top;
+
+      // Calculate normalized position (-1 to 1 range)
+      const normalizedX = (mouseX - centerX) / centerX;
+      const normalizedY = (mouseY - centerY) / centerY;
+
+      items.forEach((item) => {
+        const index = parseInt(item.dataset.stackIndex);
+        const depthFactor = index * 0.05; // Subtle effect
+
+        // Get the current transform
+        const currentTransform = item.style.transform;
+
+        // Add mouse movement effect to existing transform
+        item.style.transform = `${currentTransform}
+          rotateY(${normalizedX * depthFactor * maxTilt}deg)
+          rotateX(${-normalizedY * depthFactor * maxTilt}deg)
+        `;
+      });
+    });
+
+    // Reset mouse effect when leaving container
+    container.addEventListener('mouseleave', () => {
+      updateStackEffect(); // Reset to scroll-based transforms
+    });
+  });
+</script>
+
+<style>
+  .stack-container {
+    position: relative;
+    width: 100%;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+  }
+
+  .stack-container__content {
+    width: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+  }
+
+  /* Default item styling - can be overridden */
+  :global(.stack__item) {
+    transform-style: preserve-3d;
+    transition: transform var(--transition-standard, 300ms ease);
+    will-change: transform;
+  }
+
+  /* Responsive adjustments */
+  @media (prefers-reduced-motion: reduce) {
+    :global(.stack__item) {
+      transition: none !important;
+      transform: none !important;
+    }
+  }
+</style>

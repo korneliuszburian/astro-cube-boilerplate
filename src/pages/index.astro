@@ -1,18 +1,1816 @@
 ---
-import Layout from "../layouts/Layout.astro";
+/**
+ * index.astro
+ * A game-like main page that creates an immersive shopping experience with
+ * parallax scrolling, interactive elements, and rarity-based product displays.
+ */
+ import GameLayout from '../layouts/GameLayout.astro';
+import ParallaxHero from '../components/ParallaxHero.astro';
+import ProductGrid from '../components/ProductGrid.astro';
+import ThemeSwitcher from '../components/ThemeSwitcher.astro';
+import ItemCard from '../components/ItemCard.astro';
+import CardPackOpener from '../components/CardPackOpener.astro';
+
+// Example product data
+const featuredProducts = [
+  {
+    id: 'obsidian-hoodie',
+    title: 'Obsidian Stealth Hoodie',
+    price: 89.99,
+    image: '/img/products/obsidian-hoodie.jpg',
+    rarity: 'rare',
+    category: 'hoodies',
+    description: 'Engineered for the urban explorer. This hoodie adapts to your environment.',
+    stats: {
+      comfort: 85,
+      durability: 92,
+      style: 88,
+      uniqueness: 74
+    }
+  },
+  {
+    id: 'frost-tee',
+    title: 'Frost Tech Tee',
+    price: 49.99,
+    image: '/img/products/frost-tee.jpg',
+    rarity: 'common',
+    category: 'shirts',
+    description: 'Breathable performance fabric with cooling technology.',
+    stats: {
+      comfort: 90,
+      durability: 75,
+      style: 70,
+      uniqueness: 65
+    }
+  },
+  {
+    id: 'mystic-cargo',
+    title: 'Mystic Cargo Pants',
+    price: 119.99,
+    image: '/img/products/mystic-cargo.jpg',
+    rarity: 'mystic',
+    category: 'pants',
+    description: 'Multi-pocket design with hidden compartments and water-resistant fabric.',
+    stats: {
+      comfort: 82,
+      durability: 95,
+      style: 85,
+      uniqueness: 88
+    }
+  },
+  {
+    id: 'nova-jacket',
+    title: 'Nova Expedition Jacket',
+    price: 299.99,
+    image: '/img/products/nova-jacket.jpg',
+    rarity: 'legendary',
+    category: 'outerwear',
+    description: 'Our most advanced technical jacket for extreme conditions.',
+    stats: {
+      comfort: 88,
+      durability: 98,
+      style: 93,
+      uniqueness: 96
+    }
+  },
+  {
+    id: 'shadow-beanie',
+    title: 'Shadow Beanie',
+    price: 34.99,
+    image: '/img/products/shadow-beanie.jpg',
+    rarity: 'common',
+    category: 'accessories',
+    description: 'Lightweight yet warm headwear for everyday use.',
+    stats: {
+      comfort: 87,
+      durability: 80,
+      style: 75,
+      uniqueness: 60
+    }
+  },
+  {
+    id: 'echo-backpack',
+    title: 'Echo Tactical Backpack',
+    price: 149.99,
+    image: '/img/products/echo-backpack.jpg',
+    rarity: 'rare',
+    category: 'accessories',
+    description: 'Modular storage system with reinforced construction.',
+    stats: {
+      comfort: 78,
+      durability: 94,
+      style: 85,
+      uniqueness: 80
+    }
+  }
+];
+
+// More diverse products for different sections
+const newArrivals = [
+  {
+    id: 'quantum-vest',
+    title: 'Quantum Utility Vest',
+    price: 179.99,
+    image: '/img/products/quantum-vest.jpg',
+    rarity: 'mystic',
+    category: 'outerwear',
+    description: 'Futuristic vest with integrated smart features and adaptable compartments.',
+    stats: {
+      comfort: 82,
+      durability: 90,
+      style: 95,
+      uniqueness: 89
+    }
+  },
+  {
+    id: 'aurora-boots',
+    title: 'Aurora Tactical Boots',
+    price: 225.99,
+    image: '/img/products/aurora-boots.jpg',
+    rarity: 'rare',
+    category: 'footwear',
+    description: 'All-terrain boots with advanced suspension and weather protection.',
+    stats: {
+      comfort: 88,
+      durability: 96,
+      style: 82,
+      uniqueness: 78
+    }
+  },
+  {
+    id: 'nebula-gloves',
+    title: 'Nebula Tech Gloves',
+    price: 64.99,
+    image: '/img/products/nebula-gloves.jpg',
+    rarity: 'common',
+    category: 'accessories',
+    description: 'Touchscreen compatible gloves with thermal regulation.',
+    stats: {
+      comfort: 90,
+      durability: 82,
+      style: 75,
+      uniqueness: 70
+    }
+  }
+];
+
+// Legendary collection
+const legendaryCollection = [
+  {
+    id: 'phoenix-jacket',
+    title: 'Phoenix Ascendant Jacket',
+    price: 499.99,
+    image: '/img/products/phoenix-jacket.jpg',
+    rarity: 'legendary',
+    category: 'outerwear',
+    description: 'A masterpiece of engineering. Only 50 ever produced.',
+    stats: {
+      comfort: 94,
+      durability: 98,
+      style: 99,
+      uniqueness: 99
+    }
+  },
+  {
+    id: 'chrono-watch',
+    title: 'Chrono Void Timepiece',
+    price: 349.99,
+    image: '/img/products/chrono-watch.jpg',
+    rarity: 'legendary',
+    category: 'accessories',
+    description: 'Limited edition watch with custom movement and exotic materials.',
+    stats: {
+      comfort: 92,
+      durability: 97,
+      style: 98,
+      uniqueness: 96
+    }
+  }
+];
+
+// Define parallax layers based on different themes
+const getThemeLayers = (theme) => {
+  switch(theme) {
+    case 'iceland':
+      return [
+        {
+          image: '/img/backgrounds/iceland-bg-3.jpg',
+          depth: 0.1,
+          position: 'bottom center'
+        },
+        {
+          image: '/img/backgrounds/iceland-bg-2.jpg',
+          depth: 0.2,
+          opacity: 0.8
+        },
+        {
+          image: '/img/backgrounds/iceland-bg-1.jpg',
+          depth: 0.3,
+          position: 'top center'
+        }
+      ];
+    case 'thailand':
+      return [
+        {
+          image: '/img/backgrounds/thailand-bg-3.jpg',
+          depth: 0.1,
+          position: 'bottom center'
+        },
+        {
+          image: '/img/backgrounds/thailand-bg-2.jpg',
+          depth: 0.2,
+          opacity: 0.8
+        },
+        {
+          image: '/img/backgrounds/thailand-bg-1.jpg',
+          depth: 0.3,
+          position: 'top center'
+        }
+      ];
+    case 'berlin':
+      return [
+        {
+          image: '/img/backgrounds/berlin-bg-3.jpg',
+          depth: 0.1,
+          position: 'bottom center'
+        },
+        {
+          image: '/img/backgrounds/berlin-bg-2.jpg',
+          depth: 0.2,
+          opacity: 0.8
+        },
+        {
+          image: '/img/backgrounds/berlin-bg-1.jpg',
+          depth: 0.3,
+          position: 'top center'
+        }
+      ];
+    case 'spain':
+      return [
+        {
+          image: '/img/backgrounds/spain-bg-3.jpg',
+          depth: 0.1,
+          position: 'bottom center'
+        },
+        {
+          image: '/img/backgrounds/spain-bg-2.jpg',
+          depth: 0.2,
+          opacity: 0.8
+        },
+        {
+          image: '/img/backgrounds/spain-bg-1.jpg',
+          depth: 0.3,
+          position: 'top center'
+        }
+      ];
+    default:
+      return getThemeLayers('iceland');
+  }
+};
+
+// Get initial theme for server-side rendering
+const initialTheme = 'iceland';
+const heroLayers = getThemeLayers(initialTheme);
+
+// Flag to show card pack opener (this would normally be controlled by an API)
+const showPackOpener = false;
 ---
 
-<Layout title="Welcome to Astro.">
-  <article class="wrapper flow">
-    <h1>CUBE CSS core setup</h1>
-    <div class="switcher">
-      <h2 class="text-primary">A heading and paragraph in two columns</h2>
-      <p>
-        Donec sed odio dui. Donec sed odio dui. Vivamus sagittis lacus vel augue
-        laoreet rutrum faucibus dolor auctor. Vivamus sagittis lacus vel augue
-        laoreet rutrum faucibus dolor auctor. Praesent commodo cursus magna, vel
-        scelerisque nisl consectetur et.
-      </p>
+<GameLayout
+  title="VOYAGER - Game-Like Shopping Experience"
+  initialTheme={initialTheme}
+  activeSection="home"
+>
+  <!-- Infinite Zoom Hero Section with Parallax -->
+  <div class="infinite-zoom-container">
+    <div class="infinite-zoom-viewport">
+      <div class="infinite-zoom-object" id="infinite-zoom-level-1">
+        <ParallaxHero
+          title="START YOUR ADVENTURE"
+          subtitle="Collect rare items, upgrade your style, and explore our themed destinations"
+          ctaText="Discover Gear"
+          ctaLink="#featured-items"
+          layers={heroLayers}
+          height="100%"
+          overlayOpacity={0.3}
+        />
+      </div>
+
+      <div class="infinite-zoom-object" id="infinite-zoom-level-2">
+        <div class="legendary-spotlight">
+          <div class="legendary-spotlight__glow"></div>
+          <div class="legendary-spotlight__content">
+            <h2 class="legendary-spotlight__title">LEGENDARY ITEMS</h2>
+            <p class="legendary-spotlight__subtitle">Ultra-rare collector's pieces with exceptional quality</p>
+            <div class="legendary-spotlight__items">
+              {legendaryCollection.map(product => (
+                <div class="legendary-spotlight__item">
+                  <ItemCard
+                    id={product.id}
+                    title={product.title}
+                    price={product.price}
+                    image={product.image}
+                    rarity={product.rarity}
+                    description={product.description}
+                    stats={product.stats}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="infinite-zoom-object" id="infinite-zoom-level-3">
+        <!-- Featured Items section with 3D Stack Effect -->
+        <section id="featured-items" class="game-section featured-items">
+          <div class="game-section__header">
+            <div class="game-section__title-container">
+              <h2 class="game-section__title">Featured Items</h2>
+              <div class="game-section__title-decoration"></div>
+            </div>
+            <p class="game-section__subtitle">Discover our collection of high-quality items with various rarity levels</p>
+          </div>
+
+          <ProductGrid
+            products={featuredProducts}
+            title=""
+            useStackMotion={true}
+            showFilters={true}
+          />
+        </section>
+      </div>
     </div>
-  </article>
-</Layout>
+  </div>
+
+  <!-- Mission Board / Daily Quests Section -->
+  <section class="game-section missions-section">
+    <div class="game-section__header">
+      <div class="game-section__title-container">
+        <h2 class="game-section__title">Daily Quests</h2>
+        <div class="game-section__title-decoration"></div>
+      </div>
+      <p class="game-section__subtitle">Complete challenges to earn rewards and discounts</p>
+    </div>
+
+    <div class="missions-board">
+      <div class="mission-card" data-difficulty="easy">
+        <div class="mission-card__header">
+          <div class="mission-card__icon">📱</div>
+          <div class="mission-card__difficulty">Easy</div>
+        </div>
+        <h3 class="mission-card__title">Social Share</h3>
+        <p class="mission-card__description">Share any product on social media to earn points</p>
+        <div class="mission-card__rewards">
+          <div class="mission-card__reward">
+            <span class="mission-card__reward-icon">💎</span>
+            <span class="mission-card__reward-value">50</span>
+          </div>
+          <div class="mission-card__reward">
+            <span class="mission-card__reward-icon">🏆</span>
+            <span class="mission-card__reward-value">100 XP</span>
+          </div>
+        </div>
+        <button class="mission-card__button">Start Quest</button>
+      </div>
+
+      <div class="mission-card" data-difficulty="medium">
+        <div class="mission-card__header">
+          <div class="mission-card__icon">📝</div>
+          <div class="mission-card__difficulty">Medium</div>
+        </div>
+        <h3 class="mission-card__title">Product Review</h3>
+        <p class="mission-card__description">Write a review for any item you've purchased</p>
+        <div class="mission-card__rewards">
+          <div class="mission-card__reward">
+            <span class="mission-card__reward-icon">💎</span>
+            <span class="mission-card__reward-value">200</span>
+          </div>
+          <div class="mission-card__reward">
+            <span class="mission-card__reward-icon">🏆</span>
+            <span class="mission-card__reward-value">300 XP</span>
+          </div>
+        </div>
+        <button class="mission-card__button">Start Quest</button>
+      </div>
+
+      <div class="mission-card" data-difficulty="hard">
+        <div class="mission-card__header">
+          <div class="mission-card__icon">📸</div>
+          <div class="mission-card__difficulty">Hard</div>
+        </div>
+        <h3 class="mission-card__title">Style Challenge</h3>
+        <p class="mission-card__description">Upload a photo of your complete Voyager outfit</p>
+        <div class="mission-card__rewards">
+          <div class="mission-card__reward">
+            <span class="mission-card__reward-icon">💎</span>
+            <span class="mission-card__reward-value">500</span>
+          </div>
+          <div class="mission-card__reward">
+            <span class="mission-card__reward-icon">🏆</span>
+            <span class="mission-card__reward-value">750 XP</span>
+          </div>
+          <div class="mission-card__reward">
+            <span class="mission-card__reward-icon">🎁</span>
+            <span class="mission-card__reward-value">Mystery Item</span>
+          </div>
+        </div>
+        <button class="mission-card__button">Start Quest</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- New Arrivals Carousel -->
+  <section class="game-section new-arrivals">
+    <div class="game-section__header">
+      <div class="game-section__title-container">
+        <h2 class="game-section__title">New Arrivals</h2>
+        <div class="game-section__title-decoration"></div>
+      </div>
+      <p class="game-section__subtitle">Just dropped into the world of Voyager</p>
+    </div>
+
+    <div class="carousel">
+      <div class="carousel__track">
+        {newArrivals.map(product => (
+          <div class="carousel__item">
+            <ItemCard
+              id={product.id}
+              title={product.title}
+              price={product.price}
+              image={product.image}
+              rarity={product.rarity}
+              description={product.description}
+              stats={product.stats}
+            />
+          </div>
+        ))}
+      </div>
+      <button class="carousel__control carousel__control--prev" aria-label="Previous">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <button class="carousel__control carousel__control--next" aria-label="Next">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- Rarity System Explanation -->
+  <section class="game-section rarity-section">
+    <div class="game-section__header">
+      <div class="game-section__title-container">
+        <h2 class="game-section__title">Rarity System</h2>
+        <div class="game-section__title-decoration"></div>
+      </div>
+      <p class="game-section__subtitle">Collect items of increasing rarity for unique benefits</p>
+    </div>
+
+    <div class="rarity-cards">
+      <div class="rarity-card rarity-card--common">
+        <div class="rarity-card__glow"></div>
+        <div class="rarity-card__orb">
+          <div class="rarity-card__orb-inner"></div>
+          <div class="rarity-card__orb-ring"></div>
+        </div>
+        <h3 class="rarity-card__title">Common</h3>
+        <div class="rarity-card__bar">
+          <div class="rarity-card__fill" style="width: 80%"></div>
+          <span class="rarity-card__value">80%</span>
+        </div>
+        <p class="rarity-card__description">Quality essentials with reliable construction and performance.</p>
+        <div class="rarity-card__traits">
+          <div class="rarity-card__trait">
+            <span class="rarity-card__trait-name">Availability</span>
+            <div class="rarity-card__trait-bar">
+              <div class="rarity-card__trait-fill" style="width: 80%"></div>
+            </div>
+          </div>
+          <div class="rarity-card__trait">
+            <span class="rarity-card__trait-name">Durability</span>
+            <div class="rarity-card__trait-bar">
+              <div class="rarity-card__trait-fill" style="width: 70%"></div>
+            </div>
+          </div>
+          <div class="rarity-card__trait">
+            <span class="rarity-card__trait-name">Uniqueness</span>
+            <div class="rarity-card__trait-bar">
+              <div class="rarity-card__trait-fill" style="width: 40%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rarity-card rarity-card--rare">
+        <div class="rarity-card__glow"></div>
+        <div class="rarity-card__orb">
+          <div class="rarity-card__orb-inner"></div>
+          <div class="rarity-card__orb-ring"></div>
+        </div>
+        <h3 class="rarity-card__title">Rare</h3>
+        <div class="rarity-card__bar">
+          <div class="rarity-card__fill" style="width: 50%"></div>
+          <span class="rarity-card__value">50%</span>
+        </div>
+        <p class="rarity-card__description">Limited production runs with enhanced features and premium details.</p>
+        <div class="rarity-card__traits">
+          <div class="rarity-card__trait">
+            <span class="rarity-card__trait-name">Availability</span>
+            <div class="rarity-card__trait-bar">
+              <div class="rarity-card__trait-fill" style="width: 50%"></div>
+            </div>
+          </div>
+          <div class="rarity-card__trait">
+            <span class="rarity-card__trait-name">Durability</span>
+            <div class="rarity-card__trait-bar">
+              <div class="rarity-card__trait-fill" style="width: 85%"></div>
+            </div>
+          </div>
+          <div class="rarity-card__trait">
+            <span class="rarity-card__trait-name">Uniqueness</span>
+            <div class="rarity-card__trait-bar">
+              <div class="rarity-card__trait-fill" style="width: 65%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rarity-card rarity-card--mystic">
+        <div class="rarity-card__glow"></div>
+        <div class="rarity-card__orb">
+          <div class="rarity-card__orb-inner"></div>
+          <div class="rarity-card__orb-ring"></div>
+        </div>
+        <h3 class="rarity-card__title">Mystic</h3>
+        <div class="rarity-card__bar">
+          <div class="rarity-card__fill" style="width: 25%"></div>
+          <span class="rarity-card__value">25%</span>
+        </div>
+        <p class="rarity-card__description">Exclusive designs with advanced technology and superior craftsmanship.</p>
+        <div class="rarity-card__traits">
+          <div class="rarity-card__trait">
+            <span class="rarity-card__trait-name">Availability</span>
+            <div class="rarity-card__trait-bar">
+              <div class="rarity-card__trait-fill" style="width: 25%"></div>
+            </div>
+          </div>
+          <div class="rarity-card__trait">
+            <span class="rarity-card__trait-name">Durability</span>
+            <div class="rarity-card__trait-bar">
+              <div class="rarity-card__trait-fill" style="width: 90%"></div>
+            </div>
+          </div>
+          <div class="rarity-card__trait">
+            <span class="rarity-card__trait-name">Uniqueness</span>
+            <div class="rarity-card__trait-bar">
+              <div class="rarity-card__trait-fill" style="width: 85%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rarity-card rarity-card--legendary">
+        <div class="rarity-card__glow"></div>
+        <div class="rarity-card__orb">
+          <div class="rarity-card__orb-inner"></div>
+          <div class="rarity-card__orb-ring"></div>
+        </div>
+        <h3 class="rarity-card__title">Legendary</h3>
+        <div class="rarity-card__bar">
+          <div class="rarity-card__fill" style="width: 5%"></div>
+          <span class="rarity-card__value">5%</span>
+        </div>
+        <p class="rarity-card__description">Ultra-rare collector's items with unique features and exceptional quality.</p>
+        <div class="rarity-card__traits">
+          <div class="rarity-card__trait">
+            <span class="rarity-card__trait-name">Availability</span>
+            <div class="rarity-card__trait-bar">
+              <div class="rarity-card__trait-fill" style="width: 5%"></div>
+            </div>
+          </div>
+          <div class="rarity-card__trait">
+            <span class="rarity-card__trait-name">Durability</span>
+            <div class="rarity-card__trait-bar">
+              <div class="rarity-card__trait-fill" style="width: 98%"></div>
+            </div>
+          </div>
+          <div class="rarity-card__trait">
+            <span class="rarity-card__trait-name">Uniqueness</span>
+            <div class="rarity-card__trait-bar">
+              <div class="rarity-card__trait-fill" style="width: 97%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mystery Packs Promotion -->
+  <section class="game-section mystery-packs">
+    <div class="game-section__header">
+      <div class="game-section__title-container">
+        <h2 class="game-section__title">Mystery Packs</h2>
+        <div class="game-section__title-decoration"></div>
+      </div>
+      <p class="game-section__subtitle">Take a chance on exclusive items with guaranteed rarities</p>
+    </div>
+
+    <div class="mystery-packs__content">
+      <div class="mystery-packs__image">
+        <img src="/img/mystery-pack.jpg" alt="Mystery Pack" />
+        <div class="mystery-packs__effects">
+          <div class="mystery-packs__glow"></div>
+          <div class="mystery-packs__particles"></div>
+        </div>
+      </div>
+
+      <div class="mystery-packs__info">
+        <h3 class="mystery-packs__title">COLLECTOR'S EDITION</h3>
+        <ul class="mystery-packs__features">
+          <li class="mystery-packs__feature">
+            <span class="mystery-packs__feature-icon">✓</span>
+            <span class="mystery-packs__feature-text">Contains 3-5 random items</span>
+          </li>
+          <li class="mystery-packs__feature">
+            <span class="mystery-packs__feature-icon">✓</span>
+            <span class="mystery-packs__feature-text">Guaranteed at least one Rare item</span>
+          </li>
+          <li class="mystery-packs__feature">
+            <span class="mystery-packs__feature-icon">✓</span>
+            <span class="mystery-packs__feature-text">25% chance for Mystic item</span>
+          </li>
+          <li class="mystery-packs__feature">
+            <span class="mystery-packs__feature-icon">✓</span>
+            <span class="mystery-packs__feature-text">5% chance for Legendary item</span>
+          </li>
+          <li class="mystery-packs__feature">
+            <span class="mystery-packs__feature-icon">✓</span>
+            <span class="mystery-packs__feature-text">Exclusive items only available in packs</span>
+          </li>
+        </ul>
+
+        <div class="mystery-packs__price">
+          <div class="mystery-packs__original-price">$299.99</div>
+          <div class="mystery-packs__current-price">$249.99</div>
+        </div>
+
+        <button id="show-pack-button" class="mystery-packs__button">Open Sample Pack</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Conditionally show pack opener -->
+  {showPackOpener && (
+    <CardPackOpener
+      packName="Sample Mystery Pack"
+      packImage="/img/mystery-pack.jpg"
+      products={featuredProducts.slice(0, 3)}
+      onOpenCallback="handlePackOpen"
+    />
+  )}
+</GameLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Infinite zoom scroll effect
+    const setupInfiniteZoom = () => {
+      const container = document.querySelector('.infinite-zoom-container');
+      const viewport = document.querySelector('.infinite-zoom-viewport');
+      const zoomLevels = document.querySelectorAll('.infinite-zoom-object');
+      const totalLevels = zoomLevels.length;
+
+      if (!container || !viewport || zoomLevels.length === 0) return;
+
+      // Initial state
+      let currentLevel = 0;
+      let scrollProgress = 0;
+      let isTransitioning = false;
+
+      // Set initial position for each level
+      zoomLevels.forEach((level, index) => {
+        if (index === 0) {
+          level.style.opacity = '1';
+          level.style.transform = 'scale(1) translateZ(0)';
+        } else {
+          level.style.opacity = '0';
+          level.style.transform = 'scale(0.5) translateZ(-1000px)';
+        }
+      });
+
+      // Handle scroll events
+      const handleScroll = () => {
+        if (isTransitioning) return;
+
+        const containerRect = container.getBoundingClientRect();
+        const containerHeight = containerRect.height;
+        const viewportScrollTop = window.pageYOffset;
+
+        // Check if container is in view
+        if (containerRect.bottom < 0 || containerRect.top > window.innerHeight) {
+          return;
+        }
+
+        // Calculate scroll progress within the container
+        const scrollOffset = Math.max(0, Math.min(containerHeight, viewportScrollTop - containerRect.top + window.innerHeight / 2));
+        scrollProgress = scrollOffset / containerHeight;
+
+        // Determine which level we should be at
+        const targetLevel = Math.min(totalLevels - 1, Math.floor(scrollProgress * totalLevels));
+
+        // Calculate progress within the current level
+        const levelProgress = (scrollProgress * totalLevels) % 1;
+
+        // If we need to change level and not currently transitioning
+        if (targetLevel !== currentLevel) {
+          isTransitioning = true;
+
+          // Fade out current level
+          zoomLevels[currentLevel].style.opacity = '0';
+          zoomLevels[currentLevel].style.transform = 'scale(2) translateZ(1000px)';
+
+          // Fade in next level
+          zoomLevels[targetLevel].style.opacity = '1';
+          zoomLevels[targetLevel].style.transform = 'scale(1) translateZ(0)';
+
+          // After transition completes, update current level
+          setTimeout(() => {
+            currentLevel = targetLevel;
+            isTransitioning = false;
+          }, 1000);
+        }
+        // Animate within the current level
+        else {
+          // Apply subtle scaling effect based on level progress
+          const scale = 1 + (levelProgress * 0.2);
+          zoomLevels[currentLevel].style.transform = `scale(${scale}) translateZ(${levelProgress * 200}px)`;
+        }
+      };
+
+      // Listen for scroll events
+      window.addEventListener('scroll', handleScroll, { passive: true });
+
+      // Initial positioning
+      handleScroll();
+    };
+
+    // Carousel functionality
+    const setupCarousel = () => {
+      const carousel = document.querySelector('.carousel');
+      if (!carousel) return;
+
+      const track = carousel.querySelector('.carousel__track');
+      const items = carousel.querySelectorAll('.carousel__item');
+      const prevBtn = carousel.querySelector('.carousel__control--prev');
+      const nextBtn = carousel.querySelector('.carousel__control--next');
+
+      if (!track || !prevBtn || !nextBtn) return;
+
+      let currentIndex = 0;
+      const itemCount = items.length;
+      const itemWidth = items[0].offsetWidth;
+      const gap = 20; // Gap between items in pixels
+
+      // Set initial position
+      updateCarouselPosition();
+
+      // Handle click events
+      prevBtn.addEventListener('click', () => {
+        currentIndex = Math.max(0, currentIndex - 1);
+        updateCarouselPosition();
+      });
+
+      nextBtn.addEventListener('click', () => {
+        currentIndex = Math.min(itemCount - 1, currentIndex + 1);
+        updateCarouselPosition();
+      });
+
+      // Update carousel position
+      function updateCarouselPosition() {
+        const offset = currentIndex * (itemWidth + gap);
+        track.style.transform = `translateX(-${offset}px)`;
+
+        // Update button states
+        prevBtn.disabled = currentIndex === 0;
+        nextBtn.disabled = currentIndex === itemCount - 1;
+
+        // Add visual feedback
+        prevBtn.classList.toggle('carousel__control--disabled', currentIndex === 0);
+        nextBtn.classList.toggle('carousel__control--disabled', currentIndex === itemCount - 1);
+      }
+
+      // Handle window resize
+      window.addEventListener('resize', () => {
+        // Recalculate item width
+        const newItemWidth = items[0].offsetWidth;
+        if (newItemWidth !== itemWidth) {
+          itemWidth = newItemWidth;
+          updateCarouselPosition();
+        }
+      });
+    };
+
+    // Mystery pack button
+    const packButton = document.getElementById('show-pack-button');
+    if (packButton) {
+      packButton.addEventListener('click', () => {
+        // Create and inject the card pack opener component
+        const packOpener = document.createElement('div');
+        packOpener.innerHTML = `
+          <div id="dynamic-pack-opener" class="pack-opener">
+            <!-- Loading animation -->
+            <div class="pack-opener__loading">
+              <div class="pack-spinner"></div>
+              <p>Preparing your pack...</p>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(packOpener);
+
+        // Show notification
+        if (typeof window.showNotification === 'function') {
+          window.showNotification('Opening mystery pack...', 'info');
+        }
+
+        // Simulate loading and show the pack opener
+        setTimeout(() => {
+          // In a real app, we would fetch the pack data from an API
+          // For now, we'll just remove our placeholder and trigger a notification
+          document.getElementById('dynamic-pack-opener').remove();
+
+          if (typeof window.showNotification === 'function') {
+            window.showNotification('Pack opening feature will be available in the full version', 'info', 5000);
+          }
+        }, 2000);
+      });
+    }
+
+    // Mission card hover effects
+    const missionCards = document.querySelectorAll('.mission-card');
+    missionCards.forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        // Add active state to card
+        card.classList.add('mission-card--active');
+      });
+
+      card.addEventListener('mouseleave', () => {
+        // Remove active state
+        card.classList.remove('mission-card--active');
+      });
+
+      // Add click handler for mission buttons
+      const button = card.querySelector('.mission-card__button');
+      if (button) {
+        button.addEventListener('click', () => {
+          if (typeof window.showNotification === 'function') {
+            window.showNotification('Quest system will be available in the full version', 'info');
+          }
+        });
+      }
+    });
+
+    // Initialize all components
+    setupInfiniteZoom();
+    setupCarousel();
+  });
+</script>
+
+<style>
+  /* Infinite Zoom Layout */
+  .infinite-zoom-container {
+    height: 300vh; /* Three full viewport heights for scrolling */
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .infinite-zoom-viewport {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    perspective: 1000px;
+    z-index: 1;
+  }
+
+  .infinite-zoom-object {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 1s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Main Game Section Styles */
+  .game-section {
+    padding: var(--space-3xl) var(--space-l);
+    margin-bottom: var(--space-3xl);
+    position: relative;
+  }
+
+  .game-section__header {
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .game-section__title-container {
+    display: inline-block;
+    position: relative;
+    margin-bottom: var(--space-m);
+  }
+
+  .game-section__title {
+    font-size: var(--size-step-3);
+    color: var(--theme-text-primary);
+    font-family: var(--font-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 0 10px rgba(var(--theme-primary-rgb), 0.5);
+  }
+
+  .game-section__title-decoration {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 3px;
+    width: 60%;
+    background-color: var(--theme-primary);
+    transition: width 0.3s ease;
+    z-index: 0;
+    border-radius: 2px;
+    box-shadow: 0 0 10px var(--theme-primary);
+  }
+
+  .game-section__title-container:hover .game-section__title-decoration {
+    width: 100%;
+  }
+
+  .game-section__subtitle {
+    color: var(--theme-text-secondary);
+    font-family: var(--font-secondary);
+    font-size: var(--size-step-0);
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Legendary Spotlight */
+  .legendary-spotlight {
+    padding: var(--space-2xl);
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: var(--radius-lg);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 213, 79, 0.3);
+    box-shadow: 0 0 30px rgba(255, 213, 79, 0.3);
+  }
+
+  .legendary-spotlight__glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(255, 213, 79, 0.3) 0%,
+      rgba(255, 213, 79, 0.1) 40%,
+      transparent 70%
+    );
+    animation: rotate 20s linear infinite;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .legendary-spotlight__content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+
+  .legendary-spotlight__title {
+    font-size: var(--size-step-4);
+    color: var(--color-rarity-legendary);
+    text-shadow: 0 0 10px var(--color-rarity-legendary);
+    margin-bottom: var(--space-m);
+    letter-spacing: 0.1em;
+    animation: pulse 2s infinite alternate;
+  }
+
+  .legendary-spotlight__subtitle {
+    color: var(--theme-text-secondary);
+    margin-bottom: var(--space-xl);
+    font-size: var(--size-step-1);
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .legendary-spotlight__items {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-xl);
+    flex-wrap: wrap;
+  }
+
+  .legendary-spotlight__item {
+    flex: 0 1 350px;
+    transform: scale(1);
+    transition: transform 0.3s ease;
+  }
+
+  .legendary-spotlight__item:hover {
+    transform: scale(1.05);
+  }
+
+  /* Mission Cards */
+  .missions-board {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-xl);
+    margin-top: var(--space-2xl);
+  }
+
+  .mission-card {
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: var(--radius-md);
+    padding: var(--space-l);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mission-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    transition: background-color 0.3s ease;
+  }
+
+  .mission-card[data-difficulty="easy"]::before {
+    background-color: #4caf50;
+  }
+
+  .mission-card[data-difficulty="medium"]::before {
+    background-color: #ff9800;
+  }
+
+  .mission-card[data-difficulty="hard"]::before {
+    background-color: #f44336;
+  }
+
+  .mission-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-s);
+  }
+
+  .mission-card__icon {
+    font-size: 1.5rem;
+    background-color: rgba(0, 0, 0, 0.3);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mission-card__difficulty {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: var(--radius-full);
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  .mission-card[data-difficulty="easy"] .mission-card__difficulty {
+    color: #4caf50;
+  }
+
+  .mission-card[data-difficulty="medium"] .mission-card__difficulty {
+    color: #ff9800;
+  }
+
+  .mission-card[data-difficulty="hard"] .mission-card__difficulty {
+    color: #f44336;
+  }
+
+  .mission-card__title {
+    font-size: var(--size-step-1);
+    margin: var(--space-s) 0;
+    color: var(--theme-text-primary);
+  }
+
+  .mission-card__description {
+    color: var(--theme-text-secondary);
+    margin-bottom: var(--space-l);
+    min-height: 3em;
+  }
+
+  .mission-card__rewards {
+    display: flex;
+    gap: var(--space-s);
+    margin-bottom: var(--space-l);
+    flex-wrap: wrap;
+  }
+
+  .mission-card__reward {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 5px 10px;
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    transition: transform 0.2s ease;
+  }
+
+  .mission-card__reward:hover {
+    transform: translateY(-2px);
+  }
+
+  .mission-card__button {
+    width: 100%;
+    padding: var(--space-s) var(--space-m);
+    background-color: var(--theme-primary);
+    color: var(--theme-text-primary);
+    border: none;
+    border-radius: var(--radius-button);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.9rem;
+  }
+
+  .mission-card__button:hover {
+    background-color: var(--theme-secondary);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  }
+
+  .mission-card--active {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Carousel */
+  .carousel {
+    position: relative;
+    overflow: hidden;
+    padding: var(--space-l) 0;
+  }
+
+  .carousel__track {
+    display: flex;
+    gap: var(--space-xl);
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .carousel__item {
+    flex: 0 0 auto;
+    width: 300px;
+  }
+
+  .carousel__control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+    transition: all 0.2s ease;
+  }
+
+  .carousel__control:hover {
+    background-color: var(--theme-primary);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  .carousel__control--prev {
+    left: 20px;
+  }
+
+  .carousel__control--next {
+    right: 20px;
+  }
+
+  .carousel__control svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .carousel__control--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Rarity Cards */
+  .rarity-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-xl);
+    margin-top: var(--space-2xl);
+  }
+
+  .rarity-card {
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: var(--radius-md);
+    padding: var(--space-l);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .rarity-card:hover {
+    transform: translateY(-10px);
+  }
+
+  .rarity-card__glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.3;
+    transition: opacity 0.3s ease;
+  }
+
+  .rarity-card:hover .rarity-card__glow {
+    opacity: 0.5;
+  }
+
+  .rarity-card--common .rarity-card__glow {
+    background: radial-gradient(circle at center, var(--color-rarity-common) 0%, transparent 70%);
+  }
+
+  .rarity-card--rare .rarity-card__glow {
+    background: radial-gradient(circle at center, var(--color-rarity-rare) 0%, transparent 70%);
+  }
+
+  .rarity-card--mystic .rarity-card__glow {
+    background: radial-gradient(circle at center, var(--color-rarity-mystic) 0%, transparent 70%);
+  }
+
+  .rarity-card--legendary .rarity-card__glow {
+    background: radial-gradient(circle at center, var(--color-rarity-legendary) 0%, transparent 70%);
+    animation: pulse-glow 3s infinite alternate;
+  }
+
+  .rarity-card__orb {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin-bottom: var(--space-m);
+    z-index: 1;
+  }
+
+  .rarity-card__orb-inner {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    top: 10px;
+    left: 10px;
+    border-radius: 50%;
+    z-index: 1;
+  }
+
+  .rarity-card--common .rarity-card__orb-inner {
+    background: radial-gradient(circle at 30% 30%, white 0%, var(--color-rarity-common) 70%);
+  }
+
+  .rarity-card--rare .rarity-card__orb-inner {
+    background: radial-gradient(circle at 30% 30%, white 0%, var(--color-rarity-rare) 70%);
+  }
+
+  .rarity-card--mystic .rarity-card__orb-inner {
+    background: radial-gradient(circle at 30% 30%, white 0%, var(--color-rarity-mystic) 70%);
+  }
+
+  .rarity-card--legendary .rarity-card__orb-inner {
+    background: radial-gradient(circle at 30% 30%, white 0%, var(--color-rarity-legendary) 70%);
+    animation: pulse 2s infinite alternate;
+  }
+
+  .rarity-card__orb-ring {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    border: 2px solid;
+    opacity: 0.7;
+    z-index: 0;
+  }
+
+  .rarity-card--common .rarity-card__orb-ring {
+    border-color: var(--color-rarity-common);
+  }
+
+  .rarity-card--rare .rarity-card__orb-ring {
+    border-color: var(--color-rarity-rare);
+    box-shadow: 0 0 10px var(--color-rarity-rare);
+  }
+
+  .rarity-card--mystic .rarity-card__orb-ring {
+    border-color: var(--color-rarity-mystic);
+    box-shadow: 0 0 15px var(--color-rarity-mystic);
+  }
+
+  .rarity-card--legendary .rarity-card__orb-ring {
+    border-color: var(--color-rarity-legendary);
+    box-shadow: 0 0 20px var(--color-rarity-legendary);
+    animation: rotate 10s linear infinite;
+  }
+
+  .rarity-card__title {
+    font-size: var(--size-step-2);
+    margin: 0 0 var(--space-s) 0;
+    z-index: 1;
+  }
+
+  .rarity-card--common .rarity-card__title {
+    color: var(--color-rarity-common);
+  }
+
+  .rarity-card--rare .rarity-card__title {
+    color: var(--color-rarity-rare);
+  }
+
+  .rarity-card--mystic .rarity-card__title {
+    color: var(--color-rarity-mystic);
+  }
+
+  .rarity-card--legendary .rarity-card__title {
+    color: var(--color-rarity-legendary);
+    text-shadow: 0 0 10px var(--color-rarity-legendary);
+  }
+
+  .rarity-card__bar {
+    width: 100%;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-full);
+    position: relative;
+    margin-bottom: var(--space-m);
+    z-index: 1;
+  }
+
+  .rarity-card__fill {
+    height: 100%;
+    border-radius: var(--radius-full);
+    position: relative;
+  }
+
+  .rarity-card--common .rarity-card__fill {
+    background-color: var(--color-rarity-common);
+  }
+
+  .rarity-card--rare .rarity-card__fill {
+    background-color: var(--color-rarity-rare);
+  }
+
+  .rarity-card--mystic .rarity-card__fill {
+    background-color: var(--color-rarity-mystic);
+  }
+
+  .rarity-card--legendary .rarity-card__fill {
+    background-color: var(--color-rarity-legendary);
+    background-image: linear-gradient(45deg,
+      rgba(255,255,255,0.3) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(255,255,255,0.3) 50%,
+      rgba(255,255,255,0.3) 75%,
+      transparent 75%,
+      transparent
+    );
+    background-size: 20px 20px;
+    animation: legendaryBarAnimation 1s linear infinite;
+  }
+
+  .rarity-card__value {
+    position: absolute;
+    top: -20px;
+    right: 0;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--theme-text-secondary);
+  }
+
+  .rarity-card__description {
+    color: var(--theme-text-secondary);
+    text-align: center;
+    margin-bottom: var(--space-l);
+    min-height: 4em;
+    z-index: 1;
+  }
+
+  .rarity-card__traits {
+    width: 100%;
+    z-index: 1;
+  }
+
+  .rarity-card__trait {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: var(--space-s);
+  }
+
+  .rarity-card__trait-name {
+    font-size: 0.8rem;
+    color: var(--theme-text-secondary);
+    margin-bottom: 5px;
+  }
+
+  .rarity-card__trait-bar {
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+  }
+
+  .rarity-card__trait-fill {
+    height: 100%;
+    border-radius: var(--radius-full);
+  }
+
+  .rarity-card--common .rarity-card__trait-fill {
+    background-color: var(--color-rarity-common);
+  }
+
+  .rarity-card--rare .rarity-card__trait-fill {
+    background-color: var(--color-rarity-rare);
+  }
+
+  .rarity-card--mystic .rarity-card__trait-fill {
+    background-color: var(--color-rarity-mystic);
+  }
+
+  .rarity-card--legendary .rarity-card__trait-fill {
+    background-color: var(--color-rarity-legendary);
+  }
+
+  /* Mystery Packs Section */
+  .mystery-packs__content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  @media (min-width: 768px) {
+    .mystery-packs__content {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .mystery-packs__image {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    transform: perspective(1000px) rotateY(10deg);
+    transition: transform 0.5s ease;
+  }
+
+  .mystery-packs__image:hover {
+    transform: perspective(1000px) rotateY(0deg) scale(1.05);
+  }
+
+  .mystery-packs__image img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .mystery-packs__effects {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .mystery-packs__glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+      circle at center,
+      rgba(255, 213, 79, 0.3) 0%,
+      transparent 70%
+    );
+    animation: pulse-glow 3s infinite alternate;
+  }
+
+  .mystery-packs__particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(
+      circle at center,
+      rgba(255, 255, 255, 0.8) 0%,
+      rgba(255, 255, 255, 0) 0.5%
+    );
+    background-size: 5% 5%;
+    background-repeat: space;
+    mask-image: radial-gradient(circle at center, transparent 60%, black 70%);
+    animation: sparkle 3s infinite;
+  }
+
+  .mystery-packs__info {
+    padding: var(--space-xl);
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(8px);
+  }
+
+  .mystery-packs__title {
+    font-size: var(--size-step-3);
+    color: var(--color-rarity-legendary);
+    margin-bottom: var(--space-l);
+    text-align: center;
+    text-shadow: 0 0 10px var(--color-rarity-legendary);
+    letter-spacing: 0.1em;
+  }
+
+  .mystery-packs__features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-xl) 0;
+  }
+
+  .mystery-packs__feature {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--space-s);
+    animation: feature-fade-in 0.5s ease forwards;
+    opacity: 0;
+  }
+
+  .mystery-packs__feature:nth-child(1) { animation-delay: 0.1s; }
+  .mystery-packs__feature:nth-child(2) { animation-delay: 0.2s; }
+  .mystery-packs__feature:nth-child(3) { animation-delay: 0.3s; }
+  .mystery-packs__feature:nth-child(4) { animation-delay: 0.4s; }
+  .mystery-packs__feature:nth-child(5) { animation-delay: 0.5s; }
+
+  .mystery-packs__feature-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background-color: var(--color-rarity-legendary);
+    color: black;
+    border-radius: 50%;
+    margin-right: var(--space-s);
+    font-weight: bold;
+    font-size: 0.75rem;
+  }
+
+  .mystery-packs__price {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-m);
+    margin-bottom: var(--space-l);
+  }
+
+  .mystery-packs__original-price {
+    font-size: var(--size-step-1);
+    color: var(--theme-text-secondary);
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+
+  .mystery-packs__current-price {
+    font-size: var(--size-step-2);
+    color: var(--color-rarity-legendary);
+    font-weight: bold;
+    text-shadow: 0 0 10px var(--color-rarity-legendary);
+  }
+
+  .mystery-packs__button {
+    display: block;
+    width: 100%;
+    padding: var(--space-m);
+    background-color: var(--color-rarity-legendary);
+    color: black;
+    border: none;
+    border-radius: var(--radius-button);
+    font-weight: bold;
+    font-size: var(--size-step-1);
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mystery-packs__button::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      to bottom right,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0) 45%,
+      rgba(255, 255, 255, 0.7) 50%,
+      rgba(255, 255, 255, 0) 55%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    transform: rotate(30deg);
+    animation: shineEffect 3s infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .mystery-packs__button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 213, 79, 0.5);
+  }
+
+  /* Pack opener loading */
+  .pack-opener {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pack-opener__loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+
+  .pack-spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba(255, 255, 255, 0.1);
+    border-top-color: var(--color-rarity-legendary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: var(--space-m);
+  }
+
+  /* Animations */
+  @keyframes pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(1.1); opacity: 1; }
+  }
+
+  @keyframes pulse-glow {
+    0% { opacity: 0.2; }
+    100% { opacity: 0.5; }
+  }
+
+  @keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  @keyframes legendaryBarAnimation {
+    0% { background-position: 0 0; }
+    100% { background-position: 20px 0; }
+  }
+
+  @keyframes shineEffect {
+    0% {
+      transform: rotate(30deg) translateX(-100%);
+      opacity: 0;
+    }
+    25% {
+      opacity: 1;
+    }
+    50% {
+      transform: rotate(30deg) translateX(100%);
+      opacity: 0;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes sparkle {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 0.8; }
+  }
+
+  @keyframes feature-fade-in {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .legendary-spotlight__items {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .rarity-cards {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+  }
+
+  /* Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    .infinite-zoom-object {
+      transition: none;
+    }
+
+    .legendary-spotlight__glow {
+      animation: none;
+    }
+
+    .legendary-spotlight__title {
+      animation: none;
+    }
+
+    .rarity-card--legendary .rarity-card__glow,
+    .rarity-card--legendary .rarity-card__orb-inner,
+    .rarity-card--legendary .rarity-card__orb-ring,
+    .rarity-card--legendary .rarity-card__fill {
+      animation: none;
+    }
+
+    .mystery-packs__glow,
+    .mystery-packs__particles {
+      animation: none;
+    }
+
+    .mystery-packs__button::after {
+      animation: none;
+    }
+
+    .pack-spinner {
+      animation: none;
+    }
+
+    .mystery-packs__feature {
+      opacity: 1;
+      animation: none;
+    }
+  }
+</style>

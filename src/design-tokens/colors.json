@@ -1,6 +1,6 @@
 {
   "title": "Colors",
-  "description": "Hex color codes that can be shared, cross-platform. They can be converted at point of usage, such as HSL for web or CMYK for print.",
+  "description": "Core colors and rarity-specific colors for the Voyager Design System",
   "items": [
     {
       "name": "Transparent",
@@ -17,6 +17,38 @@
     {
       "name": "Primary",
       "value": "#02394A"
+    },
+    {
+      "name": "Rarity Common",
+      "value": "#b0bec5"
+    },
+    {
+      "name": "Rarity Rare",
+      "value": "#64b5f6"
+    },
+    {
+      "name": "Rarity Mystic",
+      "value": "#ce93d8"
+    },
+    {
+      "name": "Rarity Legendary",
+      "value": "#ffd54f"
+    },
+    {
+      "name": "Common Glow",
+      "value": "rgba(176, 190, 197, 0.5)"
+    },
+    {
+      "name": "Rare Glow",
+      "value": "rgba(100, 181, 246, 0.6)"
+    },
+    {
+      "name": "Mystic Glow",
+      "value": "rgba(206, 147, 216, 0.7)"
+    },
+    {
+      "name": "Legendary Glow",
+      "value": "rgba(255, 213, 79, 0.8)"
     }
   ]
 }

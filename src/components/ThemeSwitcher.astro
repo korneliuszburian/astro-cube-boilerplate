@@ -1,0 +1,270 @@
+---
+/**
+ * ThemeSwitcher.astro
+ * A component that allows users to switch between different destination themes.
+ * Utilizes ViewTransition API when available with fallbacks for unsupported browsers.
+ */
+
+ interface Theme {
+  id: string;
+  name: string;
+  icon: string;
+  description: string;
+}
+
+interface Props {
+  themes?: Theme[];
+  currentTheme?: string;
+  class?: string;
+  compact?: boolean;
+}
+
+// Default themes
+const defaultThemes: Theme[] = [
+  {
+    id: 'iceland',
+    name: 'Iceland',
+    icon: '❄️',
+    description: 'Cold, icy northern landscapes with blue hues'
+  },
+  {
+    id: 'thailand',
+    name: 'Thailand',
+    icon: '🌴',
+    description: 'Lush tropical rainforest with vibrant greens'
+  },
+  {
+    id: 'berlin',
+    name: 'Berlin',
+    icon: '🔥',
+    description: 'Dark, fiery underground scene with red and black tones'
+  },
+  {
+    id: 'spain',
+    name: 'Spain',
+    icon: '☀️',
+    description: 'Vibrant, colorful Mediterranean setting with purple gradients'
+  }
+];
+
+const {
+  themes = defaultThemes,
+  currentTheme = 'iceland', // Default theme
+  class: className = '',
+  compact = false
+} = Astro.props;
+---
+
+<div class:list={["theme-switcher", className, { "theme-switcher--compact": compact }]}>
+  {!compact && (
+    <div class="theme-switcher__header">
+      <span class="theme-switcher__label">Destination:</span>
+    </div>
+  )}
+
+  <div class="theme-switcher__options">
+    {themes.map((theme) => (
+      <button
+        class:list={[
+          "theme-switcher__option",
+          { "theme-switcher__option--active": theme.id === currentTheme }
+        ]}
+        data-theme={theme.id}
+        aria-label={`Switch to ${theme.name} theme`}
+        title={theme.description}
+      >
+        <span class="theme-switcher__icon">{theme.icon}</span>
+        {!compact && <span class="theme-switcher__name">{theme.name}</span>}
+      </button>
+    ))}
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Detect if View Transitions API is supported
+    const supportsViewTransitions = !!document.startViewTransition;
+
+    // Add a class to enable conditional CSS
+    if (supportsViewTransitions) {
+      document.documentElement.classList.add('supports-view-transitions');
+    }
+
+    // Get all theme buttons
+    const themeButtons = document.querySelectorAll('.theme-switcher__option');
+    const html = document.documentElement;
+
+    // Set initial theme from localStorage or keep the server-rendered one
+    const savedTheme = localStorage.getItem('voyager-theme');
+    if (savedTheme) {
+      html.dataset.theme = savedTheme;
+
+      // Update active button
+      document.querySelectorAll('.theme-switcher__option--active')
+        .forEach(el => el.classList.remove('theme-switcher__option--active'));
+
+      document.querySelectorAll(`.theme-switcher__option[data-theme="${savedTheme}"]`)
+        .forEach(el => el.classList.add('theme-switcher__option--active'));
+    }
+
+    // Handle theme switching
+    themeButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const theme = button.getAttribute('data-theme');
+        if (!theme) return;
+
+        // Don't switch if already on this theme
+        if (html.dataset.theme === theme) return;
+
+        // Remove active class from all buttons
+        document.querySelectorAll('.theme-switcher__option--active')
+          .forEach(el => el.classList.remove('theme-switcher__option--active'));
+
+        // Add active class to clicked button
+        document.querySelectorAll(`.theme-switcher__option[data-theme="${theme}"]`)
+          .forEach(el => el.classList.add('theme-switcher__option--active'));
+
+        // Use View Transitions API if available
+        if (supportsViewTransitions) {
+          document.startViewTransition(() => {
+            html.dataset.theme = theme;
+            localStorage.setItem('voyager-theme', theme);
+
+            // Dispatch custom event for other components to react
+            window.dispatchEvent(new CustomEvent('themeChanged', {
+              detail: { theme }
+            }));
+          });
+        } else {
+          // Fallback for browsers without View Transitions
+          html.dataset.theme = theme;
+          localStorage.setItem('voyager-theme', theme);
+
+          // Dispatch custom event for other components to react
+          window.dispatchEvent(new CustomEvent('themeChanged', {
+            detail: { theme }
+          }));
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  .theme-switcher {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs, 0.5rem);
+    padding: var(--space-s, 0.75rem);
+    background-color: var(--theme-surface, rgba(0, 0, 0, 0.2));
+    border-radius: var(--radius-lg, 0.5rem);
+    backdrop-filter: var(--card-backdrop-filter, blur(8px));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: max-content;
+  }
+
+  .theme-switcher--compact {
+    flex-direction: row;
+    align-items: center;
+    padding: var(--space-xs, 0.5rem);
+  }
+
+  .theme-switcher__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .theme-switcher__label {
+    font-family: var(--font-secondary, monospace);
+    font-size: 0.85rem;
+    color: var(--theme-text-secondary, #a3c1ff);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .theme-switcher__options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs, 0.5rem);
+  }
+
+  .theme-switcher--compact .theme-switcher__options {
+    gap: var(--space-2xs, 0.25rem);
+  }
+
+  .theme-switcher__option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs, 0.25rem);
+    padding: var(--space-xs, 0.5rem) var(--space-s, 0.75rem);
+    background-color: var(--theme-surface, rgba(0, 0, 0, 0.2));
+    border: 1px solid transparent;
+    border-radius: var(--radius-button, 0.25rem);
+    color: var(--theme-text-primary, white);
+    cursor: pointer;
+    font-family: var(--font-primary, sans-serif);
+    font-size: 0.9rem;
+    transition: all var(--transition-standard, 250ms ease);
+  }
+
+  .theme-switcher--compact .theme-switcher__option {
+    padding: var(--space-2xs, 0.25rem);
+    border-radius: var(--radius-full, 9999px);
+  }
+
+  .theme-switcher__option:hover {
+    background-color: var(--theme-primary, #7aa4e3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .theme-switcher__option--active {
+    background-color: var(--theme-primary, #7aa4e3);
+    box-shadow: 0 0 10px var(--theme-primary, #7aa4e3);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .theme-switcher__icon {
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .theme-switcher__name {
+    font-weight: 500;
+  }
+
+  /* Animation for theme transitions */
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+
+  .theme-switcher__option--active .theme-switcher__icon {
+    animation: pulse 2s infinite;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .theme-switcher:not(.theme-switcher--compact) {
+      width: 100%;
+    }
+
+    .theme-switcher__options {
+      justify-content: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .theme-switcher__option:hover {
+      transform: none;
+    }
+
+    .theme-switcher__option--active .theme-switcher__icon {
+      animation: none;
+    }
+  }
+</style>

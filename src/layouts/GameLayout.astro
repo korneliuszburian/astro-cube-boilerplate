@@ -1,0 +1,1272 @@
+---
+/**
+ * GameLayout.astro
+ * An immersive game-like layout with dynamic transitions, ambient effects and
+ * interactive elements. Fully supports theme changing and creates a seamless experience.
+ */
+ import AmbientEffects from '../components/AmbientEffects.astro';
+import ThemeSwitcher from '../components/ThemeSwitcher.astro';
+import ShoppingCart from '../components/ShoppingCart.astro';
+import '../css/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  initialTheme?: 'iceland' | 'thailand' | 'berlin' | 'spain';
+  showAmbientEffects?: boolean;
+  activeSection?: string;
+}
+
+const {
+  title,
+  description = 'An immersive game-like shopping experience',
+  initialTheme = 'iceland',
+  showAmbientEffects = true,
+  activeSection = 'home',
+} = Astro.props;
+
+// Destinations for navigation
+const destinations = [
+  { id: 'iceland', name: 'Iceland', icon: '❄️' },
+  { id: 'thailand', name: 'Thailand', icon: '🌴' },
+  { id: 'berlin', name: 'Berlin', icon: '🔥' },
+  { id: 'spain', name: 'Spain', icon: '☀️' }
+];
+
+// Navigation items
+const navItems = [
+  { id: 'home', label: 'Home', icon: 'home' },
+  { id: 'shop', label: 'Shop', icon: 'shopping-bag' },
+  { id: 'inventory', label: 'Inventory', icon: 'box' },
+  { id: 'collections', label: 'Collections', icon: 'layers' },
+  { id: 'quests', label: 'Quests', icon: 'map' }
+];
+
+// Example inventory items for demo
+const cartItems = [
+  {
+    id: 'obsidian-hoodie',
+    title: 'Obsidian Stealth Hoodie',
+    price: 89.99,
+    image: '/img/products/obsidian-hoodie.jpg',
+    quantity: 1,
+    rarity: 'rare'
+  },
+  {
+    id: 'frost-tee',
+    title: 'Frost Tech Tee',
+    price: 49.99,
+    image: '/img/products/frost-tee.jpg',
+    quantity: 1,
+    rarity: 'common'
+  }
+];
+---
+
+<!DOCTYPE html>
+<html lang="en" data-theme={initialTheme}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+
+    <!-- Preload critical fonts -->
+    <link
+      rel="preload"
+      href="/fonts/Exo2-Variable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/KodeMono-VariableFont.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <!-- Theme color meta tag (will be updated via JS) -->
+    <meta name="theme-color" content="#0b1733" />
+
+    <!-- View transition polyfill -->
+    <script>
+      // Check if the browser supports view transitions
+      if (!document.startViewTransition) {
+        // Polyfill view transitions API
+        window.viewTransitionsPolyfill = true;
+      }
+    </script>
+  </head>
+
+  <body class="game-interface">
+    <!-- Dynamic background with theme-specific ambient effects -->
+    {showAmbientEffects && <AmbientEffects particleDensity={80} animationSpeed={1.2} />}
+
+    <!-- Game HUD Layout -->
+    <div class="game-hud">
+      <!-- Top Navigation Bar (Status Bar) -->
+      <header class="game-status-bar">
+        <div class="game-logo">
+          <a href="/" class="game-logo__link">
+            <span class="game-logo__text">VOYAGER</span>
+          </a>
+        </div>
+
+        <div class="game-stats">
+          <div class="game-stats__xp">
+            <div class="game-stats__xp-bar">
+              <div class="game-stats__xp-fill"></div>
+            </div>
+            <span class="game-stats__xp-level">LVL 8</span>
+          </div>
+
+          <div class="game-stats__currency">
+            <span class="game-stats__currency-icon">💎</span>
+            <span class="game-stats__currency-amount">2,450</span>
+          </div>
+        </div>
+
+        <div class="game-actions">
+          <button class="game-action-button" aria-label="Search" data-action="search">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+
+          <button class="game-action-button" aria-label="Notifications" data-action="notifications">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span class="game-action-button__badge">3</span>
+          </button>
+
+          <button class="game-action-button" aria-label="Cart" data-action="toggle-cart">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            <span class="game-action-button__badge shop-actions__badge">2</span>
+          </button>
+
+          <button class="game-action-button game-profile-button" aria-label="Profile">
+            <div class="game-profile-avatar">
+              <img src="/img/player-avatar.jpg" alt="Player Avatar" />
+            </div>
+          </button>
+        </div>
+      </header>
+
+      <!-- Side Navigation (Quest/Map Navigation) -->
+      <nav class="game-nav">
+        <div class="game-nav__inner">
+          <ul class="game-nav__list">
+            {navItems.map(item => (
+              <li class="game-nav__item">
+                <a
+                  href={`/${item.id === 'home' ? '' : item.id}`}
+                  class:list={["game-nav__link", { "game-nav__link--active": activeSection === item.id }]}
+                  data-section={item.id}
+                >
+                  <svg class="game-nav__icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    {item.icon === 'home' && (
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    )}
+                    {item.icon === 'shopping-bag' && (
+                      <><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></>
+                    )}
+                    {item.icon === 'box' && (
+                      <><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></>
+                    )}
+                    {item.icon === 'layers' && (
+                      <><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></>
+                    )}
+                    {item.icon === 'map' && (
+                      <><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></>
+                    )}
+                  </svg>
+                  <span class="game-nav__text">{item.label}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <div class="game-destinations">
+            <h3 class="game-destinations__title">Destinations</h3>
+            <div class="game-destinations__list">
+              <ThemeSwitcher
+                themes={destinations}
+                currentTheme={initialTheme}
+                class="game-theme-switcher"
+              />
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main Content Area -->
+      <main id="game-viewport" class="game-viewport">
+        <div class="game-viewport__inner" view-transition-name="game-content">
+          <slot />
+        </div>
+      </main>
+
+      <!-- Minimap/Location Display -->
+      <div class="game-minimap">
+        <div class="game-minimap__backdrop"></div>
+        <div class="game-minimap__location">
+          <div class="game-minimap__icon" data-theme={initialTheme}>
+            {initialTheme === 'iceland' && '❄️'}
+            {initialTheme === 'thailand' && '🌴'}
+            {initialTheme === 'berlin' && '🔥'}
+            {initialTheme === 'spain' && '☀️'}
+          </div>
+          <div class="game-minimap__text">
+            <span class="game-minimap__name">
+              {initialTheme === 'iceland' && 'Frozen Peaks'}
+              {initialTheme === 'thailand' && 'Emerald Jungle'}
+              {initialTheme === 'berlin' && 'Neon District'}
+              {initialTheme === 'spain' && 'Solar Coast'}
+            </span>
+            <span class="game-minimap__coords">Zone 3 • Level 5-12</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Player Controls (Bottom Bar) -->
+      <div class="game-controls">
+        <div class="game-quick-slots">
+          <button class="game-quick-slot" data-slot="1">
+            <div class="game-quick-slot__icon">🛡️</div>
+            <span class="game-quick-slot__key">1</span>
+          </button>
+          <button class="game-quick-slot" data-slot="2">
+            <div class="game-quick-slot__icon">⚔️</div>
+            <span class="game-quick-slot__key">2</span>
+          </button>
+          <button class="game-quick-slot" data-slot="3">
+            <div class="game-quick-slot__icon">💊</div>
+            <span class="game-quick-slot__key">3</span>
+          </button>
+          <button class="game-quick-slot" data-slot="4">
+            <div class="game-quick-slot__icon">🧪</div>
+            <span class="game-quick-slot__key">4</span>
+          </button>
+        </div>
+
+        <div class="game-special-actions">
+          <button class="game-special-action" data-action="customize">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+              <line x1="16" y1="8" x2="2" y2="22"></line>
+              <line x1="17.5" y1="15" x2="9" y2="15"></line>
+            </svg>
+            <span>Customize</span>
+          </button>
+
+          <button class="game-special-action" data-action="rewards">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="7"></circle>
+              <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+            </svg>
+            <span>Rewards</span>
+          </button>
+
+          <button class="game-special-action" data-action="friends">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span>Friends</span>
+          </button>
+
+          <button class="game-special-action" data-action="settings">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            <span>Settings</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shopping Cart as Inventory Panel -->
+    <ShoppingCart items={cartItems} isOpen={false} />
+
+    <!-- Game Notifications Area (fixed position) -->
+    <div class="game-notifications">
+      <!-- Notifications will be dynamically added here -->
+    </div>
+
+    <!-- Global Overlay Effects -->
+    <div class="game-overlay-effects">
+      <div class="vignette-effect"></div>
+      <div class="noise-effect"></div>
+      <div class="theme-transition-effect"></div>
+    </div>
+
+    <script>
+      // Handle view transitions
+      document.addEventListener('DOMContentLoaded', () => {
+        const handleNavigation = (event) => {
+          // Only process links within our site
+          const target = event.target.closest('a[href^="/"]');
+          if (!target) return;
+
+          // Don't process if modifier keys are pressed
+          if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+          event.preventDefault();
+          const url = new URL(target.href);
+
+          // If browser supports view transitions API, use it
+          if (document.startViewTransition) {
+            // Update the active section
+            document.querySelectorAll('.game-nav__link').forEach(link => {
+              link.classList.remove('game-nav__link--active');
+            });
+
+            target.classList.add('game-nav__link--active');
+
+            // Start view transition
+            const transition = document.startViewTransition(async () => {
+              try {
+                // Fetch the new page
+                const response = await fetch(url);
+                const html = await response.text();
+
+                // Extract the content we want to replace
+                const parser = new DOMParser();
+                const newDocument = parser.parseFromString(html, 'text/html');
+                const newContent = newDocument.querySelector('#game-viewport .game-viewport__inner').innerHTML;
+
+                // Replace just the viewport content
+                document.querySelector('#game-viewport .game-viewport__inner').innerHTML = newContent;
+
+                // Update browser URL
+                window.history.pushState({}, '', url);
+
+                // Update page title
+                document.title = newDocument.title;
+
+                // Update minimap
+                updateMinimap(newDocument.documentElement.dataset.theme);
+              } catch (error) {
+                console.error('Error during navigation:', error);
+                window.location.href = url; // Fallback to normal navigation
+              }
+            });
+          } else {
+            // Fallback for browsers without view transitions API
+            window.location.href = url;
+          }
+        };
+
+        // Delegated event listener for navigation links
+        document.addEventListener('click', handleNavigation);
+
+        // Theme switching enhancements
+        const updateMinimap = (theme) => {
+          const minimapIcon = document.querySelector('.game-minimap__icon');
+          const minimapName = document.querySelector('.game-minimap__name');
+
+          // Update icon
+          if (minimapIcon) {
+            minimapIcon.dataset.theme = theme;
+
+            switch (theme) {
+              case 'iceland':
+                minimapIcon.textContent = '❄️';
+                minimapName.textContent = 'Frozen Peaks';
+                break;
+              case 'thailand':
+                minimapIcon.textContent = '🌴';
+                minimapName.textContent = 'Emerald Jungle';
+                break;
+              case 'berlin':
+                minimapIcon.textContent = '🔥';
+                minimapName.textContent = 'Neon District';
+                break;
+              case 'spain':
+                minimapIcon.textContent = '☀️';
+                minimapName.textContent = 'Solar Coast';
+                break;
+            }
+          }
+        };
+
+        // Listen for theme changes
+        window.addEventListener('themeChanged', (e) => {
+          if (e.detail && e.detail.theme) {
+            updateMinimap(e.detail.theme);
+
+            // Add visual effect for theme change
+            const transitionEffect = document.querySelector('.theme-transition-effect');
+            if (transitionEffect) {
+              transitionEffect.classList.add('active');
+              setTimeout(() => {
+                transitionEffect.classList.remove('active');
+              }, 1000);
+            }
+          }
+        });
+
+        // Cart toggle functionality
+        const cartButtons = document.querySelectorAll('[data-action="toggle-cart"]');
+        cartButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            const cart = document.querySelector('.shopping-cart');
+            if (cart) {
+              cart.classList.toggle('shopping-cart--open');
+              document.body.classList.toggle('cart-open');
+            }
+          });
+        });
+
+        // Show toast notification function
+        window.showNotification = (message, type = 'info', duration = 3000) => {
+          const notificationsArea = document.querySelector('.game-notifications');
+          if (!notificationsArea) return;
+
+          const notification = document.createElement('div');
+          notification.className = `game-notification game-notification--${type}`;
+          notification.innerHTML = `
+            <div class="game-notification__icon"></div>
+            <div class="game-notification__message">${message}</div>
+          `;
+
+          notificationsArea.appendChild(notification);
+
+          // Animate in
+          setTimeout(() => {
+            notification.classList.add('game-notification--visible');
+          }, 10);
+
+          // Remove after duration
+          setTimeout(() => {
+            notification.classList.remove('game-notification--visible');
+            setTimeout(() => {
+              notification.remove();
+            }, 300);
+          }, duration);
+        };
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+          // Quick slots
+          if (e.key >= '1' && e.key <= '4') {
+            const slot = document.querySelector(`.game-quick-slot[data-slot="${e.key}"]`);
+            if (slot) {
+              slot.classList.add('game-quick-slot--active');
+              setTimeout(() => {
+                slot.classList.remove('game-quick-slot--active');
+              }, 200);
+
+              // Show notification based on slot
+              const slotIcon = slot.querySelector('.game-quick-slot__icon').textContent;
+              window.showNotification(`Quick slot ${e.key} activated: ${slotIcon}`, 'success', 2000);
+            }
+          }
+
+          // I key for inventory
+          if (e.key.toLowerCase() === 'i') {
+            const cart = document.querySelector('.shopping-cart');
+            if (cart) {
+              cart.classList.toggle('shopping-cart--open');
+              document.body.classList.toggle('cart-open');
+            }
+          }
+
+          // M key for map
+          if (e.key.toLowerCase() === 'm') {
+            window.showNotification('World map not available in this demo', 'info', 3000);
+          }
+        });
+
+        // Demo-only functionality for special action buttons
+        document.querySelectorAll('.game-special-action').forEach(button => {
+          button.addEventListener('click', () => {
+            const action = button.dataset.action;
+            window.showNotification(`${action.charAt(0).toUpperCase() + action.slice(1)} system will be available in the full version`, 'info', 3000);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  /* Game Interface Base Styles */
+  :root {
+    --hud-primary-color: var(--theme-primary, #7aa4e3);
+    --hud-secondary-color: var(--theme-secondary, #3d5e91);
+    --hud-accent-color: var(--theme-accent, #a6c9ff);
+    --hud-surface-color: rgba(0, 0, 0, 0.6);
+    --hud-border-color: rgba(var(--theme-primary), 0.5);
+    --hud-border-glow: 0 0 10px rgba(var(--theme-primary), 0.3);
+
+    --hud-text-primary: var(--theme-text-primary, #ffffff);
+    --hud-text-secondary: var(--theme-text-secondary, #a3c1ff);
+
+    --status-bar-height: 60px;
+    --nav-width: 80px;
+    --nav-expanded-width: 220px;
+    --minimap-height: 90px;
+    --controls-height: 80px;
+
+    --viewport-padding: 20px;
+
+    --card-hover-transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                             box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Base Layout */
+  body.game-interface {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100vh;
+    background: var(--theme-background);
+    color: var(--hud-text-primary);
+    font-family: var(--font-primary);
+    transition: background 0.5s ease;
+    cursor: url('/img/cursors/default.png'), auto;
+  }
+
+  .game-hud {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-areas:
+      "status status"
+      "nav viewport"
+      "nav minimap"
+      "nav controls";
+    grid-template-columns: var(--nav-width) 1fr;
+    grid-template-rows: var(--status-bar-height) 1fr var(--minimap-height) var(--controls-height);
+    z-index: 10;
+    pointer-events: none; /* Allow clicking through to the viewport by default */
+  }
+
+  .game-hud > * {
+    pointer-events: auto; /* Re-enable pointer events for HUD elements */
+  }
+
+  /* Status Bar (Top Bar) */
+  .game-status-bar {
+    grid-area: status;
+    background-color: var(--hud-surface-color);
+    border-bottom: 1px solid var(--hud-border-color);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    height: var(--status-bar-height);
+  }
+
+  .game-logo__link {
+    text-decoration: none;
+    color: var(--hud-text-primary);
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+  }
+
+  .game-logo__text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-family: var(--font-primary);
+    text-shadow: 0 0 10px var(--hud-primary-color);
+  }
+
+  .game-logo__link:hover {
+    color: var(--hud-accent-color);
+    text-shadow: 0 0 15px var(--hud-accent-color);
+  }
+
+  /* Stats Display */
+  .game-stats {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .game-stats__xp {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .game-stats__xp-bar {
+    width: 120px;
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .game-stats__xp-fill {
+    height: 100%;
+    width: 65%; /* Example fill level */
+    background-color: var(--hud-primary-color);
+    border-radius: 4px;
+    position: relative;
+  }
+
+  .game-stats__xp-level {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: var(--hud-accent-color);
+  }
+
+  .game-stats__currency {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .game-stats__currency-amount {
+    font-family: var(--font-secondary);
+    font-weight: bold;
+  }
+
+  /* Top Bar Actions */
+  .game-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .game-action-button {
+    background: none;
+    border: none;
+    color: var(--hud-text-primary);
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  .game-action-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .game-action-button:active {
+    transform: translateY(0) scale(0.95);
+  }
+
+  .game-action-button__badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--hud-primary-color);
+    color: #000;
+    font-size: 0.7rem;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+
+  .game-profile-button {
+    margin-left: 10px;
+    width: 45px;
+    height: 45px;
+    overflow: hidden;
+  }
+
+  .game-profile-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--hud-primary-color);
+  }
+
+  .game-profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Side Navigation */
+  .game-nav {
+    grid-area: nav;
+    background-color: var(--hud-surface-color);
+    border-right: 1px solid var(--hud-border-color);
+    backdrop-filter: blur(8px);
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    width: var(--nav-width);
+    transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    overflow: hidden;
+    z-index: 90;
+  }
+
+  .game-nav:hover {
+    width: var(--nav-expanded-width);
+  }
+
+  .game-nav__inner {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    width: var(--nav-expanded-width); /* Always keep full width for inner content */
+  }
+
+  .game-nav__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .game-nav__item {
+    padding: 0 10px;
+  }
+
+  .game-nav__link {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--hud-text-secondary);
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    gap: 15px;
+  }
+
+  .game-nav__link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--hud-text-primary);
+    transform: translateX(5px);
+  }
+
+  .game-nav__link--active {
+    background-color: rgba(var(--theme-primary-rgb), 0.2);
+    color: var(--hud-primary-color);
+    border-left: 3px solid var(--hud-primary-color);
+  }
+
+  .game-nav__icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+
+  .game-nav__text {
+    white-space: nowrap;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+  }
+
+  /* Destinations Section */
+  .game-destinations {
+    margin-top: auto;
+    padding: 0 10px;
+  }
+
+  .game-destinations__title {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--hud-text-secondary);
+    margin-bottom: 15px;
+    padding-left: 15px;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .game-nav:hover .game-destinations__title {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .game-theme-switcher {
+    width: 100%;
+  }
+
+  /* Main Viewport */
+  .game-viewport {
+    grid-area: viewport;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    scrollbar-width: thin;
+    scrollbar-color: var(--hud-secondary-color) rgba(0, 0, 0, 0.2);
+    padding: var(--viewport-padding);
+  }
+
+  .game-viewport::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .game-viewport::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
+
+  .game-viewport::-webkit-scrollbar-thumb {
+    background-color: var(--hud-secondary-color);
+    border-radius: 4px;
+  }
+
+  .game-viewport__inner {
+    min-height: 100%;
+    padding-bottom: 40px; /* Extra padding at bottom for scroll room */
+  }
+
+  /* Minimap/Location Display */
+  .game-minimap {
+    grid-area: minimap;
+    background-color: var(--hud-surface-color);
+    border-top: 1px solid var(--hud-border-color);
+    backdrop-filter: blur(8px);
+    z-index: 80;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .game-minimap__backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(var(--theme-primary-rgb), 0.1) 50%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    animation: minimap-scan 8s linear infinite;
+    z-index: 0;
+  }
+
+  .game-minimap__location {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 10px 20px;
+    border-radius: 30px;
+    position: relative;
+    z-index: 1;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+  }
+
+  .game-minimap__location:hover {
+    transform: scale(1.05);
+  }
+
+  .game-minimap__icon {
+    font-size: 1.5rem;
+    background-color: rgba(0, 0, 0, 0.3);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 10px rgba(var(--theme-primary-rgb), 0.3);
+    position: relative;
+  }
+
+  .game-minimap__icon::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border-radius: 50%;
+    border: 1px solid var(--hud-primary-color);
+    opacity: 0.6;
+    animation: pulse 2s infinite;
+  }
+
+  .game-minimap__text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .game-minimap__name {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: var(--hud-text-primary);
+  }
+
+  .game-minimap__coords {
+    font-size: 0.8rem;
+    color: var(--hud-text-secondary);
+    font-family: var(--font-secondary);
+  }
+
+  /* Controls Bar */
+  .game-controls {
+    grid-area: controls;
+    background-color: var(--hud-surface-color);
+    border-top: 1px solid var(--hud-border-color);
+    backdrop-filter: blur(8px);
+    z-index: 80;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+  }
+
+  .game-quick-slots {
+    display: flex;
+    gap: 10px;
+  }
+
+  .game-quick-slot {
+    width: 50px;
+    height: 50px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .game-quick-slot:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-3px);
+  }
+
+  .game-quick-slot--active {
+    background-color: rgba(var(--theme-primary-rgb), 0.3);
+    border-color: var(--hud-primary-color);
+    box-shadow: 0 0 10px rgba(var(--theme-primary-rgb), 0.5);
+  }
+
+  .game-quick-slot__icon {
+    font-size: 1.2rem;
+  }
+
+  .game-quick-slot__key {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    background-color: var(--hud-secondary-color);
+    color: white;
+    font-size: 0.7rem;
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  }
+
+  .game-special-actions {
+    display: flex;
+    gap: 15px;
+  }
+
+  .game-special-action {
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 8px 15px;
+    color: var(--hud-text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+  }
+
+  .game-special-action:hover {
+    background-color: rgba(var(--theme-primary-rgb), 0.2);
+    border-color: var(--hud-primary-color);
+    transform: translateY(-3px);
+  }
+
+  .game-special-action svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Notifications */
+  .game-notifications {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+    pointer-events: none;
+  }
+
+  .game-notification {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-left: 3px solid var(--hud-primary-color);
+    border-radius: 4px;
+    padding: 12px 15px;
+    color: white;
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: translateX(100%);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    max-width: 300px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  }
+
+  .game-notification--visible {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  .game-notification--success {
+    border-left-color: #4caf50;
+  }
+
+  .game-notification--warning {
+    border-left-color: #ff9800;
+  }
+
+  .game-notification--error {
+    border-left-color: #f44336;
+  }
+
+  .game-notification--info {
+    border-left-color: var(--hud-primary-color);
+  }
+
+  /* Overlay Effects */
+  .game-overlay-effects {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  .vignette-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+      ellipse at center,
+      transparent 60%,
+      rgba(0, 0, 0, 0.4) 100%
+    );
+  }
+
+  .noise-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/img/textures/noise.png');
+    opacity: 0.03;
+    mix-blend-mode: overlay;
+  }
+
+  .theme-transition-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(var(--theme-primary-rgb), 0.1);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    mix-blend-mode: screen;
+  }
+
+  .theme-transition-effect.active {
+    opacity: 1;
+  }
+
+  /* Animations */
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 0.6;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 0.3;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0.6;
+    }
+  }
+
+  @keyframes minimap-scan {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .game-hud {
+      grid-template-areas:
+        "status status"
+        "viewport viewport"
+        "minimap minimap"
+        "nav controls";
+      grid-template-columns: 1fr 4fr;
+      grid-template-rows: var(--status-bar-height) 1fr var(--minimap-height) var(--controls-height);
+    }
+
+    .game-nav {
+      width: 100%;
+      height: var(--controls-height);
+      border-right: none;
+      border-top: 1px solid var(--hud-border-color);
+      padding: 0;
+    }
+
+    .game-nav__inner {
+      flex-direction: row;
+      width: 100%;
+      height: var(--nav-expanded-width);
+    }
+
+    .game-nav__list {
+      flex-direction: row;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding: 0 10px;
+    }
+
+    .game-nav__item {
+      flex-shrink: 0;
+    }
+
+    .game-nav__link {
+      flex-direction: column;
+      gap: 5px;
+      padding: 10px;
+    }
+
+    .game-nav__text {
+      font-size: 0.7rem;
+    }
+
+    .game-destinations {
+      display: none;
+    }
+
+    .game-controls {
+      flex-direction: column;
+      padding: 10px;
+      gap: 10px;
+    }
+
+    .game-stats {
+      display: none;
+    }
+
+    .game-special-actions {
+      display: none;
+    }
+  }
+
+  /* View Transitions */
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes fade-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
+  @keyframes slide-from-right {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+
+  @keyframes slide-to-left {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
+  }
+
+  ::view-transition-old(game-content) {
+    animation: fade-out 0.5s ease-out forwards, slide-to-left 0.5s ease-out forwards;
+  }
+
+  ::view-transition-new(game-content) {
+    animation: fade-in 0.5s ease-out forwards, slide-from-right 0.5s ease-out forwards;
+  }
+
+  /* Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    .game-minimap__backdrop {
+      animation: none;
+    }
+
+    .game-minimap__icon::after {
+      animation: none;
+    }
+
+    ::view-transition-old(game-content),
+    ::view-transition-new(game-content) {
+      animation: none;
+    }
+  }
+</style>

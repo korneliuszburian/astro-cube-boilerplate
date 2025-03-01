@@ -1,0 +1,1159 @@
+---
+/**
+ * ItemCard.astro
+ *
+ * A game-like product card component that displays items with different rarity levels,
+ * visual treatments, animations, and interactive 3D effects.
+ *
+ * Features:
+ * - Rarity-based styling (common, rare, mystic, legendary)
+ * - 3D parallax effects on hover
+ * - Animated stat bars
+ * - Rarity-specific visual effects
+ * - Interactive add to cart functionality
+ */
+ interface Props {
+  id: string;
+  title: string;
+  price: number;
+  rarity: 'common' | 'rare' | 'mystic' | 'legendary';
+  image: string;
+  description?: string;
+  stats?: {
+    comfort?: number;
+    durability?: number;
+    style?: number;
+    uniqueness?: number;
+    [key: string]: number | undefined;
+  };
+  showActions?: boolean;
+  animateIn?: boolean;
+  class?: string;
+}
+
+const {
+  id,
+  title,
+  price,
+  rarity,
+  image,
+  description,
+  stats,
+  showActions = true,
+  animateIn = true,
+  class: className
+} = Astro.props;
+
+// Format price with currency symbol
+const formattedPrice = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD'
+}).format(price);
+
+// Calculate max stat if stats provided
+const maxStat = stats ? Math.max(...Object.values(stats).filter(value => value !== undefined) as number[]) : 0;
+
+// Map rarity to color variables and additional attributes
+const rarityMap = {
+  common: {
+    border: "var(--color-rarity-common, #b0bec5)",
+    glow: "var(--card-glow-intensity-common, 0.2)",
+    background: "var(--card-bg-common, linear-gradient(135deg, #62728a 0%, #2e3b4f 100%))",
+    name: "Common",
+    animation: false,
+    shine: false
+  },
+  rare: {
+    border: "var(--color-rarity-rare, #64b5f6)",
+    glow: "var(--card-glow-intensity-rare, 0.4)",
+    background: "var(--card-bg-rare, linear-gradient(135deg, #315a82 0%, #1a304d 100%))",
+    name: "Rare",
+    animation: false,
+    shine: false
+  },
+  mystic: {
+    border: "var(--color-rarity-mystic, #ce93d8)",
+    glow: "var(--card-glow-intensity-mystic, 0.6)",
+    background: "var(--card-bg-mystic, linear-gradient(135deg, #6b45a4 0%, #2e1d45 100%))",
+    name: "Mystic",
+    animation: true,
+    shine: false
+  },
+  legendary: {
+    border: "var(--color-rarity-legendary, #ffd54f)",
+    glow: "var(--card-glow-intensity-legendary, 0.8)",
+    background: "var(--card-bg-legendary, linear-gradient(135deg, #b4883b 0%, #5d4010 100%))",
+    name: "Legendary",
+    animation: true,
+    shine: true
+  }
+};
+
+const rarityInfo = rarityMap[rarity];
+
+// Generate a unique ID for this instance
+const instanceId = `item-card-${id}-${Math.random().toString(36).substring(2, 9)}`;
+---
+
+<article
+  id={instanceId}
+  class:list={[
+    "item-card",
+    `item-card--${rarity}`,
+    { "item-card--animate-in": animateIn },
+    className
+  ]}
+  data-rarity={rarity}
+  data-id={id}
+>
+  <div class="item-card__frame">
+    <div class="item-card__inner">
+      <!-- Card top section with image -->
+      <div class="item-card__image-container">
+        <img src={image} alt={title} class="item-card__image" loading="lazy" />
+
+        <!-- Overlay gradients -->
+        <div class="item-card__image-overlay"></div>
+
+        <!-- Rarity indicator -->
+        <div class="item-card__rarity-badge">
+          <span class="item-card__rarity-icon"></span>
+          <span class="item-card__rarity-name">{rarityInfo.name}</span>
+        </div>
+
+        <!-- Additional decorative elements for higher rarities -->
+        {rarity === 'legendary' && (
+          <div class="item-card__legendary-crown">
+            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L5 5V11.5L12 18L19 11.5V5L12 2Z" />
+            </svg>
+          </div>
+        )}
+
+        {(rarity === 'mystic' || rarity === 'legendary') && (
+          <div class="item-card__energy-orbs">
+            {Array(5).fill(0).map((_, i) => (
+              <div
+                class="item-card__energy-orb"
+                style={`--orb-delay: ${i * 0.7}s`}
+              ></div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <!-- Main card content -->
+      <div class="item-card__content">
+        <header class="item-card__header">
+          <h3 class="item-card__title">{title}</h3>
+          <div class="item-card__price">
+            {formattedPrice}
+          </div>
+        </header>
+
+        {description && (
+          <div class="item-card__description">{description}</div>
+        )}
+
+        {stats && Object.keys(stats).length > 0 && (
+          <div class="item-card__stats">
+            {Object.entries(stats).map(([key, value]) =>
+              value !== undefined && (
+                <div class="item-card__stat">
+                  <span class="item-card__stat-name">{key}</span>
+                  <div class="item-card__stat-bar">
+                    <div
+                      class="item-card__stat-fill"
+                      style={`--stat-value: ${value}%`}
+                      data-value={value}
+                    ></div>
+                    <span class="item-card__stat-value">{value}</span>
+                  </div>
+                </div>
+              )
+            )}
+          </div>
+        )}
+
+        {showActions && (
+          <div class="item-card__actions">
+            <button
+              class="item-card__action-button item-card__add-button"
+              data-item-id={id}
+              aria-label="Add to cart"
+            >
+              <span class="item-card__action-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"></path>
+                  <path d="M20 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"></path>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+              </span>
+              <span class="item-card__action-text">Add to Cart</span>
+            </button>
+
+            <button
+              class="item-card__action-button item-card__info-button"
+              data-item-id={id}
+              aria-label="View details"
+            >
+              <span class="item-card__action-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12" y2="8"></line>
+                </svg>
+              </span>
+              <span class="item-card__action-text">Details</span>
+            </button>
+          </div>
+        )}
+      </div>
+
+      <!-- Border effects -->
+      <div class="item-card__border"></div>
+
+      <!-- Corner accents for rare+ items -->
+      {(rarity !== 'common') && (
+        <div class="item-card__corners">
+          <div class="item-card__corner item-card__corner--tl"></div>
+          <div class="item-card__corner item-card__corner--tr"></div>
+          <div class="item-card__corner item-card__corner--bl"></div>
+          <div class="item-card__corner item-card__corner--br"></div>
+        </div>
+      )}
+    </div>
+
+    <!-- Special effects for higher rarities -->
+    {rarityInfo.shine && (
+      <div class="item-card__shine-effect"></div>
+    )}
+
+    {rarityInfo.animation && (
+      <div class="item-card__aura-effect"></div>
+    )}
+
+    <!-- Hover glow effect -->
+    <div class="item-card__hover-glow"></div>
+  </div>
+</article>
+
+<script define:vars={{ id, rarity, instanceId }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const card = document.getElementById(instanceId);
+    if (!card) return;
+
+    const inner = card.querySelector('.item-card__inner');
+    const image = card.querySelector('.item-card__image');
+    const statBars = card.querySelectorAll('.item-card__stat-fill');
+    const addButton = card.querySelector('.item-card__add-button');
+    const infoButton = card.querySelector('.item-card__info-button');
+
+    // Add 3D tilt effect on mouse move
+    // Effect is more pronounced for higher rarities
+    const handleMouseMove = (e) => {
+      if (!inner || !image) return;
+
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left; // x position within the element
+      const y = e.clientY - rect.top; // y position within the element
+
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      // Scale tilt by rarity
+      let tiltIntensity;
+      let parallaxIntensity;
+
+      switch(rarity) {
+        case 'legendary':
+          tiltIntensity = 12;
+          parallaxIntensity = 20;
+          break;
+        case 'mystic':
+          tiltIntensity = 8;
+          parallaxIntensity = 15;
+          break;
+        case 'rare':
+          tiltIntensity = 6;
+          parallaxIntensity = 10;
+          break;
+        default: // common
+          tiltIntensity = 4;
+          parallaxIntensity = 5;
+      }
+
+      // Calculate rotation based on mouse position
+      const rotateY = ((x - centerX) / centerX) * tiltIntensity; // max N degrees
+      const rotateX = ((centerY - y) / centerY) * tiltIntensity; // max N degrees
+
+      // Apply the rotation with smooth transition
+      inner.style.transform = `
+        perspective(1200px)
+        rotateX(${rotateX}deg)
+        rotateY(${rotateY}deg)
+      `;
+
+      // Move the image slightly for parallax effect
+      if (image) {
+        image.style.transform = `
+          translateX(${(x - centerX) / centerX * parallaxIntensity}px)
+          translateY(${(y - centerY) / centerY * parallaxIntensity}px)
+        `;
+      }
+
+      // Add glow effect that follows cursor
+      const glowElement = card.querySelector('.item-card__hover-glow');
+      if (glowElement) {
+        // Position glow relative to mouse position on card
+        const glowX = (x / rect.width) * 100;
+        const glowY = (y / rect.height) * 100;
+        glowElement.style.background = `
+          radial-gradient(
+            circle at ${glowX}% ${glowY}%,
+            rgba(255, 255, 255, 0.3) 0%,
+            rgba(255, 255, 255, 0.1) 30%,
+            transparent 70%
+          )
+        `;
+      }
+    };
+
+    // Reset transforms when mouse leaves
+    const handleMouseLeave = () => {
+      if (!inner || !image) return;
+
+      inner.style.transform = 'perspective(1200px) rotateX(0) rotateY(0)';
+
+      if (image) {
+        image.style.transform = 'translateX(0) translateY(0)';
+      }
+
+      // Reset glow
+      const glowElement = card.querySelector('.item-card__hover-glow');
+      if (glowElement) {
+        glowElement.style.background = 'none';
+      }
+    };
+
+    // Animate stat bars on card view
+    const animateStatBars = () => {
+      if (!statBars.length) return;
+
+      statBars.forEach((bar) => {
+        // Reset initial state
+        bar.style.width = '0%';
+
+        // Force a reflow to restart animation
+        void bar.offsetWidth;
+
+        // Set the width based on the data-value attribute
+        const value = bar.getAttribute('data-value');
+        if (value) {
+          bar.style.width = `${value}%`;
+        }
+      });
+    };
+
+    // Add to cart effect
+    const handleAddToCart = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      // Create effect container
+      const effectContainer = document.createElement('div');
+      effectContainer.className = 'item-card__cart-effect';
+
+      // Create effect based on rarity
+      switch(rarity) {
+        case 'legendary':
+          // Create legendary effect
+          effectContainer.innerHTML = `
+            <div class="item-card__cart-effect-ring"></div>
+            <div class="item-card__cart-effect-ring"></div>
+            <div class="item-card__cart-effect-glow"></div>
+          `;
+          break;
+        case 'mystic':
+          // Create mystic effect
+          effectContainer.innerHTML = `
+            <div class="item-card__cart-effect-ring"></div>
+            <div class="item-card__cart-effect-glow"></div>
+          `;
+          break;
+        case 'rare':
+          // Create rare effect
+          effectContainer.innerHTML = `
+            <div class="item-card__cart-effect-glow"></div>
+          `;
+          break;
+        default:
+          // Simple effect for common
+          effectContainer.innerHTML = `
+            <div class="item-card__cart-effect-pulse"></div>
+          `;
+      }
+
+      // Add effect to button
+      addButton.appendChild(effectContainer);
+
+      // Animate
+      addButton.classList.add('item-card__action-button--active');
+
+      // Remove after animation completes
+      setTimeout(() => {
+        addButton.classList.remove('item-card__action-button--active');
+        effectContainer.remove();
+      }, 1000);
+
+      // Dispatch add to cart event
+      const addToCartEvent = new CustomEvent('addToCart', {
+        detail: {
+          productId: id,
+          quantity: 1,
+          rarity: rarity
+        },
+        bubbles: true
+      });
+
+      card.dispatchEvent(addToCartEvent);
+    };
+
+    // Handle info button click
+    const handleInfoClick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      // Create effect on button
+      infoButton.classList.add('item-card__action-button--active');
+
+      // Remove after animation completes
+      setTimeout(() => {
+        infoButton.classList.remove('item-card__action-button--active');
+      }, 300);
+
+      // Navigate to product page (in a real implementation)
+      // For this demo, show notification if available
+      if (typeof window.showNotification === 'function') {
+        window.showNotification(`Details for ${id} will be available in the full version`, 'info');
+      }
+    };
+
+    // Register event listeners
+    card.addEventListener('mousemove', handleMouseMove);
+    card.addEventListener('mouseleave', handleMouseLeave);
+    card.addEventListener('mouseenter', animateStatBars);
+
+    if (addButton) {
+      addButton.addEventListener('click', handleAddToCart);
+    }
+
+    if (infoButton) {
+      infoButton.addEventListener('click', handleInfoClick);
+    }
+
+    // Trigger stat animation after a delay for initial load
+    if (card.classList.contains('item-card--animate-in')) {
+      setTimeout(animateStatBars, 500);
+    }
+
+    // Handle card click to show product details
+    card.addEventListener('click', (e) => {
+      // Only respond if the click was directly on the card or content
+      // and not on a button
+      if (e.target.closest('.item-card__action-button')) {
+        return;
+      }
+
+      // Show details (would navigate to product details page)
+      if (typeof window.showNotification === 'function') {
+        window.showNotification(`${title} details will be available in the full version`, 'info');
+      }
+    });
+  });
+</script>
+
+<style>
+  /* Base card styling */
+  .item-card {
+    --card-width: 100%;
+    --card-max-width: 320px;
+    --card-aspect-ratio: 3/4;
+    --card-border-width: 3px;
+    --card-border-radius: var(--radius-card, 12px);
+    --card-inner-padding: var(--space-s, 0.75rem);
+    --card-color-border: var(--color-rarity-common, #b0bec5);
+    --card-glow-intensity: var(--card-glow-intensity-common, 0.2);
+    --card-background: var(--card-bg-common, linear-gradient(135deg, #62728a 0%, #2e3b4f 100%));
+
+    position: relative;
+    width: var(--card-width);
+    max-width: var(--card-max-width);
+    aspect-ratio: var(--card-aspect-ratio);
+    perspective: 1200px;
+    cursor: pointer;
+    user-select: none;
+    z-index: 1;
+  }
+
+  /* Apply rarity-specific styling */
+  .item-card--rare {
+    --card-color-border: var(--color-rarity-rare, #64b5f6);
+    --card-glow-intensity: var(--card-glow-intensity-rare, 0.4);
+    --card-background: var(--card-bg-rare, linear-gradient(135deg, #315a82 0%, #1a304d 100%));
+  }
+
+  .item-card--mystic {
+    --card-color-border: var(--color-rarity-mystic, #ce93d8);
+    --card-glow-intensity: var(--card-glow-intensity-mystic, 0.6);
+    --card-background: var(--card-bg-mystic, linear-gradient(135deg, #6b45a4 0%, #2e1d45 100%));
+  }
+
+  .item-card--legendary {
+    --card-color-border: var(--color-rarity-legendary, #ffd54f);
+    --card-glow-intensity: var(--card-glow-intensity-legendary, 0.8);
+    --card-background: var(--card-bg-legendary, linear-gradient(135deg, #b4883b 0%, #5d4010 100%));
+  }
+
+  /* Card frame - container with visual border effects */
+  .item-card__frame {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Inner container - holds card content */
+  .item-card__inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--card-border-radius);
+    background: var(--card-background);
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow:
+      0 10px 30px rgba(0, 0, 0, 0.3),
+      0 0 calc(20px * var(--card-glow-intensity)) rgba(var(--card-color-border), 0.5);
+  }
+
+  /* Border effect */
+  .item-card__border {
+    position: absolute;
+    inset: 0;
+    border: var(--card-border-width) solid var(--card-color-border);
+    border-radius: var(--card-border-radius);
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* Corner accents for rare+ cards */
+  .item-card__corners {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  .item-card__corner {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 3px solid var(--card-color-border);
+    opacity: 0.8;
+  }
+
+  .item-card__corner--tl {
+    top: 0px;
+    left: 0px;
+    border-bottom: none;
+    border-right: none;
+    border-top-left-radius: var(--card-border-radius);
+  }
+
+  .item-card__corner--tr {
+    top: 0px;
+    right: 0px;
+    border-bottom: none;
+    border-left: none;
+    border-top-right-radius: var(--card-border-radius);
+  }
+
+  .item-card__corner--bl {
+    bottom: 0px;
+    left: 0px;
+    border-top: none;
+    border-right: none;
+    border-bottom-left-radius: var(--card-border-radius);
+  }
+
+  .item-card__corner--br {
+    bottom: 0px;
+    right: 0px;
+    border-top: none;
+    border-left: none;
+    border-bottom-right-radius: var(--card-border-radius);
+  }
+
+  /* Hover glow effect */
+  .item-card__hover-glow {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--card-border-radius);
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 1;
+    transition: background 0.1s ease-out;
+  }
+
+  /* Image container and styling */
+  .item-card__image-container {
+    position: relative;
+    width: 100%;
+    height: 50%;
+    overflow: hidden;
+    border-top-left-radius: var(--card-border-radius);
+    border-top-right-radius: var(--card-border-radius);
+    z-index: 1;
+  }
+
+  .item-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  .item-card__image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 50%,
+      rgba(0, 0, 0, 0.7) 100%
+    );
+    z-index: 2;
+  }
+
+  /* Rarity badge */
+  .item-card__rarity-badge {
+    position: absolute;
+    top: var(--card-inner-padding);
+    right: var(--card-inner-padding);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    z-index: 3;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .item-card__rarity-icon {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--card-color-border);
+  }
+
+  .item-card__rarity-name {
+    color: var(--card-color-border);
+  }
+
+  /* Legendary crown ornament */
+  .item-card__legendary-crown {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--card-color-border);
+    color: #000;
+    border-radius: 50%;
+    z-index: 3;
+    box-shadow: 0 0 15px var(--card-color-border);
+    border: 2px solid rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .item-card--legendary:hover .item-card__legendary-crown {
+    opacity: 1;
+    transform: translate(-50%, -30%);
+  }
+
+  .item-card__legendary-crown svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Energy orbs for mystic and legendary */
+  .item-card__energy-orbs {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .item-card__energy-orb {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--card-color-border);
+    opacity: 0.7;
+    filter: blur(2px);
+    box-shadow: 0 0 6px var(--card-color-border);
+    animation: floatingOrb 4s ease-in-out infinite;
+    animation-delay: var(--orb-delay, 0s);
+  }
+
+  .item-card__energy-orb:nth-child(1) {
+    top: 20%;
+    left: 20%;
+  }
+
+  .item-card__energy-orb:nth-child(2) {
+    top: 30%;
+    right: 15%;
+  }
+
+  .item-card__energy-orb:nth-child(3) {
+    bottom: 25%;
+    left: 30%;
+  }
+
+  .item-card__energy-orb:nth-child(4) {
+    bottom: 40%;
+    right: 25%;
+  }
+
+  .item-card__energy-orb:nth-child(5) {
+    top: 50%;
+    left: 50%;
+  }
+
+  /* Card content */
+  .item-card__content {
+    flex: 1;
+    padding: var(--card-inner-padding);
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+  }
+
+  /* Title and price */
+  .item-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+  }
+
+  .item-card__title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0;
+    color: var(--theme-text-primary, #ffffff);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    flex: 1;
+  }
+
+  .item-card__price {
+    font-family: var(--font-secondary, monospace);
+    font-weight: bold;
+    color: var(--card-color-border);
+    font-size: 0.95rem;
+    white-space: nowrap;
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+  }
+
+  /* Description */
+  .item-card__description {
+    font-size: 0.8rem;
+    color: var(--theme-text-secondary, rgba(255, 255, 255, 0.7));
+    margin-bottom: 0.75rem;
+    height: 2.4em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  /* Stats */
+  .item-card__stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+    flex-grow: 1;
+  }
+
+  .item-card__stat {
+    display: grid;
+    grid-template-columns: 75px 1fr;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .item-card__stat-name {
+    color: var(--theme-text-secondary, rgba(255, 255, 255, 0.7));
+    text-transform: capitalize;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .item-card__stat-bar {
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .item-card__stat-fill {
+    height: 100%;
+    width: 0;
+    background-color: var(--card-color-border);
+    border-radius: 3px;
+    transition: width 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+    position: relative;
+  }
+
+  /* Add animated pattern to legendary stat bars */
+  .item-card--legendary .item-card__stat-fill {
+    background-image: linear-gradient(45deg,
+      rgba(255, 255, 255, 0.3) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(255, 255, 255, 0.3) 50%,
+      rgba(255, 255, 255, 0.3) 75%,
+      transparent 75%,
+      transparent
+    );
+    background-size: 12px 12px;
+    animation: move-bar-pattern 1s linear infinite;
+  }
+
+  .item-card__stat-value {
+    position: absolute;
+    right: 0.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.65rem;
+    color: rgba(0, 0, 0, 0.7);
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .item-card:hover .item-card__stat-value {
+    opacity: 1;
+  }
+
+  /* Action buttons */
+  .item-card__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-top: auto;
+  }
+
+  .item-card__action-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    font-family: var(--font-primary, sans-serif);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: rgba(0, 0, 0, 0.2);
+    color: var(--theme-text-primary, white);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .item-card__action-button:hover {
+    transform: translateY(-2px);
+  }
+
+  .item-card__action-button:active,
+  .item-card__action-button--active {
+    transform: translateY(0) scale(0.95);
+  }
+
+  .item-card__add-button {
+    background-color: var(--card-color-border);
+    color: rgba(0, 0, 0, 0.9);
+  }
+
+  .item-card__info-button {
+    background-color: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(4px);
+  }
+
+  .item-card__action-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .item-card__action-text {
+    line-height: 1;
+  }
+
+  @media (max-width: 400px) {
+    .item-card__action-text {
+      display: none;
+    }
+
+    .item-card__action-button {
+      padding: 0.4rem;
+    }
+
+    .item-card__action-icon {
+      margin: 0 auto;
+    }
+  }
+
+  /* Add to cart effect (added via JS) */
+  .item-card__cart-effect {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .item-card__cart-effect-pulse {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.3);
+    animation: cart-pulse 0.5s ease-out forwards;
+  }
+
+  .item-card__cart-effect-ring {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid var(--card-color-border);
+    animation: cart-ring 1s ease-out forwards;
+  }
+
+  .item-card__cart-effect-ring:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .item-card__cart-effect-glow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center,
+      var(--card-color-border) 0%,
+      transparent 70%
+    );
+    opacity: 0;
+    animation: cart-glow 0.8s ease-out forwards;
+  }
+
+  /* Special effects for higher rarities */
+  .item-card__shine-effect {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      35deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0) 30%,
+      rgba(255, 255, 255, 0.5) 47%,
+      rgba(255, 255, 255, 0) 50%,
+      transparent 100%
+    );
+    border-radius: var(--card-border-radius);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 2;
+    animation: shine-sweep 5s ease-in-out infinite;
+  }
+
+  .item-card__aura-effect {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--card-border-radius);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.3;
+    animation: aura-pulse 3s ease-in-out infinite alternate;
+  }
+
+  .item-card--mystic .item-card__aura-effect {
+    box-shadow: 0 0 30px var(--card-color-border);
+  }
+
+  .item-card--legendary .item-card__aura-effect {
+    box-shadow: 0 0 50px var(--card-color-border);
+  }
+
+  /* Entrance animation */
+  .item-card--animate-in {
+    animation: card-enter 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  /* Card hover effects */
+  .item-card:hover .item-card__frame {
+    transform: translateY(-10px);
+  }
+
+  .item-card:hover .item-card__image {
+    transform: scale(1.05);
+  }
+
+  /* Animations */
+  @keyframes card-enter {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes cart-pulse {
+    0% {
+      opacity: 0.5;
+      transform: scale(0.5);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.5);
+    }
+  }
+
+  @keyframes cart-ring {
+    0% {
+      width: 10px;
+      height: 10px;
+      opacity: 1;
+    }
+    100% {
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+    }
+  }
+
+  @keyframes cart-glow {
+    0% {
+      opacity: 0.7;
+      transform: scale(0.5);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.5);
+    }
+  }
+
+  @keyframes shine-sweep {
+    0%, 25% {
+      opacity: 0;
+      transform: translateX(-100%) skewX(-30deg);
+    }
+    30%, 40% {
+      opacity: 0.6;
+    }
+    60% {
+      opacity: 0;
+      transform: translateX(100%) skewX(-30deg);
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(100%) skewX(-30deg);
+    }
+  }
+
+  @keyframes aura-pulse {
+    0% {
+      opacity: 0.2;
+    }
+    100% {
+      opacity: 0.6;
+    }
+  }
+
+  @keyframes floatingOrb {
+    0%, 100% {
+      transform: translateY(0) translateX(0);
+    }
+    50% {
+      transform: translateY(-10px) translateX(5px);
+    }
+  }
+
+  @keyframes move-bar-pattern {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 12px 0;
+    }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .item-card,
+    .item-card__inner,
+    .item-card__image,
+    .item-card__action-button,
+    .item-card__frame,
+    .item-card__stat-fill {
+      transition: none;
+    }
+
+    .item-card--animate-in,
+    .item-card__energy-orb,
+    .item-card__shine-effect,
+    .item-card__aura-effect,
+    .item-card--legendary .item-card__stat-fill {
+      animation: none;
+    }
+
+    .item-card:hover .item-card__legendary-crown {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+</style>

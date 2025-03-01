@@ -1,0 +1,66 @@
+{
+  "title": "Base Theme Properties",
+  "description": "Properties that all themes share regardless of visual presentation",
+  "items": [
+    {
+      "name": "Font Primary",
+      "value": "Exo 2, sans-serif"
+    },
+    {
+      "name": "Font Secondary",
+      "value": "Kode Mono, monospace"
+    },
+    {
+      "name": "Border Width Thin",
+      "value": "1px"
+    },
+    {
+      "name": "Border Width Default",
+      "value": "2px"
+    },
+    {
+      "name": "Border Width Thick",
+      "value": "4px"
+    },
+    {
+      "name": "Nav Height",
+      "value": "4rem"
+    },
+    {
+      "name": "Nav Padding",
+      "value": "1rem"
+    },
+    {
+      "name": "Header Height",
+      "value": "6rem"
+    },
+    {
+      "name": "Footer Padding",
+      "value": "2rem"
+    },
+    {
+      "name": "Modal Padding",
+      "value": "1.5rem"
+    },
+    {
+      "name": "Card Padding",
+      "value": "1rem"
+    },
+    {
+      "name": "Input Padding",
+      "value": "0.5rem 0.75rem"
+    },
+    {
+      "name": "Button Padding Small",
+      "value": "0.5rem 1rem"
+    },
+    {
+      "name": "Button Padding Default",
+      "value": "0.75rem 1.5rem"
+    },
+    {
+      "name": "Button Padding Large",
+      "value": "1rem 2rem"
+    }
+  ]
+}
