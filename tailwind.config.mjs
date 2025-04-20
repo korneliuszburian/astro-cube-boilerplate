@@ -3,8 +3,8 @@ const plugin = require("tailwindcss/plugin");
 const postcss = require("postcss");
 const postcssJs = require("postcss-js");
 
-const clampGenerator = require("./src/css-utils/clamp-generator.js");
-const tokensToTailwind = require("./src/css-utils/tokens-to-tailwind.js");
+import clampGenerator from "./src/css-utils/clamp-generator.ts";
+import tokensToTailwind from "./src/css-utils/tokens-to-tailwind.ts";
 
 // Raw design tokens
 const colorTokens = require("./src/design-tokens/colors.json");

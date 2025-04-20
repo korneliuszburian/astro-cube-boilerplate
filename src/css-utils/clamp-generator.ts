@@ -1,13 +1,30 @@
-const viewports = require('../design-tokens/viewports.json');
+import viewports from '../design-tokens/viewports.json';
+
+/**
+ * Token interface representing a design token with name, min and max values
+ */
+interface Token {
+  name: string;
+  min: number;
+  max: number;
+}
+
+/**
+ * Result interface representing the output of the clamp generator
+ */
+interface ClampResult {
+  name: string;
+  value: string;
+}
 
 /**
  * Takes an array of tokens and sends back and array of name
  * and clamp pairs for CSS fluid values.
  *
- * @param {array} tokens array of {name: string, min: number, max: number}
- * @returns {array} {name: string, value: string}
+ * @param {Token[]} tokens array of {name: string, min: number, max: number}
+ * @returns {(ClampResult[] | string[])} Array of name/value pairs or string values
  */
-const clampGenerator = tokens => {
+const clampGenerator = (tokens: Token[]): (ClampResult | string)[] => {
   const rootSize = 16;
 
   return tokens.map(({name, min, max}) => {
@@ -36,4 +53,4 @@ const clampGenerator = tokens => {
   });
 };
 
-module.exports = clampGenerator;
+export default clampGenerator;
