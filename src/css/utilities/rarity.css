@@ -1,0 +1,298 @@
+/**
+ * Rarity Utility Classes
+ *
+ * These utility classes provide consistent styling for different rarity levels
+ * across components. They can be applied to any element to indicate rarity.
+ */
+
+/* Base rarity colors */
+.rarity-common {
+  --rarity-color: var(--color-rarity-common);
+  --rarity-glow: var(--card-glow-intensity-common);
+  --rarity-bg: var(--card-bg-common, linear-gradient(135deg, #62728a 0%, #2e3b4f 100%));
+}
+
+.rarity-rare {
+  --rarity-color: var(--color-rarity-rare);
+  --rarity-glow: var(--card-glow-intensity-rare);
+  --rarity-bg: var(--card-bg-rare, linear-gradient(135deg, #315a82 0%, #1a304d 100%));
+}
+
+.rarity-mystic {
+  --rarity-color: var(--color-rarity-mystic);
+  --rarity-glow: var(--card-glow-intensity-mystic);
+  --rarity-bg: var(--card-bg-mystic, linear-gradient(135deg, #6b45a4 0%, #2e1d45 100%));
+}
+
+.rarity-legendary {
+  --rarity-color: var(--color-rarity-legendary);
+  --rarity-glow: var(--card-glow-intensity-legendary);
+  --rarity-bg: var(--card-bg-legendary, linear-gradient(135deg, #b4883b 0%, #5d4010 100%));
+}
+
+/* Rarity badges */
+.rarity-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs, 0.25rem);
+  padding: var(--space-2xs, 0.25rem) var(--space-xs, 0.5rem);
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: var(--radius-full, 9999px);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-family: var(--font-secondary);
+  letter-spacing: 0.05em;
+  font-weight: bold;
+}
+
+.rarity-badge-icon {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.rarity-common .rarity-badge-icon {
+  background-color: var(--color-rarity-common);
+}
+
+.rarity-common.rarity-badge,
+.rarity-common .rarity-badge-text {
+  color: var(--color-rarity-common);
+}
+
+.rarity-rare .rarity-badge-icon {
+  background-color: var(--color-rarity-rare);
+  box-shadow: 0 0 5px var(--color-rarity-rare);
+}
+
+.rarity-rare.rarity-badge,
+.rarity-rare .rarity-badge-text {
+  color: var(--color-rarity-rare);
+}
+
+.rarity-mystic .rarity-badge-icon {
+  background-color: var(--color-rarity-mystic);
+  box-shadow: 0 0 8px var(--color-rarity-mystic);
+}
+
+.rarity-mystic.rarity-badge,
+.rarity-mystic .rarity-badge-text {
+  color: var(--color-rarity-mystic);
+}
+
+.rarity-legendary .rarity-badge-icon {
+  background-color: var(--color-rarity-legendary);
+  box-shadow: 0 0 12px var(--color-rarity-legendary);
+  animation: rarity-pulse 2s infinite alternate;
+}
+
+.rarity-legendary.rarity-badge,
+.rarity-legendary .rarity-badge-text {
+  color: var(--color-rarity-legendary);
+}
+
+/* Rarity borders */
+.rarity-border {
+  border-width: var(--border-width-default, 2px);
+  border-style: solid;
+}
+
+.rarity-common.rarity-border {
+  border-color: var(--color-rarity-common);
+}
+
+.rarity-rare.rarity-border {
+  border-color: var(--color-rarity-rare);
+  box-shadow: 0 0 10px rgba(100, 181, 246, 0.3);
+}
+
+.rarity-mystic.rarity-border {
+  border-color: var(--color-rarity-mystic);
+  box-shadow: 0 0 15px rgba(206, 147, 216, 0.4);
+}
+
+.rarity-legendary.rarity-border {
+  border-color: var(--color-rarity-legendary);
+  box-shadow: 0 0 20px rgba(255, 213, 79, 0.5);
+}
+
+/* Rarity backgrounds */
+.rarity-bg {
+  background: var(--rarity-bg);
+}
+
+/* Rarity text */
+.rarity-text {
+  color: var(--rarity-color);
+}
+
+.rarity-legendary.rarity-text {
+  text-shadow: 0 0 5px rgba(255, 213, 79, 0.5);
+}
+
+/* Rarity buttons */
+.rarity-button {
+  background-color: var(--rarity-color);
+  color: #000;
+  border: none;
+  border-radius: var(--radius-button, 6px);
+  padding: var(--space-xs, 0.5rem) var(--space-s, 0.75rem);
+  font-family: var(--font-primary);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all var(--transition-standard, 250ms ease);
+}
+
+.rarity-button:hover {
+  transform: translateY(-3px);
+}
+
+.rarity-common.rarity-button:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.rarity-rare.rarity-button:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 0 15px rgba(100, 181, 246, 0.4);
+}
+
+.rarity-mystic.rarity-button:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 0 20px rgba(206, 147, 216, 0.5);
+}
+
+.rarity-legendary.rarity-button:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 0 25px rgba(255, 213, 79, 0.6);
+}
+
+.rarity-legendary.rarity-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.rarity-legendary.rarity-button::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 45%,
+    rgba(255, 255, 255, 0.7) 50%,
+    rgba(255, 255, 255, 0) 55%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(30deg);
+  animation: rarity-shine-effect 3s infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Rarity effects */
+.rarity-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.rarity-shine::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 45%,
+    rgba(255, 255, 255, 0.7) 50%,
+    rgba(255, 255, 255, 0) 55%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(30deg);
+  animation: rarity-shine-effect 6s infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Rarity progress bars */
+.rarity-progress {
+  height: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full, 9999px);
+  overflow: hidden;
+  position: relative;
+}
+
+.rarity-progress-fill {
+  height: 100%;
+  border-radius: var(--radius-full, 9999px);
+  transition: width 1s ease;
+}
+
+.rarity-common .rarity-progress-fill {
+  background-color: var(--color-rarity-common);
+}
+
+.rarity-rare .rarity-progress-fill {
+  background-color: var(--color-rarity-rare);
+}
+
+.rarity-mystic .rarity-progress-fill {
+  background-color: var(--color-rarity-mystic);
+}
+
+.rarity-legendary .rarity-progress-fill {
+  background-color: var(--color-rarity-legendary);
+  background-image: linear-gradient(45deg,
+    rgba(255,255,255,0.2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255,255,255,0.2) 50%,
+    rgba(255,255,255,0.2) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 20px 20px;
+  animation: rarity-bar-animation 1s linear infinite;
+}
+
+/* Animations */
+@keyframes rarity-pulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.5); opacity: 1; }
+}
+
+@keyframes rarity-shine-effect {
+  0% {
+    transform: rotate(30deg) translateX(-100%);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  40% {
+    transform: rotate(30deg) translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes rarity-bar-animation {
+  0% { background-position: 0 0; }
+  100% { background-position: 20px 0; }
+}
+
+/* Reduced motion adaptations */
+@media (prefers-reduced-motion: reduce) {
+  .rarity-legendary .rarity-badge-icon,
+  .rarity-legendary .rarity-progress-fill,
+  .rarity-legendary.rarity-button::after,
+  .rarity-shine::after {
+    animation: none;
+  }
+}

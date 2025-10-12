@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "author": "Frank Stallone <frank@stallone.dev>",
   "description": "A simple Astro boilerplate with CUBE CSS and TailwindCSS",
+  "homepage": "https://github.com/frankstallone/astro-cube-boilerplate",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -13,6 +14,7 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
+<<<<<<< HEAD
     "@astrojs/partytown": "^2.1.4",
     "@astrojs/react": "^4.3.0",
     "@astrojs/sitemap": "^3.4.1",
@@ -21,6 +23,12 @@
     "astro": "^5.9.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+=======
+    "@astrojs/partytown": "^2.1.2",
+    "@astrojs/sitemap": "^3.2.1",
+    "@astrojs/tailwind": "^5.1.4",
+    "astro": "^5.1.1",
+>>>>>>> 5cf4019e9f9514ccf6e4e3e3a1550db0530659ed
     "slugify": "^1.6.6",
     "tailwindcss": "^3.4.1",
     "three": "^0.177.0"
@@ -32,6 +40,13 @@
     "typescript": "^5.3.3"
   },
   "engines": {
+<<<<<<< HEAD
     "node": ">=22.12.2"
+=======
+    "node": ">=20.12.2"
+  },
+  "resolutions": {
+    "esbuild": "0.24.0"
+>>>>>>> 5cf4019e9f9514ccf6e4e3e3a1550db0530659ed
   }
 }

@@ -1,0 +1,95 @@
+{
+  "title": "Iceland Theme",
+  "description": "Cold, icy, northern theme with blue hues",
+  "extends": "base",
+  "items": [
+    {
+      "name": "Background",
+      "value": "linear-gradient(180deg, #0b1733 0%, #203a6d 100%)"
+    },
+    {
+      "name": "Primary",
+      "value": "#7aa4e3"
+    },
+    {
+      "name": "Secondary",
+      "value": "#3d5e91"
+    },
+    {
+      "name": "Accent",
+      "value": "#a6c9ff"
+    },
+    {
+      "name": "Surface",
+      "value": "rgba(16, 37, 72, 0.8)"
+    },
+    {
+      "name": "Text Primary",
+      "value": "#ffffff"
+    },
+    {
+      "name": "Text Secondary",
+      "value": "#a3c1ff"
+    },
+    {
+      "name": "Card Background Common",
+      "value": "linear-gradient(135deg, #62728a 0%, #2e3b4f 100%)"
+    },
+    {
+      "name": "Card Background Rare",
+      "value": "linear-gradient(135deg, #315a82 0%, #1a304d 100%)"
+    },
+    {
+      "name": "Card Background Mystic",
+      "value": "linear-gradient(135deg, #6b45a4 0%, #2e1d45 100%)"
+    },
+    {
+      "name": "Card Background Legendary",
+      "value": "linear-gradient(135deg, #b4883b 0%, #5d4010 100%)"
+    },
+    {
+      "name": "Button Primary",
+      "value": "#3d5e91"
+    },
+    {
+      "name": "Button Border",
+      "value": "#7aa4e3"
+    },
+    {
+      "name": "Ambient Animation",
+      "value": "snowfall"
+    },
+    {
+      "name": "Particle Density",
+      "value": "60"
+    },
+    {
+      "name": "Accent Pattern",
+      "value": "url('/img/patterns/iceland-pattern.svg')"
+    },
+    {
+      "name": "Accent Noise",
+      "value": "url('/img/textures/ice-noise.png')"
+    },
+    {
+      "name": "Modal Backdrop",
+      "value": "rgba(11, 23, 51, 0.8)"
+    },
+    {
+      "name": "Modal Background",
+      "value": "linear-gradient(135deg, #1c3258 0%, #0b1733 100%)"
+    },
+    {
+      "name": "Modal Border",
+      "value": "rgba(122, 164, 227, 0.3)"
+    },
+    {
+      "name": "Scrollbar Thumb",
+      "value": "#3d5e91"
+    },
+    {
+      "name": "Scrollbar Track",
+      "value": "#0b1733"
+    }
+  ]
+}

@@ -1,6 +1,11 @@
 {
+<<<<<<< HEAD
   "title": "Gothic Sanctuary Colors",
   "description": "Dark fantasy Gothic color palette for the Gothic Sanctuary e-commerce platform. These colors create the immersive medieval merchant sanctuary atmosphere.",
+=======
+  "title": "Colors",
+  "description": "Core colors and rarity-specific colors for the Voyager Design System",
+>>>>>>> 5cf4019e9f9514ccf6e4e3e3a1550db0530659ed
   "items": [
     {
       "name": "Transparent",
@@ -15,6 +20,7 @@
       "value": "#222222"
     },
     {
+<<<<<<< HEAD
       "name": "Highlight Brass",
       "value": "#CD7F32"
     },
@@ -41,6 +47,42 @@
     {
       "name": "Shadow Deep",
       "value": "#0A0A0A"
+=======
+      "name": "Primary",
+      "value": "#02394A"
+    },
+    {
+      "name": "Rarity Common",
+      "value": "#b0bec5"
+    },
+    {
+      "name": "Rarity Rare",
+      "value": "#64b5f6"
+    },
+    {
+      "name": "Rarity Mystic",
+      "value": "#ce93d8"
+    },
+    {
+      "name": "Rarity Legendary",
+      "value": "#ffd54f"
+    },
+    {
+      "name": "Common Glow",
+      "value": "rgba(176, 190, 197, 0.5)"
+    },
+    {
+      "name": "Rare Glow",
+      "value": "rgba(100, 181, 246, 0.6)"
+    },
+    {
+      "name": "Mystic Glow",
+      "value": "rgba(206, 147, 216, 0.7)"
+    },
+    {
+      "name": "Legendary Glow",
+      "value": "rgba(255, 213, 79, 0.8)"
+>>>>>>> 5cf4019e9f9514ccf6e4e3e3a1550db0530659ed
     }
   ]
 }

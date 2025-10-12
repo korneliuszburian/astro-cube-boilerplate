@@ -1,0 +1,388 @@
+---
+/**
+ * ParallaxHero.astro
+ * Creates an immersive parallax hero section with multiple depth layers
+ * that move at different speeds for a dynamic 3D effect.
+ */
+
+ interface Layer {
+  image: string;
+  depth: number;
+  opacity?: number;
+  position?: string;
+}
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  ctaText?: string;
+  ctaLink?: string;
+  layers: Layer[];
+  height?: string;
+  class?: string;
+  overlayOpacity?: number;
+}
+
+const {
+  title,
+  subtitle,
+  ctaText,
+  ctaLink = '/shop',
+  layers = [],
+  height = '80vh',
+  class: className = '',
+  overlayOpacity = 0.5
+} = Astro.props;
+
+// Generate unique ID for this parallax instance
+const id = `parallax-hero-${Math.random().toString(36).substring(2, 9)}`;
+---
+
+<section id={id} class:list={["parallax-hero", className]} style={`height: ${height};`}>
+  <!-- Parallax Layers -->
+  {layers.map((layer, index) => (
+    <div
+      class="parallax-hero__layer"
+      data-depth={layer.depth}
+      style={`
+        background-image: url(${layer.image});
+        z-index: ${index};
+        opacity: ${layer.opacity ?? 1};
+        background-position: ${layer.position ?? 'center'};
+      `}
+    ></div>
+  ))}
+
+  <!-- Overlay to enhance text readability -->
+  <div
+    class="parallax-hero__overlay"
+    style={`opacity: ${overlayOpacity};`}
+  ></div>
+
+  <!-- Hero Content -->
+  <div class="parallax-hero__content">
+    <h1 class="parallax-hero__title">{title}</h1>
+    {subtitle && <p class="parallax-hero__subtitle">{subtitle}</p>}
+
+    {ctaText && (
+      <a href={ctaLink} class="parallax-hero__cta">
+        {ctaText}
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="parallax-hero__cta-icon">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    )}
+  </div>
+</section>
+
+<script define:vars={{ id }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const parallaxContainer = document.getElementById(id);
+    if (!parallaxContainer) return;
+
+    const layers = parallaxContainer.querySelectorAll('.parallax-hero__layer');
+    const content = parallaxContainer.querySelector('.parallax-hero__content');
+
+    // Check if the user prefers reduced motion
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      // Skip parallax effects for users who prefer reduced motion
+      return;
+    }
+
+    // Apply parallax effect on scroll
+    const handleParallax = () => {
+      const scrollPosition = window.pageYOffset;
+      const containerTop = parallaxContainer.offsetTop;
+      const containerHeight = parallaxContainer.offsetHeight;
+
+      // Only apply parallax when hero is in view
+      if (scrollPosition >= containerTop - window.innerHeight &&
+          scrollPosition <= containerTop + containerHeight) {
+
+        // Calculate relative scroll position
+        const relativeScroll = scrollPosition - containerTop;
+
+        // Apply parallax to each layer
+        layers.forEach(layer => {
+          const depth = parseFloat(layer.dataset.depth || '0');
+          const translateY = relativeScroll * depth * 0.15;
+          layer.style.transform = `translateY(${translateY}px)`;
+        });
+
+        // Subtle effect on content
+        if (content) {
+          const contentTranslateY = relativeScroll * -0.1; // Content moves up slowly
+          const contentOpacity = 1 - (relativeScroll / containerHeight) * 1.5;
+          content.style.transform = `translateY(${contentTranslateY}px)`;
+          content.style.opacity = Math.max(0, Math.min(1, contentOpacity));
+        }
+      }
+    };
+
+    // Apply parallax on mousemove for extra depth
+    const handleMouseParallax = (e) => {
+      const containerRect = parallaxContainer.getBoundingClientRect();
+
+      // Check if mouse is over the container
+      if (e.clientY >= containerRect.top &&
+          e.clientY <= containerRect.bottom &&
+          e.clientX >= containerRect.left &&
+          e.clientX <= containerRect.right) {
+
+        // Calculate mouse position relative to container center
+        const centerX = containerRect.width / 2;
+        const centerY = containerRect.height / 2;
+        const mouseX = e.clientX - containerRect.left - centerX;
+        const mouseY = e.clientY - containerRect.top - centerY;
+
+        // Apply subtle parallax to each layer
+        layers.forEach(layer => {
+          const depth = parseFloat(layer.dataset.depth || '0');
+          const translateX = mouseX * depth * -0.01; // Inverted for natural effect
+          const translateY = mouseY * depth * -0.01;
+
+          // Get existing transform from scroll parallax
+          const existingTransform = layer.style.transform || '';
+
+          // Extract any existing translateY value
+          let existingTranslateY = 0;
+          const match = existingTransform.match(/translateY\(([^)]+)\)/);
+          if (match) {
+            existingTranslateY = parseFloat(match[1]);
+          }
+
+          // Apply combined transform
+          layer.style.transform = `translateY(${existingTranslateY}px) translateX(${translateX}px) translateY(${translateY}px)`;
+        });
+
+        // Subtle effect on content in opposite direction
+        if (content) {
+          const contentTranslateX = mouseX * 0.005;
+          const contentTranslateY = mouseY * 0.005;
+
+          // Get existing transform from scroll parallax
+          const existingTransform = content.style.transform || '';
+
+          // Extract any existing translateY value
+          let existingTranslateY = 0;
+          const match = existingTransform.match(/translateY\(([^)]+)\)/);
+          if (match) {
+            existingTranslateY = parseFloat(match[1]);
+          }
+
+          content.style.transform = `translateY(${existingTranslateY}px) translateX(${contentTranslateX}px) translateY(${contentTranslateY}px)`;
+        }
+      }
+    };
+
+    // Apply initial parallax
+    handleParallax();
+
+    // Add scroll event listener
+    window.addEventListener('scroll', handleParallax, { passive: true });
+
+    // Add mousemove event listener
+    window.addEventListener('mousemove', handleMouseParallax, { passive: true });
+
+    // Clean up on page unload
+    window.addEventListener('beforeunload', () => {
+      window.removeEventListener('scroll', handleParallax);
+      window.removeEventListener('mousemove', handleMouseParallax);
+    });
+
+    // Handle theme changes
+    window.addEventListener('themeChanged', () => {
+      // Re-apply parallax effect after theme change
+      setTimeout(handleParallax, 50);
+    });
+
+    // Handle resize for responsive adjustments
+    window.addEventListener('resize', handleParallax, { passive: true });
+  });
+</script>
+
+<style>
+  .parallax-hero {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-lg, 8px);
+  }
+
+  .parallax-hero__layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    will-change: transform;
+    transition: transform 0.1s ease-out;
+  }
+
+  .parallax-hero__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      var(--theme-background, rgba(0, 0, 0, 0.5)) 0%,
+      transparent 40%,
+      transparent 60%,
+      var(--theme-background, rgba(0, 0, 0, 0.5)) 100%
+    );
+    z-index: 5;
+  }
+
+  .parallax-hero__content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: var(--space-l);
+    max-width: 800px;
+    color: var(--theme-text-primary);
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    will-change: transform, opacity;
+  }
+
+  .parallax-hero__title {
+    font-size: var(--size-step-5, 3rem);
+    font-weight: bold;
+    margin-bottom: var(--space-m);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    font-family: var(--font-primary);
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    animation: hero-title-entry 1s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .parallax-hero__subtitle {
+    font-size: var(--size-step-1, 1.25rem);
+    font-weight: normal;
+    margin-bottom: var(--space-xl);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: var(--font-secondary);
+    line-height: 1.6;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    animation: hero-subtitle-entry 1s ease-out 0.2s forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .parallax-hero__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-s) var(--space-l);
+    background-color: var(--theme-primary);
+    color: var(--theme-text-primary);
+    text-decoration: none;
+    border-radius: var(--radius-button);
+    font-weight: bold;
+    font-family: var(--font-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all var(--transition-standard);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    animation: hero-cta-entry 1s ease-out 0.4s forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .parallax-hero__cta:hover {
+    background-color: var(--theme-secondary);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  }
+
+  .parallax-hero__cta-icon {
+    transition: transform var(--transition-standard);
+  }
+
+  .parallax-hero__cta:hover .parallax-hero__cta-icon {
+    transform: translateX(4px);
+  }
+
+  /* Entry animations */
+  @keyframes hero-title-entry {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes hero-subtitle-entry {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 0.9;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes hero-cta-entry {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .parallax-hero__title {
+      font-size: var(--size-step-4, 2.5rem);
+    }
+
+    .parallax-hero__subtitle {
+      font-size: var(--size-step-0, 1rem);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .parallax-hero__title {
+      font-size: var(--size-step-3, 2rem);
+    }
+
+    .parallax-hero__content {
+      padding: var(--space-m);
+    }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .parallax-hero__layer {
+      transition: none;
+    }
+
+    .parallax-hero__title,
+    .parallax-hero__subtitle,
+    .parallax-hero__cta {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

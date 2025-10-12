@@ -1,0 +1,106 @@
+{
+  "title": "Effects",
+  "description": "Animation, transitions, and effects for the Voyager Design System",
+  "items": [
+    {
+      "name": "Transition Standard",
+      "value": "250ms ease"
+    },
+    {
+      "name": "Transition Movement",
+      "value": "200ms linear"
+    },
+    {
+      "name": "Transition Fade",
+      "value": "300ms ease"
+    },
+    {
+      "name": "Transition Bounce",
+      "value": "500ms cubic-bezier(0.5, 0.05, 0.2, 1.5)"
+    },
+    {
+      "name": "Card Hover Lift",
+      "value": "10px"
+    },
+    {
+      "name": "Card Parallax Depth",
+      "value": "10px"
+    },
+    {
+      "name": "Parallax Depth 1",
+      "value": "0.1"
+    },
+    {
+      "name": "Parallax Depth 2",
+      "value": "0.2"
+    },
+    {
+      "name": "Parallax Depth 3",
+      "value": "0.3"
+    },
+    {
+      "name": "Parallax Depth 4",
+      "value": "0.4"
+    },
+    {
+      "name": "Parallax Depth 5",
+      "value": "0.5"
+    },
+    {
+      "name": "Border Radius Card",
+      "value": "10px"
+    },
+    {
+      "name": "Border Radius Button",
+      "value": "6px"
+    },
+    {
+      "name": "Border Radius Badge",
+      "value": "9999px"
+    },
+    {
+      "name": "Z Index Background",
+      "value": "-10"
+    },
+    {
+      "name": "Z Index Base",
+      "value": "1"
+    },
+    {
+      "name": "Z Index Cards",
+      "value": "10"
+    },
+    {
+      "name": "Z Index Header",
+      "value": "100"
+    },
+    {
+      "name": "Z Index Modal",
+      "value": "1000"
+    },
+    {
+      "name": "Z Index Toast",
+      "value": "2000"
+    },
+    {
+      "name": "Card Glow Intensity Common",
+      "value": "0.2"
+    },
+    {
+      "name": "Card Glow Intensity Rare",
+      "value": "0.4"
+    },
+    {
+      "name": "Card Glow Intensity Mystic",
+      "value": "0.6"
+    },
+    {
+      "name": "Card Glow Intensity Legendary",
+      "value": "0.8"
+    },
+    {
+      "name": "Card Backdrop Filter",
+      "value": "blur(8px)"
+    }
+  ]
+}
