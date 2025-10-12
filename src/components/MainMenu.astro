@@ -104,9 +104,7 @@ const menuItems = [
                 menuItems.map((item, index) => (
                   <li class="main-menu__item">
                     <GothicButton
-                      variant={
-                        index % 2 === 0 && index !== 0 ? "button1" : "button2"
-                      }
+                      variant={"button2"}
                       size="large"
                       disabled={item.status === "disabled"}
                       href={item.status === "active" ? item.route : undefined}
@@ -132,7 +130,6 @@ const menuItems = [
     min-height: 100vh;
     display: flex;
     align-items: center;
-    justify-content: center;
     position: relative;
     overflow: hidden;
     flex-direction: column;

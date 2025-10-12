@@ -36,8 +36,8 @@ const availableVariants = product.variants.filter(
 >
   <div class="product-page">
     <div class="product-page__background"></div>
-    <div class="region flow flow-space-xl" >
-      <section class="product-hero wrapper" data-layout="narrow">
+    <div class="flow flow-space-xl">
+      <section class="product-hero">
         <div class="product-images">
           <div class="main-image">
             <img
@@ -117,89 +117,88 @@ const availableVariants = product.variants.filter(
             <a href="/shop" class="back-link">← Back</a>
           </div>
         </div>
-      </section>
 
-      <!-- Additional Images -->
-      {
-        (product.images.details.length > 0 ||
-          product.images.lifestyle.length > 0) && (
-          <section class="additional-images">
-            <div class="images-grid">
-              {product.images.details.map((image) => (
-                <img src={image} alt={product.name} />
-              ))}
-              {product.images.lifestyle.map((image) => (
-                <img src={image} alt={product.name} />
-              ))}
-            </div>
-          </section>
-        )
-      }
+        {
+          (product.images.details.length > 0 ||
+            product.images.lifestyle.length > 0) && (
+            <section class="additional-images">
+              <div class="images-grid">
+                {product.images.details.map((image) => (
+                  <img src={image} alt={product.name} />
+                ))}
+                {product.images.lifestyle.map((image) => (
+                  <img src={image} alt={product.name} />
+                ))}
+              </div>
+            </section>
+          )
+        }
 
-      <!-- Contact Popup -->
-      <div class="contact-popup" id="contact-popup">
-        <div class="contact-popup__overlay" id="popup-overlay"></div>
-        <div class="contact-popup__container">
-          <GothicFrame
-            variant="ornate"
-            size="thick"
-            background="none"
-            class="contact-popup__frame"
-          >
-            <div class="contact-popup__content">
-              <video
-                class="contact-popup__video"
-                autoplay
-                loop
-                muted
-                playsinline
-                poster="/assets/videos/testing-video-poster-02.png"
-              >
-                <source
-                  src="/assets/videos/testing-video-02.mp4"
-                  type="video/mp4"
-                />
-              </video>
+        <!-- Contact Popup -->
+        <div class="contact-popup" id="contact-popup">
+          <div class="contact-popup__overlay" id="popup-overlay"></div>
+          <div class="contact-popup__container">
+            <GothicFrame
+              variant="ornate"
+              size="thick"
+              background="none"
+              class="contact-popup__frame"
+            >
+              <div class="contact-popup__content">
+                <video
+                  class="contact-popup__video"
+                  autoplay
+                  loop
+                  muted
+                  playsinline
+                  poster="/assets/videos/testing-video-poster-02.png"
+                >
+                  <source
+                    src="/assets/videos/testing-video-02.mp4"
+                    type="video/mp4"
+                  />
+                </video>
 
-              <div class="contact-popup__inner">
-                <h2 class="contact-popup__title">DM ME</h2>
-                <p class="contact-popup__subtitle">
-                  {product.name} - {product.price} ZŁ
-                </p>
+                <div class="contact-popup__inner">
+                  <h2 class="contact-popup__title">DM ME</h2>
+                  <p class="contact-popup__subtitle">
+                    {product.name} - {product.price} ZŁ
+                  </p>
 
-                <div class="contact-popup__options">
-                  <GothicButton
-                    variant="button4"
-                    size="medium"
-                    href="mailto:kontakt@dotforyou.pl?subject=Zainteresowanie: {product.name}"
-                    class="contact-popup__option"
-                  >
-                    Email
-                  </GothicButton>
+                  <div class="contact-popup__options">
+                    <GothicButton
+                      variant="button4"
+                      size="medium"
+                      href="mailto:kontakt@dotforyou.pl?subject=Zainteresowanie: {product.name}"
+                      class="contact-popup__option"
+                    >
+                      Email
+                    </GothicButton>
 
-                  <GothicButton
-                    variant="button4"
-                    size="medium"
-                    href="https://instagram.com/dotforyou"
-                    class="contact-popup__option contact-popup__instagram"
-                  >
-                    Instagram
-                  </GothicButton>
+                    <GothicButton
+                      variant="button4"
+                      size="medium"
+                      href="https://instagram.com/dotforyou"
+                      class="contact-popup__option contact-popup__instagram"
+                    >
+                      Instagram
+                    </GothicButton>
 
-                  <GothicButton
-                    variant="button4"
-                    size="medium"
-                    class="contact-popup__close"
-                    data-close-popup="true"
-                  >
-                    Zamknij
-                  </GothicButton>
+                    <GothicButton
+                      variant="button4"
+                      size="medium"
+                      class="contact-popup__close"
+                      data-close-popup="true"
+                    >
+                      Zamknij
+                    </GothicButton>
+                  </div>
                 </div>
               </div>
-            </div>
-          </GothicFrame>
+            </GothicFrame>
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   </div>
 </Layout>
@@ -227,8 +226,9 @@ const availableVariants = product.variants.filter(
 
   .product-hero {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(4, 1fr);
     gap: 4rem;
+    padding: var(--space-m);
     position: relative;
     z-index: 1;
   }
@@ -248,7 +248,6 @@ const availableVariants = product.variants.filter(
 
   .main-image {
     width: 100%;
-    aspect-ratio: 1;
     overflow: hidden;
   }
 
@@ -517,20 +516,21 @@ const availableVariants = product.variants.filter(
   .additional-images {
     position: relative;
     z-index: 1;
+    grid-column: 3 / 5;
   }
 
   .images-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1rem;
   }
 
   .images-grid img {
     height: 100%;
     width: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    height: 350px;
   }
-
 </style>
 
 <script>
