@@ -22,7 +22,7 @@ const description =
     <!-- Hero Section -->
     <section class="shop-hero">
       <section class="filters-section">
-        <div class="filters-container flow flow-space-l">
+        <div class="filters-container flow flow-space-l wrapper">
           <div class="flow flow-space-xs">
             <div class="filter-group">
               <span class="filter-label">Dostępność:</span>
@@ -188,10 +188,6 @@ const description =
     letter-spacing: 4px;
   }
 
-  .filters-container {
-    padding: var(--space-s);
-  }
-
   .filters-section {
     z-index: 10;
     position: relative;
@@ -227,7 +223,7 @@ const description =
 
   .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: var(--space-m);
   }
 
