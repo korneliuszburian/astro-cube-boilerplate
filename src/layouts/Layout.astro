@@ -1,23 +1,87 @@
 ---
 import "../css/global.css";
+import { ViewTransitions } from "astro:transitions";
+
 interface Props {
   title: string;
+  description?: string;
 }
 
-const { title } = Astro.props;
+const {
+  title,
+  description = "BY DOT FOR YOU ",
+} = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Astro description" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+
+    <!-- Gothic Sanctuary Meta -->
+    <meta name="theme-color" content="#1A1A1A" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+
     <title>{title}</title>
+
+    <!-- View Transitions for seamless navigation -->
+    <ViewTransitions />
   </head>
-  <body>
+  <body class="gothic-sanctuary" data-theme="dark">
     <slot />
+
+    <style is:global>
+      .gothic-sanctuary {
+        background-color: var(--color-base-charcoal);
+        color: var(--color-highlight-bone);
+        font-family: "Times New Roman", serif;
+        line-height: var(--leading-standard);
+        min-height: 100vh;
+
+        /* Use default cursor */
+        cursor: auto;
+      }
+
+      .gothic-sanctuary * {
+        box-sizing: border-box;
+      }
+
+      /* Performance optimizations */
+      .gothic-sanctuary img,
+      .gothic-sanctuary video {
+        max-width: 100%;
+        height: auto;
+      }
+
+      /* Selection styling */
+      .gothic-sanctuary ::selection {
+        background-color: var(--color-accent-fire);
+        color: var(--color-base-charcoal);
+      }
+
+      /* Scrollbar styling for Gothic theme */
+      .gothic-sanctuary::-webkit-scrollbar {
+        width: 12px;
+      }
+
+      .gothic-sanctuary::-webkit-scrollbar-track {
+        background: var(--color-base-granite);
+      }
+
+      .gothic-sanctuary::-webkit-scrollbar-thumb {
+        background: var(--color-highlight-brass);
+        border-radius: 6px;
+      }
+
+      .gothic-sanctuary::-webkit-scrollbar-thumb:hover {
+        background: var(--color-highlight-rusted-gold);
+      }
+    </style>
   </body>
 </html>

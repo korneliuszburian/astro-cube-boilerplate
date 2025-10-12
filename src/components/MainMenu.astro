@@ -1,0 +1,456 @@
+---
+/**
+ * Main Menu Component - Gothic Sanctuary Entrance
+ * Polish navigation with Gothic styling and asset-based design
+ */
+
+import GothicFrame from "./GothicFrame.astro";
+import GothicButton from "./GothicButton.astro";
+
+// Polish navigation structure
+const menuItems = [
+  {
+    title: "NOWA KOLEKCJA",
+    route: "/",
+    status: "disabled",
+    description: "Najnowsze zabronione szaty",
+  },
+  {
+    title: "WCZYTAJ KOLEKCJE",
+    route: "/collections",
+    status: "active",
+    description: "Przywołaj starożytne zbiory",
+  },
+  {
+    title: "SKLEP",
+    route: "/shop",
+    status: "active",
+    description: "Główne sanktuarium handlu",
+  },
+  {
+    title: "PRZEDMIOTY",
+    route: "/items",
+    status: "active",
+    description: "Katalog świętych reliktów",
+  },
+  {
+    title: "SYSTEM PROJEKTOWY",
+    route: "/design-system",
+    status: "active",
+    description: "Kompletny system gotyckich elementów",
+  },
+  {
+    title: "WEBGL EFFECTS",
+    route: "/hero-effects",
+    status: "active",
+    description: "Święte efekty wizualne",
+  },
+  {
+    title: "FLUID SIMULATION",
+    route: "/fluid-simulation",
+    status: "active",
+    description: "Interaktywna symulacja płynów",
+  },
+  {
+    title: "LOOKBOOK",
+    route: "/lookbook",
+    status: "active",
+    description: "Wizualna galeria mocy",
+  },
+  {
+    title: "ZDJĘCIA",
+    route: "/photos",
+    status: "active",
+    description: "Sekcja fotograficzna",
+  },
+];
+---
+
+<div class="main-menu">
+  <!-- Full page background -->
+  <div class="main-menu__page-background"></div>
+
+  <div class="main-menu__container">
+    <GothicFrame
+      variant="ornate"
+      size="thick"
+      background="none"
+      class="main-menu__frame"
+    >
+      <div class="main-menu__content-wrapper" id="main-menu-frame">
+        <video
+          id="main-menu-video"
+          class="main-menu__frame-video"
+          poster="/assets/videos/testing-video-poster-02.png"
+          preload="metadata"
+          loop
+          muted
+          playsinline
+        >
+          <source src="/assets/videos/testing-video-02.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+
+        <div class="main-menu__content">
+          <!-- Gothic Title -->
+          <h1 class="main-menu__title">
+            <!-- <span class="main-menu__title-main">BY DOT FOR YOU</span> -->
+          </h1>
+
+          <!-- Navigation Menu -->
+          <nav
+            class="main-menu__nav"
+            role="navigation"
+            aria-label="Main navigation"
+          >
+            <ul class="main-menu__list">
+              {
+                menuItems.map((item, index) => (
+                  <li class="main-menu__item">
+                    <GothicButton
+                      variant={
+                        index % 2 === 0 && index !== 0 ? "button1" : "button2"
+                      }
+                      size="large"
+                      disabled={item.status === "disabled"}
+                      href={item.status === "active" ? item.route : undefined}
+                      class="main-menu__button"
+                      data-description={item.description}
+                    >
+                      {item.title}
+                    </GothicButton>
+                  </li>
+                ))
+              }
+            </ul>
+          </nav>
+
+          <!-- Gothic Footer -->
+          <div class="main-menu__footer">
+            <p class="main-menu__tagline">
+              "Gdzie zakazane szaty stają się świętymi relikwiami"
+            </p>
+          </div>
+        </div>
+      </div>
+    </GothicFrame>
+  </div>
+
+  {/* Embers remain as page-level effects */}
+  <div class="main-menu__effects">
+    <div class="main-menu__ember main-menu__ember--1"></div>
+    <div class="main-menu__ember main-menu__ember--2"></div>
+    <div class="main-menu__ember main-menu__ember--3"></div>
+  </div>
+</div>
+
+<style>
+  .main-menu {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Fullscreen atmospheric background for the page */
+  .main-menu__page-background {
+    background-image: url("/assets/videos/testing-video-poster-02.png");
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    z-index: -2;
+  }
+
+  .main-menu__container {
+    position: relative;
+    z-index: 1; /* Above page background */
+    max-width: 600px;
+    width: 90vw;
+    animation: sanctuaryEntrance 1.5s ease-out;
+  }
+
+  .main-menu__frame {
+    /* This is the GothicFrame component instance */
+    position: relative; /* For absolute positioning of video and content wrapper */
+    overflow: hidden; /* To clip the video to the frame's bounds */
+  }
+
+  .main-menu__frame-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1; /* Sits behind content-wrapper, shows poster/video */
+    opacity: 1; /* Poster should be visible by default */
+  }
+
+  .main-menu__content-wrapper {
+    position: relative;
+    z-index: 1;
+    background-color: transparent;
+    padding-block: 8px;
+    padding-inline: 12px;
+  }
+
+  .main-menu__content {
+    text-align: center;
+  }
+
+  @keyframes sanctuaryEntrance {
+    from {
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .main-menu__title {
+    margin: 0 0 2rem 0;
+    font-family: "Times New Roman", serif;
+    text-align: center;
+  }
+
+  .main-menu__title-main {
+    display: block;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: bold;
+    color: var(--color-highlight-bone);
+    text-shadow:
+      2px 2px 0 var(--color-shadow-deep),
+      0 0 20px var(--color-accent-fire);
+    letter-spacing: 0.2em;
+    line-height: 1;
+  }
+
+  .main-menu__title-sub {
+    display: block;
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    color: var(--color-highlight-brass);
+    text-shadow: 1px 1px 2px var(--color-shadow-deep);
+    letter-spacing: 0.3em;
+    margin-top: 0.5rem;
+    font-weight: normal;
+  }
+
+  .main-menu__nav {
+    margin: 2rem 0;
+  }
+
+  .main-menu__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .main-menu__item {
+    display: flex;
+    justify-content: center;
+  }
+
+  .main-menu__button {
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+    transition: all var(--transition-gothic);
+  }
+
+  .main-menu__button::after {
+    content: attr(data-description);
+    position: absolute;
+    bottom: -2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-base-granite);
+    color: var(--color-highlight-bone);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-ember);
+    z-index: 10;
+    box-shadow: var(--shadow-deep);
+  }
+
+  .main-menu__button:hover::after {
+    opacity: 1;
+  }
+
+  .main-menu__footer {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-highlight-brass);
+  }
+
+  .main-menu__tagline {
+    margin: 0;
+    font-style: italic;
+    color: var(--color-highlight-brass);
+    font-size: 0.9rem;
+    text-shadow: 1px 1px 2px var(--color-shadow-deep);
+  }
+
+  .main-menu__effects {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .main-menu__ember {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--color-accent-fire);
+    border-radius: 50%;
+    box-shadow: var(--glow-fire);
+    animation: emberFloat 6s infinite ease-in-out;
+  }
+
+  .main-menu__ember--1 {
+    top: 20%;
+    left: 15%;
+    animation-delay: 0s;
+  }
+
+  .main-menu__ember--2 {
+    top: 60%;
+    right: 20%;
+    animation-delay: 2s;
+  }
+
+  .main-menu__ember--3 {
+    bottom: 30%;
+    left: 25%;
+    animation-delay: 4s;
+  }
+
+  @keyframes emberFloat {
+    0%,
+    100% {
+      transform: translateY(0) scale(1);
+      opacity: 0.6;
+    }
+    50% {
+      transform: translateY(-20px) scale(1.2);
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .main-menu__button::after {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .main-menu__title-main {
+      font-size: 2rem;
+    }
+    .main-menu__title-sub {
+      font-size: 1rem;
+    }
+  }
+
+  @media (prefers-contrast: high) {
+    .main-menu__title-main,
+    .main-menu__title-sub {
+      text-shadow: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .main-menu__container {
+      animation: none;
+    }
+    .main-menu__ember {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  const mainMenuFrame = document.getElementById("main-menu-frame"); // This targets the content-wrapper
+  const video = document.getElementById(
+    "main-menu-video"
+  ) as HTMLVideoElement | null;
+
+  let videoPlayPromise: Promise<void> | null = null;
+  let isMouseOverFrame = false;
+
+  if (mainMenuFrame && video) {
+    const playVideo = () => {
+      if (video.paused) {
+        if (video.readyState >= 3) {
+          // HAVE_FUTURE_DATA or more
+          videoPlayPromise = video.play();
+          if (videoPlayPromise) {
+            videoPlayPromise.catch((error) => {
+              console.error("Video play failed:", error);
+              videoPlayPromise = null;
+            });
+          }
+        } else {
+          video.addEventListener(
+            "canplay",
+            () => {
+              if (isMouseOverFrame && video.paused) {
+                videoPlayPromise = video.play();
+                if (videoPlayPromise) {
+                  videoPlayPromise.catch((error) => {
+                    console.error("Video play failed after canplay:", error);
+                    videoPlayPromise = null;
+                  });
+                }
+              }
+            },
+            { once: true }
+          );
+        }
+      }
+    };
+
+    const pauseVideo = async () => {
+      if (videoPlayPromise !== null) {
+        try {
+          await videoPlayPromise;
+        } catch (error) {
+          /* Already logged */
+        } finally {
+          videoPlayPromise = null;
+        }
+      }
+      if (!video.paused) {
+        video.pause();
+        // Optionally, reset to show poster:
+        // video.currentTime = 0;
+      }
+    };
+
+    mainMenuFrame.addEventListener("mouseenter", () => {
+      isMouseOverFrame = true;
+      playVideo();
+    });
+
+    mainMenuFrame.addEventListener("mouseleave", () => {
+      isMouseOverFrame = false;
+      pauseVideo();
+    });
+  }
+</script>

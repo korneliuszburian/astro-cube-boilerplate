@@ -1,0 +1,102 @@
+/* src/css/components/gothic-frame.css */
+
+[data-gothic-frame] {
+  border-image-source: var(--frame-asset);
+  background-image: var(--background-asset);
+  background-size: cover;
+  
+  /* Gothic atmosphere */
+  box-shadow: var(--shadow-deep), var(--shadow-inset-glow);
+  position: relative;
+
+  padding: 13px;
+  
+  /* Hardware acceleration for smooth animations */
+  transform: translateZ(0);
+  will-change: transform, box-shadow;
+  backface-visibility: hidden;
+  
+  /* Transition with Gothic weight */
+  transition: 
+    box-shadow var(--transition-gothic),
+    transform var(--transition-stone);
+}
+
+[data-gothic-frame]:hover {
+  box-shadow: 
+    var(--shadow-deep), 
+    var(--shadow-inset-glow),
+    var(--shadow-ember);
+}
+
+/* Size variants with proper proportions */
+[data-gothic-frame][data-size="thin"] {
+  --border-width: var(--gothic-border-thin);
+}
+
+[data-gothic-frame][data-size="medium"] {
+  --border-width: var(--gothic-border-medium);
+}
+
+[data-gothic-frame][data-size="thick"] {
+  --border-width: var(--gothic-border-thick);
+}
+
+[data-gothic-frame][data-size="heavy"] {
+  --border-width: var(--gothic-border-heavy);
+}
+
+/* Content padding to account for border */
+[data-gothic-frame] > :global(*) {
+  padding: calc(var(--border-width) * 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  [data-gothic-frame] {
+    --border-width: calc(var(--border-width) * 0.75);
+  }
+}
+
+@media (max-width: 480px) {
+  [data-gothic-frame] {
+    --border-width: calc(var(--border-width) * 0.6);
+  }
+}
+
+/* Border-image configurations for each variant */
+[data-gothic-frame][data-variant="ornate"] {
+  border-image-slice: 95 72 92 78 fill;
+  border-image-width: 20px 20px 20px 20px;
+  border-image-outset: 1px 3px 3px 4px;
+  border-image-repeat: stretch stretch;
+}
+
+[data-gothic-frame][data-variant="simple"] {
+  border-image-slice: 30 30 30 30 fill;
+  border-image-width: 15px 15px 15px 15px;
+  border-image-outset: 0px 0px 0px 0px;
+  padding: 60px 92px 82px 92px;
+  border-image-repeat: stretch stretch;
+}
+
+[data-gothic-frame][data-variant="heavy"] {
+  border-image-slice: 45 45 45 45 fill;
+  border-image-width: 25px 25px 25px 25px;
+  border-image-outset: 2px 2px 2px 2px;
+  border-image-repeat: stretch stretch;
+}
+
+[data-gothic-frame][data-variant="carved"] {
+  border-image-slice: 35 35 35 35 fill;
+  border-image-width: 18px 18px 18px 18px;
+  border-image-outset: 1px 1px 1px 1px;
+  border-image-repeat: stretch stretch;
+}
+
+[data-gothic-frame][data-variant="runic"] {
+  border-image-slice: 40 40 40 40 fill;
+  border-image-width: 22px 22px 22px 22px;
+  border-image-outset: 1px 1px 1px 1px;
+  border-image-repeat: stretch stretch;
+}

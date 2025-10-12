@@ -1,0 +1,184 @@
+---
+/**
+ * Collections Page - "WCZYTAJ KOLEKCJE" - VIEWPORT-OPTIMIZED HARMONIC DESIGN
+ * 100vw × 100vh Gothic sanctuary for sacred collections
+ */
+
+import Layout from "../layouts/Layout.astro";
+import GothicFrame from "../components/GothicFrame.astro";
+import GothicButton from "../components/GothicButton.astro";
+import ProductCard from "../components/ProductCard.astro";
+import { getAllCollections, getProductsByCollection, getAvailableProducts } from "../utils/products";
+
+const collections = getAllCollections();
+const allProducts = getAvailableProducts();
+
+// Featured collection products
+const featuredProducts = getProductsByCollection('forbidden_collection');
+---
+
+<Layout title="WCZYTAJ KOLEKCJE - Gothic Sanctuary" description="Przywołaj starożytne zbiory zakazanych szat">
+  <div class="collections-viewport">
+    <!-- Fixed atmospheric background -->
+    <div class="collections-viewport__background"></div>
+
+    <!-- Floating atmospheric effects -->
+    <div class="collections-viewport__effects">
+      <div class="ember ember--1"></div>
+      <div class="ember ember--2"></div>
+      <div class="ember ember--3"></div>
+      <div class="ember ember--4"></div>
+    </div>
+
+    <!-- Viewport Grid Layout -->
+    <div class="collections-viewport__grid">
+      
+      <!-- Header Section - Top 20% -->
+      <header class="collections-viewport__header">
+        <GothicFrame variant="ornate" size="medium" background="none" class="header-frame">
+          <video
+            class="header-video"
+            poster="/assets/videos/testing-video-poster-02.png"
+            preload="metadata"
+            loop
+            muted
+            playsinline
+          >
+            <source src="/assets/videos/testing-video-02.mp4" type="video/mp4" />
+          </video>
+
+          <div class="header-content" id="header-hover">
+            <div class="header-main">
+              <h1 class="header-title">WCZYTAJ KOLEKCJE</h1>
+              <div class="header-stats">
+                <span class="stat">{Object.keys(collections).length} KOLEKCJI</span>
+                <span class="stat">{allProducts.length} RELIKTÓW</span>
+                <span class="stat">{featuredProducts.length} ZAKAZANYCH</span>
+              </div>
+            </div>
+            <div class="header-nav">
+              <GothicButton variant="button1" size="small" href="/" class="nav-btn">← SANCTUARY</GothicButton>
+              <GothicButton variant="button3" size="small" href="/shop" class="nav-btn">SHOP →</GothicButton>
+            </div>
+          </div>
+        </GothicFrame>
+      </header>
+
+      <!-- Main Collections Area - 80% -->
+      <main class="collections-viewport__main">
+        
+        <!-- Collections Grid - Left 60% -->
+        <section class="collections-section">
+          <div class="section-header">
+            <h2 class="section-title">STAROŻYTNE ZBIORY</h2>
+          </div>
+          
+          <div class="collections-scroll">
+            <div class="collections-grid">
+              {Object.entries(collections).map(([key, collection]) => {
+                const collectionProducts = getProductsByCollection(key);
+                const availableCount = collectionProducts.filter(p => p.status === 'available').length;
+                
+                return (
+                  <div class="collection-card">
+                    <GothicFrame variant="ornate" size="thin" background="none" class="collection-frame">
+                      <div class="collection-content">
+                        <div class="collection-header">
+                          <h3 class="collection-name">{collection.name}</h3>
+                          <div class="collection-count">
+                            <span class="count-available">{availableCount}</span>
+                            <span class="count-total">/{collectionProducts.length}</span>
+                          </div>
+                        </div>
+                        
+                        <p class="collection-description">{collection.description}</p>
+                        
+                        <div class="collection-preview">
+                          {collectionProducts.slice(0, 2).map(product => (
+                            <div class="preview-item">
+                              <img 
+                                src={product.images.main} 
+                                alt={product.name}
+                                class="preview-image"
+                              />
+                              <div class="preview-rarity preview-rarity--{product.rarity}">
+                                {product.rarity.slice(0, 3).toUpperCase()}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <GothicButton
+                          variant="button2"
+                          size="small"
+                          href={`/collections/${key}`}
+                          class="collection-button"
+                        >
+                          PRZYWOŁAJ
+                        </GothicButton>
+                      </div>
+                    </GothicFrame>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        <!-- Featured Collection - Right 40% -->
+        <section class="featured-section">
+          <div class="section-header">
+            <h2 class="section-title section-title--featured">ZAKAZANA KOLEKCJA</h2>
+            <span class="featured-badge">MOST FORBIDDEN</span>
+          </div>
+          
+          <GothicFrame variant="ornate" size="medium" background="none" class="featured-frame">
+            <div class="featured-content">
+              <div class="featured-description">
+                <p class="featured-text">
+                  Najbardziej pożądane relikty dostępne tylko dla wybranych adeptów ciemnych sztuk.
+                </p>
+              </div>
+              
+              <div class="featured-products-scroll">
+                <div class="featured-products-grid">
+                  {featuredProducts.map(product => (
+                    <div class="featured-product">
+                      <GothicFrame variant="ornate" size="thin" background="none" class="featured-product-frame">
+                        <div class="featured-product-content">
+                          <img 
+                            src={product.images.main} 
+                            alt={product.name}
+                            class="featured-product-image"
+                          />
+                          <div class="featured-product-overlay">
+                            <h4 class="featured-product-name">{product.name}</h4>
+                            <div class="featured-product-price">
+                              <span class="price-symbol">⚔</span>
+                              <span class="price-value">{product.price}</span>
+                            </div>
+                            <div class="featured-product-rarity featured-product-rarity--{product.rarity}">
+                              {product.rarity.toUpperCase()}
+                            </div>
+                          </div>
+                        </div>
+                      </GothicFrame>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <div class="featured-actions">
+                <GothicButton variant="button4" size="medium" href="/items" class="featured-action-button">
+                  ZOBACZ WSZYSTKIE RELIKTY
+                </GothicButton>
+              </div>
+            </div>
+          </GothicFrame>
+        </section>
+
+      </main>
+
+    </div>
+  </div>
+</Layout>

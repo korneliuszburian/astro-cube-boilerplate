@@ -1,0 +1,323 @@
+---
+/**
+ * Gothic Button Component
+ * Uses Blizzard Diablo methodology with real button assets
+ * Variant-specific styling for proper dimensions
+ */
+
+export interface Props {
+  variant?: 'button1' | 'button2' | 'button3' | 'button4' | 'button5' | 'button6';
+  size?: 'small' | 'medium' | 'large';
+  disabled?: boolean;
+  href?: string;
+  class?: string;
+  type?: 'button' | 'submit' | 'reset';
+  onClick?: string;
+}
+
+const { 
+  variant = 'button1',
+  size = 'medium',
+  disabled = false,
+  href,
+  class: className = '',
+  type = 'button',
+  onClick
+} = Astro.props;
+
+// Button asset paths for different variants
+const buttonAssets = {
+  button1: 'Button 1',
+  button2: 'Button 2', 
+  button3: 'Button 3',
+  button4: 'Button 4',
+  button5: 'Button 5',
+  button6: 'Button 6'
+};
+
+const buttonPath = buttonAssets[variant];
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag
+  class={`blz-button blz-button--${variant} blz-button--${size} ${disabled ? 'blz-button--disabled' : ''} ${className}`}
+  href={href}
+  type={!href ? type : undefined}
+  disabled={!href ? disabled : undefined}
+  onclick={onClick}
+>
+  <div class="optional-fill"></div>
+  <div class="button-content">
+    <slot />
+  </div>
+</Tag>
+
+<style>
+  /* Import Cinzel font for Gothic styling */
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
+
+  /* Base button styles */
+  .blz-button {
+    font-family: 'Cinzel', serif;
+    position: relative;
+    color: var(--color-highlight-brass);
+    font-weight: 500;
+    font-size: 16px;
+    text-align: center;
+    background-size: auto 100%;
+    background-position: left, right, center;
+    background-repeat: no-repeat, no-repeat, no-repeat;
+    transition: opacity 350ms, filter 350ms, color 350ms;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    display: inline-block;
+    text-decoration: none;
+  }
+
+  .blz-button .button-content {
+    position: relative;
+    z-index: 2;
+    text-shadow: 0px 2px 9px black, 0px 2px 9px black, 0px 1px 14px black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    user-select: none;
+  }
+
+  .blz-button .optional-fill {
+    background-repeat: repeat;
+    display: flex;
+    height: calc(100% - 12px);
+    pointer-events: none;
+    position: absolute;
+    width: calc(100% - 12px);
+    z-index: 1;
+  }
+
+  .blz-button:hover {
+    color: var(--color-text-ember);
+  }
+
+  .blz-button:after {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-size: auto 100%;
+    background-position: left, right, center;
+    background-repeat: no-repeat, no-repeat, repeat-x;
+    transition: opacity 350ms, filter 350ms;
+    opacity: 0;
+    z-index: 1;
+    filter: brightness(1.3) saturate(1.2);
+  }
+
+  .blz-button:hover:after {
+    opacity: 1;
+    filter: brightness(1.4) saturate(1.3);
+  }
+
+  /* Button 1 Variant */
+  .blz-button--button1 {
+    background-image: 
+      url('/assets/graphics/buttons/Button 1/Button 1 left.png'),
+      url('/assets/graphics/buttons/Button 1/Button 1 right.png'),
+      url('/assets/graphics/buttons/Button 1/Button 1 mid.png');
+    min-width: 250px;
+    height: 80px;
+    font-size: 14px;
+    padding: 0 30px;
+
+    .button-content {
+      padding-block-start: 4px;
+    }
+  }
+
+  .blz-button--button1:after {
+    background-image: 
+      url('/assets/graphics/buttons/Button 1/Button 1 left.png'),
+      url('/assets/graphics/buttons/Button 1/Button 1 right.png'),
+      url('/assets/graphics/buttons/Button 1/Button 1 mid.png');
+  }
+
+  /* Button 2 Variant */
+  .blz-button--button2 {
+    background-image: 
+      url('/assets/graphics/buttons/Button 2/Button 2 left.png'),
+      url('/assets/graphics/buttons/Button 2/Button 2 right.png'),
+      url('/assets/graphics/buttons/Button 2/Button 2 mid.png');
+    min-width: 275px;
+    height: 80px;
+    padding: 0 32px;
+    font-size: 14px;
+
+    .button-content {
+      padding-block-end: 6px;
+    }
+  }
+
+  .blz-button--button2:after {
+    background-image: 
+      url('/assets/graphics/buttons/Button 2/Button 2 left.png'),
+      url('/assets/graphics/buttons/Button 2/Button 2 right.png'),
+      url('/assets/graphics/buttons/Button 2/Button 2 mid.png');
+  }
+
+  /* Button 3 Variant */
+  .blz-button--button3 {
+    background-image: 
+      url('/assets/graphics/buttons/Button 3/Button 3 left.png'),
+      url('/assets/graphics/buttons/Button 3/Button 3 right.png'),
+      url('/assets/graphics/buttons/Button 3/Button 3 mid.png');
+    min-width: 180px;
+    height: 45px;
+    font-size: 15px;
+    padding: 0 28px;
+  }
+
+  .blz-button--button3:after {
+    background-image: 
+      url('/assets/graphics/buttons/Button 3/Button 3 left.png'),
+      url('/assets/graphics/buttons/Button 3/Button 3 right.png'),
+      url('/assets/graphics/buttons/Button 3/Button 3 mid.png');
+  }
+
+  /* Button 4 Variant */
+  .blz-button--button4 {
+    background-image: 
+      url('/assets/graphics/buttons/Button 4/Button 4 left.png'),
+      url('/assets/graphics/buttons/Button 4/Button 4 right.png'),
+      url('/assets/graphics/buttons/Button 4/Button 4 mid.png');
+    min-width: 240px;
+    height: 60px;
+    font-size: 18px;
+    padding: 0 35px;
+  }
+
+  .blz-button--button4:after {
+    background-image: 
+      url('/assets/graphics/buttons/Button 4/Button 4 left.png'),
+      url('/assets/graphics/buttons/Button 4/Button 4 right.png'),
+      url('/assets/graphics/buttons/Button 4/Button 4 mid.png');
+  }
+
+  /* Button 5 Variant */
+  .blz-button--button5 {
+    background-image: 
+      url('/assets/graphics/buttons/Button 5/Button 5 left.png'),
+      url('/assets/graphics/buttons/Button 5/Button 5 right.png'),
+      url('/assets/graphics/buttons/Button 5/Button 5 mid.png');
+    min-width: 190px;
+    height: 48px;
+    font-size: 16px;
+    padding: 0 30px;
+  }
+
+  .blz-button--button5:after {
+    background-image: 
+      url('/assets/graphics/buttons/Button 5/Button 5 left.png'),
+      url('/assets/graphics/buttons/Button 5/Button 5 right.png'),
+      url('/assets/graphics/buttons/Button 5/Button 5 mid.png');
+  }
+
+  /* Button 6 Variant */
+  .blz-button--button6 {
+    background-image: 
+      url('/assets/graphics/buttons/Button 6/Button 6 left.png'),
+      url('/assets/graphics/buttons/Button 6/Button 6 right.png'),
+      url('/assets/graphics/buttons/Button 6/Button 6 mid.png');
+    min-width: 160px;
+    height: 42px;
+    font-size: 14px;
+    padding: 0 25px;
+  }
+
+  .blz-button--button6:after {
+    background-image: 
+      url('/assets/graphics/buttons/Button 6/Button 6 left.png'),
+      url('/assets/graphics/buttons/Button 6/Button 6 right.png'),
+      url('/assets/graphics/buttons/Button 6/Button 6 mid.png');
+  }
+
+  /* Size modifiers */
+  .blz-button--small {
+    transform: scale(0.8);
+    transform-origin: center;
+  }
+
+  .blz-button--medium {
+    transform: scale(1);
+  }
+
+  .blz-button--large {
+    transform: scale(1.2);
+    transform-origin: center;
+  }
+
+  /* Disabled state */
+  .blz-button--disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    filter: grayscale(0.5);
+        background-color: transparent;
+  }
+
+  .blz-button--disabled:hover {
+    color: var(--color-highlight-brass);
+  }
+
+  .blz-button--disabled:after {
+    display: none;
+  }
+  
+  @media (max-width: 768px) {
+    .blz-button {
+      transform: scale(0.9);
+    }
+    
+    .blz-button--small {
+      transform: scale(0.7);
+    }
+    
+    .blz-button--large {
+      transform: scale(1.1);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blz-button {
+      transform: scale(0.8);
+    }
+    
+    .blz-button--small {
+      transform: scale(0.6);
+    }
+    
+    .blz-button--large {
+      transform: scale(1.0);
+    }
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .blz-button .button-content {
+      text-shadow: none;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .blz-button {
+      transition: none;
+    }
+    
+    .blz-button:after {
+      transition: none;
+    }
+  }
+</style>

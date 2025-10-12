@@ -1,0 +1,383 @@
+---
+/**
+ * Product Card Component - Sacred Relic Display
+ * Displays individual products in grid layouts with Gothic styling
+ */
+
+import GothicFrame from './GothicFrame.astro';
+import GothicButton from './GothicButton.astro';
+import type { ProductAsset } from '../utils/products';
+
+export interface Props {
+  product: ProductAsset;
+  variant?: 'grid' | 'list' | 'featured';
+  class?: string;
+}
+
+const { 
+  product, 
+  variant = 'grid',
+  class: className = '' 
+} = Astro.props;
+
+// Rarity styling mapping
+const rarityStyles = {
+  common: { border: 'simple' as const, glow: 'brass' },
+  rare: { border: 'carved' as const, glow: 'ember' },
+  legendary: { border: 'ornate' as const, glow: 'fire' },
+  artifact: { border: 'heavy' as const, glow: 'blood' }
+};
+
+const style = rarityStyles[product.rarity];
+const isDisabled = product.status === 'disabled';
+---
+
+<article class={`product-card product-card--${variant} product-card--${product.rarity} ${isDisabled ? 'product-card--disabled' : ''} ${className}`}>
+  <GothicFrame variant={style.border} size="medium" background="stone" class="product-card__frame">
+    <div class="product-card__content">
+      <!-- Product Image -->
+      <div class="product-card__image-container">
+        <img 
+          src={product.images.main} 
+          alt={product.name}
+          class="product-card__image"
+          loading="lazy"
+        />
+        {isDisabled && (
+          <div class="product-card__overlay">
+            <span class="product-card__status">RITUAL IN PROGRESS</span>
+          </div>
+        )}
+        <!-- Rarity indicator -->
+        <div class={`product-card__rarity product-card__rarity--${product.rarity}`}>
+          {product.rarity.toUpperCase()}
+        </div>
+      </div>
+      
+      <!-- Product Information -->
+      <div class="product-card__info">
+        <h3 class="product-card__name">{product.name}</h3>
+        
+        <p class="product-card__description">{product.description}</p>
+        
+        <!-- Traits -->
+        <div class="product-card__traits">
+          {product.traits.slice(0, 3).map(trait => (
+            <span class="product-card__trait">{trait}</span>
+          ))}
+        </div>
+        
+        <!-- Materials -->
+        <div class="product-card__materials">
+          <strong>Sacred Materials:</strong>
+          <span>{product.materials[0]}</span>
+          {product.materials.length > 1 && <span>+{product.materials.length - 1} more</span>}
+        </div>
+        
+        <!-- Pricing and Actions -->
+        <div class="product-card__footer">
+          <div class="product-card__price">
+            <span class="product-card__currency">⚔</span>
+            <span class="product-card__amount">{product.price}</span>
+            <span class="product-card__unit">GOLD</span>
+          </div>
+          
+          <div class="product-card__actions">
+            {!isDisabled ? (
+              <GothicButton
+                variant="button3"
+                size="small"
+                href={`/items/${product.id}`}
+                class="product-card__button"
+              >
+                INSPECT RELIC
+              </GothicButton>
+            ) : (
+              <GothicButton
+                variant="button6"
+                size="small"
+                disabled={true}
+                class="product-card__button"
+              >
+                FORBIDDEN
+              </GothicButton>
+            )}
+          </div>
+        </div>
+        
+        <!-- Stock indicator -->
+        {product.maxQuantity > 0 && product.maxQuantity < 3 && (
+          <div class="product-card__stock">
+            <span class="product-card__stock-warning">
+              Only {product.maxQuantity} remaining
+            </span>
+          </div>
+        )}
+      </div>
+    </div>
+  </GothicFrame>
+</article>
+
+<style>
+  .product-card {
+    transition: all var(--transition-gothic);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .product-card:hover:not(.product-card--disabled) {
+    transform: translateY(-4px);
+  }
+  
+  .product-card__frame {
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  .product-card__content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1rem;
+  }
+  
+  /* Image Container */
+  .product-card__image-container {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+  
+  .product-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-ember);
+  }
+  
+  .product-card:hover .product-card__image {
+    transform: scale(1.05);
+  }
+  
+  .product-card__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-accent-blood);
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+  }
+  
+  /* Rarity Indicator */
+  .product-card__rarity {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .product-card__rarity--common {
+    background: var(--color-base-granite);
+    color: var(--color-highlight-bone);
+  }
+  
+  .product-card__rarity--rare {
+    background: var(--color-highlight-brass);
+    color: var(--color-base-charcoal);
+  }
+  
+  .product-card__rarity--legendary {
+    background: var(--color-accent-fire);
+    color: var(--color-base-charcoal);
+    box-shadow: var(--glow-ember);
+  }
+  
+  .product-card__rarity--artifact {
+    background: var(--color-accent-blood);
+    color: var(--color-highlight-bone);
+    box-shadow: 0 0 12px rgba(153, 0, 0, 0.6);
+  }
+  
+  /* Product Information */
+  .product-card__info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .product-card__name {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--color-highlight-bone);
+    margin: 0 0 0.5rem 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .product-card__description {
+    font-size: 0.85rem;
+    color: var(--color-highlight-brass);
+    margin: 0 0 0.75rem 0;
+    font-style: italic;
+    line-height: 1.4;
+    flex: 1;
+  }
+  
+  /* Traits */
+  .product-card__traits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .product-card__trait {
+    background: var(--color-base-granite);
+    color: var(--color-text-ember);
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  
+  /* Materials */
+  .product-card__materials {
+    font-size: 0.8rem;
+    color: var(--color-highlight-bone);
+    margin-bottom: 1rem;
+  }
+  
+  .product-card__materials strong {
+    color: var(--color-highlight-brass);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  
+  /* Footer */
+  .product-card__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-base-granite);
+  }
+  
+  .product-card__price {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: bold;
+  }
+  
+  .product-card__currency {
+    color: var(--color-accent-fire);
+    font-size: 1.1rem;
+  }
+  
+  .product-card__amount {
+    color: var(--color-highlight-bone);
+    font-size: 1.1rem;
+  }
+  
+  .product-card__unit {
+    color: var(--color-highlight-brass);
+    font-size: 0.8rem;
+  }
+  
+  /* Stock Warning */
+  .product-card__stock {
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+  
+  .product-card__stock-warning {
+    background: var(--color-accent-blood);
+    color: var(--color-highlight-bone);
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  
+  /* Disabled State */
+  .product-card--disabled {
+    opacity: 0.7;
+    filter: grayscale(0.3);
+  }
+  
+  .product-card--disabled:hover {
+    transform: none;
+  }
+  
+  /* Variant Styles */
+  .product-card--list {
+    flex-direction: row;
+    max-width: none;
+  }
+  
+  .product-card--list .product-card__content {
+    flex-direction: row;
+    gap: 1rem;
+  }
+  
+  .product-card--list .product-card__image-container {
+    width: 200px;
+    flex-shrink: 0;
+    margin-bottom: 0;
+  }
+  
+  .product-card--featured {
+    grid-column: span 2;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .product-card__content {
+      padding: 0.75rem;
+    }
+    
+    .product-card__name {
+      font-size: 1rem;
+    }
+    
+    .product-card__footer {
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: stretch;
+    }
+    
+    .product-card--list .product-card__content {
+      flex-direction: column;
+    }
+    
+    .product-card--list .product-card__image-container {
+      width: 100%;
+    }
+  }
+  
+  /* High contrast mode */
+  @media (prefers-contrast: high) {
+    .product-card__name,
+    .product-card__description {
+      text-shadow: none;
+    }
+  }
+</style>

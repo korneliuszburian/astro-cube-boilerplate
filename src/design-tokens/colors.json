@@ -1,22 +1,46 @@
 {
-  "title": "Colors",
-  "description": "Hex color codes that can be shared, cross-platform. They can be converted at point of usage, such as HSL for web or CMYK for print.",
+  "title": "Gothic Sanctuary Colors",
+  "description": "Dark fantasy Gothic color palette for the Gothic Sanctuary e-commerce platform. These colors create the immersive medieval merchant sanctuary atmosphere.",
   "items": [
     {
       "name": "Transparent",
       "value": "transparent"
     },
     {
-      "name": "Dark",
-      "value": "#030303"
+      "name": "Base Charcoal",
+      "value": "#1A1A1A"
     },
     {
-      "name": "Light",
-      "value": "#ffffff"
+      "name": "Base Granite",
+      "value": "#222222"
     },
     {
-      "name": "Primary",
-      "value": "#02394A"
+      "name": "Highlight Brass",
+      "value": "#CD7F32"
+    },
+    {
+      "name": "Highlight Bone",
+      "value": "#F5F5DC"
+    },
+    {
+      "name": "Highlight Rusted Gold",
+      "value": "#B8860B"
+    },
+    {
+      "name": "Accent Fire",
+      "value": "#FF9900"
+    },
+    {
+      "name": "Accent Blood",
+      "value": "#990000"
+    },
+    {
+      "name": "Text Ember",
+      "value": "#FFA500"
+    },
+    {
+      "name": "Shadow Deep",
+      "value": "#0A0A0A"
     }
   ]
 }

@@ -14,13 +14,19 @@
   "dependencies": {
     "@astrojs/check": "^0.9.4",
     "@astrojs/partytown": "^2.1.4",
-    "@astrojs/sitemap": "^3.3.0",
+    "@astrojs/react": "^4.3.0",
+    "@astrojs/sitemap": "^3.4.1",
     "@astrojs/tailwind": "^6.0.2",
-    "astro": "^5.7.4",
+    "@types/three": "^0.177.0",
+    "astro": "^5.9.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "slugify": "^1.6.6",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.1",
+    "three": "^0.177.0"
   },
   "devDependencies": {
+    "postcss-nesting": "^13.0.2",
     "prettier": "^3.2.5",
     "prettier-plugin-astro": "^0.13.0",
     "typescript": "^5.3.3"

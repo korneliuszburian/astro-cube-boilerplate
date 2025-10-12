@@ -1,0 +1,58 @@
+---
+/**
+ * Gothic Frame Component
+ * Uses real assets from assets/graphics/frames/ for border-image implementation
+ * Never generates graphics - only uses provided Gothic assets
+ */
+import '../css/components/gothic-frame.css';
+
+export interface Props {
+  variant?: 'ornate' | 'simple' | 'heavy' | 'carved' | 'runic';
+  size?: 'thin' | 'medium' | 'thick' | 'heavy';
+  class?: string;
+  background?: 'stone' | 'parchment' | 'burned' | 'none';
+}
+
+const { 
+  variant = 'ornate', 
+  size = 'medium', 
+  class: className = '',
+  background = 'stone'
+} = Astro.props;
+
+// Asset mapping for different frame variants using real assets
+const frameAssets = {
+  ornate: 'good-frame-01.png',
+  simple: 'ChatGPT-Image-17-maj-2025,-23_51_35_0000_Warstwa-1.png',
+  heavy: 'ChatGPT-Image-18-maj-2025,-00_07_45_0000_Warstwa-1.png',
+  carved: 'ChatGPT-Image-17-maj-2025,-23_54_35_0000_Warstwa-1.png',
+  runic: 'ChatGPT-Image-18-maj-2025,-00_23_42_0000_Warstwa-1.png'
+};
+
+// Background texture mapping
+const backgroundAssets = {
+  stone: 'ChatGPT-Image-18-maj-2025,-00_52_43_0000_Warstwa-1.png',
+  parchment: 'ChatGPT-Image-18-maj-2025,-01_03_34_0001_Warstwa-2.png',
+  burned: 'ChatGPT-Image-18-maj-2025,-00_52_47_0000_Warstwa-2.png',
+  none: 'none'
+};
+
+const frameAsset = frameAssets[variant];
+const backgroundAssetPath = backgroundAssets[background];
+const borderWidthValue = `var(--gothic-border-${size})`;
+---
+
+<div
+  data-gothic-frame
+  data-variant={variant}
+  data-size={size}
+  data-background={background}
+  class={className}
+  style={{
+    '--frame-asset': `url('/assets/graphics/frames/${frameAsset}')`,
+    '--background-asset': background !== 'none' ? `url('/assets/graphics/frameBackgrounds/${backgroundAssetPath}')` : 'none',
+    '--border-width': borderWidthValue
+  }}
+>
+  <slot />
+</div>

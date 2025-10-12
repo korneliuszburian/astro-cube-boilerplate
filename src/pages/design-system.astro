@@ -1,0 +1,1165 @@
+---
+/**
+ * Design System Playground - Complete Gothic Sanctuary Showcase
+ * A comprehensive showcase of all Gothic design elements, assets, and components
+ */
+
+import Layout from "../layouts/Layout.astro";
+import GothicFrame from "../components/GothicFrame.astro";
+import GothicButton from "../components/GothicButton.astro";
+import ProductCard from "../components/ProductCard.astro";
+import { getAvailableProducts, getAllCollections } from "../utils/products";
+
+const products = getAvailableProducts();
+const collections = getAllCollections();
+
+// Asset collections for showcase
+const buttonAssets = [
+  { id: 'button1', name: 'Ancient Stone', path: '/assets/graphics/buttons/Button 1/' },
+  { id: 'button2', name: 'Sacred Bronze', path: '/assets/graphics/buttons/Button 2/' },
+  { id: 'button3', name: 'Dark Iron', path: '/assets/graphics/buttons/Button 3/' },
+  { id: 'button4', name: 'Blood Ruby', path: '/assets/graphics/buttons/Button 4/' },
+  { id: 'button5', name: 'Mystic Gold', path: '/assets/graphics/buttons/Button 5/' },
+  { id: 'button6', name: 'Shadow Steel', path: '/assets/graphics/buttons/Button 6/' }
+];
+
+const frameAssets = [
+  { id: 'frame1', name: 'Ornate Sanctuary', path: '/assets/graphics/frames/good-frame-01.png' },
+  { id: 'frame2', name: 'Ancient Runes', path: '/assets/graphics/frames/94da7c01-40c2-44b3-b89c-ed884946215a_0003_Warstwa-4.png' },
+  { id: 'frame3', name: 'Carved Stone', path: '/assets/graphics/frames/ChatGPT Image 17 maj 2025, 23_12_46.png' },
+  { id: 'frame4', name: 'Gothic Arch', path: '/assets/graphics/frames/ChatGPT Image 17 maj 2025, 23_16_49.png' }
+];
+
+const addonAssets = [
+  { id: 'addon1', name: 'Sacred Symbol', path: '/assets/graphics/addons/ChatGPT-Image-17-maj-2025,-23_44_44_0000_Warstwa-1.png' },
+  { id: 'addon2', name: 'Mystic Rune', path: '/assets/graphics/addons/ChatGPT-Image-18-maj-2025,-00_23_42_0011_Warstwa-12.png' },
+  { id: 'addon3', name: 'Dark Emblem', path: '/assets/graphics/addons/ChatGPT-Image-18-maj-2025,-00_37_34_0005_Warstwa-6.png' },
+  { id: 'addon4', name: 'Blood Seal', path: '/assets/graphics/addons/fb8185c3-116b-41b8-919c-f48ff889dbbb_0007_Warstwa-8.png' }
+];
+
+const backgroundAssets = [
+  { id: 'bg1', name: 'Sanctuary Depths', path: '/assets/graphics/frameBackgrounds/ChatGPT Image 18 maj 2025, 00_53_51.png' },
+  { id: 'bg2', name: 'Ancient Mist', path: '/assets/graphics/frameBackgrounds/ChatGPT Image 18 maj 2025, 01_13_40.png' },
+  { id: 'bg3', name: 'Shadow Veil', path: '/assets/graphics/frameBackgrounds/ChatGPT Image 18 maj 2025, 01_55_54.png' }
+];
+
+const mainMenuAssets = [
+  { id: 'menu1', name: 'Sanctuary Gate', path: '/assets/graphics/main-menu/01.png' },
+  { id: 'menu2', name: 'Ancient Hall', path: '/assets/graphics/main-menu/02.png' },
+  { id: 'menu3', name: 'Ritual Chamber', path: '/assets/graphics/main-menu/03.png' },
+  { id: 'menu4', name: 'Forbidden Altar', path: '/assets/graphics/main-menu/04.png' },
+  { id: 'menu5', name: 'Shadow Realm', path: '/assets/graphics/main-menu/05.png' },
+  { id: 'menu6', name: 'Divine Light', path: '/assets/graphics/main-menu/06.png' }
+];
+---
+
+<Layout title="Design System - Gothic Sanctuary" description="Complete showcase of Gothic design elements and components">
+  <div class="design-system">
+    <!-- Atmospheric Background -->
+    <div class="design-system__background"></div>
+
+    <!-- Floating Effects -->
+    <div class="design-system__effects">
+      <div class="ember ember--1"></div>
+      <div class="ember ember--2"></div>
+      <div class="ember ember--3"></div>
+      <div class="ember ember--4"></div>
+      <div class="ember ember--5"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="design-system__header">
+      <GothicFrame variant="ornate" size="thick" background="none" class="header-frame">
+        <div class="header-content">
+          <h1 class="header-title">GOTHIC SANCTUARY DESIGN SYSTEM</h1>
+          <p class="header-subtitle">Complete showcase of sacred design elements, components, and mystical assets</p>
+          <div class="header-stats">
+            <span class="stat">{buttonAssets.length} Button Variants</span>
+            <span class="stat">{frameAssets.length} Frame Styles</span>
+            <span class="stat">{addonAssets.length} Mystical Addons</span>
+            <span class="stat">{products.length} Sacred Relics</span>
+          </div>
+        </div>
+      </GothicFrame>
+    </header>
+
+    <!-- Main Content -->
+    <main class="design-system__main">
+
+      <!-- Navigation -->
+      <nav class="design-system__nav">
+        <GothicFrame variant="simple" size="thin" background="none" class="nav-frame">
+          <div class="nav-content">
+            <h2 class="nav-title">NAVIGATION</h2>
+            <div class="nav-links">
+              <a href="#buttons" class="nav-link">SACRED BUTTONS</a>
+              <a href="#frames" class="nav-link">ANCIENT FRAMES</a>
+              <a href="#addons" class="nav-link">MYSTICAL ADDONS</a>
+              <a href="#backgrounds" class="nav-link">ETHEREAL BACKGROUNDS</a>
+              <a href="#products" class="nav-link">RELIC SHOWCASE</a>
+              <a href="#mainmenu" class="nav-link">SANCTUARY ENTRANCE</a>
+            </div>
+          </div>
+        </GothicFrame>
+      </nav>
+
+      <!-- Buttons Section -->
+      <section id="buttons" class="design-system__section">
+        <GothicFrame variant="carved" size="medium" background="none" class="section-frame">
+          <div class="section-content">
+            <h2 class="section-title">SACRED BUTTON VARIANTS</h2>
+            <p class="section-description">Six distinct button styles forged in ancient workshops</p>
+
+            <div class="buttons-showcase">
+              {buttonAssets.map((button, index) => (
+                <div class="button-demo">
+                  <GothicFrame variant="simple" size="thin" background="none" class="demo-frame">
+                    <div class="demo-content">
+                      <h3 class="demo-title">{button.name}</h3>
+                      <div class="button-examples">
+                        <GothicButton variant={`button${index + 1}`} size="small" class="demo-button">
+                          SMALL
+                        </GothicButton>
+                        <GothicButton variant={`button${index + 1}`} size="medium" class="demo-button">
+                          MEDIUM
+                        </GothicButton>
+                        <GothicButton variant={`button${index + 1}`} size="large" class="demo-button">
+                          LARGE
+                        </GothicButton>
+                        <GothicButton variant={`button${index + 1}`} size="medium" disabled={true} class="demo-button">
+                          FORBIDDEN
+                        </GothicButton>
+                      </div>
+                      <div class="demo-assets">
+                        <div class="asset-preview">
+                          <img src={`${button.path}Button ${index + 1} left.png`} alt="Left segment" class="asset-image" />
+                          <span class="asset-label">LEFT</span>
+                        </div>
+                        <div class="asset-preview">
+                          <img src={`${button.path}Button ${index + 1} mid.png`} alt="Middle segment" class="asset-image" />
+                          <span class="asset-label">MIDDLE</span>
+                        </div>
+                        <div class="asset-preview">
+                          <img src={`${button.path}Button ${index + 1} right.png`} alt="Right segment" class="asset-image" />
+                          <span class="asset-label">RIGHT</span>
+                        </div>
+                      </div>
+                    </div>
+                  </GothicFrame>
+                </div>
+              ))}
+            </div>
+          </div>
+        </GothicFrame>
+      </section>
+
+      <!-- Frames Section -->
+      <section id="frames" class="design-system__section">
+        <GothicFrame variant="heavy" size="medium" background="none" class="section-frame">
+          <div class="section-content">
+            <h2 class="section-title">ANCIENT FRAME ARCHITECTURE</h2>
+            <p class="section-description">Sacred boundaries for mystical content</p>
+
+            <div class="frames-showcase">
+              {frameAssets.map((frame, index) => (
+                <div class="frame-demo">
+                  <div class="frame-example">
+                    <img src={frame.path} alt={frame.name} class="frame-image" />
+                    <div class="frame-overlay">
+                      <h3 class="frame-name">{frame.name}</h3>
+                      <p class="frame-description">Variant {index + 1} of sacred geometry</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </GothicFrame>
+      </section>
+
+      <!-- Addons Section -->
+      <section id="addons" class="design-system__section">
+        <GothicFrame variant="runic" size="medium" background="none" class="section-frame">
+          <div class="section-content">
+            <h2 class="section-title">MYSTICAL ADDONS & SYMBOLS</h2>
+            <p class="section-description">Sacred elements to enhance ritual interfaces</p>
+
+            <div class="addons-showcase">
+              {addonAssets.map((addon) => (
+                <div class="addon-demo">
+                  <GothicFrame variant="simple" size="thin" background="none" class="addon-frame">
+                    <div class="addon-content">
+                      <img src={addon.path} alt={addon.name} class="addon-image" />
+                      <h3 class="addon-name">{addon.name}</h3>
+                      <div class="addon-hover-effect">
+                        <GothicButton variant="button3" size="small">ACTIVATE</GothicButton>
+                      </div>
+                    </div>
+                  </GothicFrame>
+                </div>
+              ))}
+            </div>
+          </div>
+        </GothicFrame>
+      </section>
+
+      <!-- Backgrounds Section -->
+      <section id="backgrounds" class="design-system__section">
+        <GothicFrame variant="ornate" size="medium" background="none" class="section-frame">
+          <div class="section-content">
+            <h2 class="section-title">ETHEREAL BACKGROUNDS</h2>
+            <p class="section-description">Atmospheric layers for immersive sanctuaries</p>
+
+            <div class="backgrounds-showcase">
+              {backgroundAssets.map((bg) => (
+                <div class="background-demo">
+                  <div class="background-example" style={`background-image: url('${bg.path}')`}>
+                    <div class="background-overlay">
+                      <h3 class="background-name">{bg.name}</h3>
+                      <p class="background-description">Click to preview full screen</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </GothicFrame>
+      </section>
+
+      <!-- Products Showcase -->
+      <section id="products" class="design-system__section">
+        <GothicFrame variant="heavy" size="medium" background="none" class="section-frame">
+          <div class="section-content">
+            <h2 class="section-title">SACRED RELIC COLLECTION</h2>
+            <p class="section-description">Complete showcase of available mystical artifacts</p>
+
+            <div class="products-showcase">
+              {products.map((product) => (
+                <ProductCard
+                  product={product}
+                  variant="grid"
+                  class="relic-card"
+                />
+              ))}
+            </div>
+          </div>
+        </GothicFrame>
+      </section>
+
+      <!-- Main Menu Showcase -->
+      <section id="mainmenu" class="design-system__section">
+        <GothicFrame variant="ornate" size="medium" background="none" class="section-frame">
+          <div class="section-content">
+            <h2 class="section-title">SANCTUARY ENTRANCE VISUALS</h2>
+            <p class="section-description">Atmospheric backgrounds for the main sanctuary</p>
+
+            <div class="mainmenu-showcase">
+              {mainMenuAssets.map((menu, index) => (
+                <div class="menu-demo">
+                  <div class="menu-example">
+                    <img src={menu.path} alt={menu.name} class="menu-image" />
+                    <div class="menu-overlay">
+                      <h3 class="menu-name">{menu.name}</h3>
+                      <p class="menu-description">Scene {index + 1} of the sanctuary</p>
+                      <GothicButton variant="button4" size="small">ENTER</GothicButton>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </GothicFrame>
+      </section>
+
+      <!-- Interactive Demo -->
+      <section class="design-system__section">
+        <GothicFrame variant="runic" size="medium" background="none" class="section-frame">
+          <div class="section-content">
+            <h2 class="section-title">INTERACTIVE SANCTUARY</h2>
+            <p class="section-description">Experience the complete Gothic interface</p>
+
+            <div class="interactive-demo">
+              <GothicFrame variant="carved" size="medium" background="none" class="demo-sanctuary">
+                <div class="sanctuary-content">
+                  <h3 class="sanctuary-title">BUILD YOUR SANCTUARY</h3>
+                  <div class="sanctuary-controls">
+                    <div class="control-group">
+                      <label class="control-label">Frame Style:</label>
+                      <select class="gothic-select" id="frameSelect">
+                        <option value="simple">Simple Stone</option>
+                        <option value="carved">Carved Ancient</option>
+                        <option value="ornate">Ornate Gold</option>
+                        <option value="heavy">Heavy Iron</option>
+                        <option value="runic">Runic Mystical</option>
+                      </select>
+                    </div>
+                    <div class="control-group">
+                      <label class="control-label">Button Variant:</label>
+                      <select class="gothic-select" id="buttonSelect">
+                        <option value="button1">Ancient Stone</option>
+                        <option value="button2">Sacred Bronze</option>
+                        <option value="button3">Dark Iron</option>
+                        <option value="button4">Blood Ruby</option>
+                        <option value="button5">Mystic Gold</option>
+                        <option value="button6">Shadow Steel</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="sanctuary-preview" id="sanctuaryPreview">
+                    <GothicFrame variant="simple" size="medium" background="none" class="preview-frame">
+                      <div class="preview-content">
+                        <h4 class="preview-title">YOUR SANCTUARY</h4>
+                        <p class="preview-text">Customize your sacred space</p>
+                        <GothicButton variant="button1" size="medium" class="preview-button">
+                          CUSTOMIZE
+                        </GothicButton>
+                      </div>
+                    </GothicFrame>
+                  </div>
+                </div>
+              </GothicFrame>
+            </div>
+          </div>
+        </GothicFrame>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="design-system__footer">
+      <GothicFrame variant="simple" size="thin" background="none" class="footer-frame">
+        <div class="footer-content">
+          <p class="footer-text">"Gdzie zakazane szaty stają się świętymi relikwiami"</p>
+          <div class="footer-actions">
+            <GothicButton variant="button3" size="medium" href="/">RETURN TO SANCTUARY</GothicButton>
+            <GothicButton variant="button2" size="medium" href="/shop">VISIT SHOP</GothicButton>
+          </div>
+        </div>
+      </GothicFrame>
+    </footer>
+
+  </div>
+</Layout>
+
+<style>
+  .design-system {
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Atmospheric Background */
+  .design-system__background {
+    background-image: url("/assets/videos/testing-video-poster-02.png");
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    z-index: -2;
+    filter: brightness(0.6) contrast(1.1) saturate(0.8);
+  }
+
+  /* Floating Effects */
+  .design-system__effects {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .ember {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--color-fire-ember);
+    border-radius: 50%;
+    box-shadow: var(--glow-fire);
+    animation: emberFloat 15s infinite ease-in-out;
+  }
+
+  .ember--1 { top: 15%; left: 10%; animation-delay: 0s; }
+  .ember--2 { top: 45%; right: 15%; animation-delay: 3s; }
+  .ember--3 { bottom: 25%; left: 70%; animation-delay: 6s; }
+  .ember--4 { top: 70%; left: 30%; animation-delay: 9s; }
+  .ember--5 { bottom: 10%; right: 40%; animation-delay: 12s; }
+
+  @keyframes emberFloat {
+    0%, 100% { transform: translateY(0) scale(1); opacity: 0.5; }
+    50% { transform: translateY(-40px) scale(1.8); opacity: 1; }
+  }
+
+  /* Header */
+  .design-system__header {
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+
+  .header-frame {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .header-content {
+    padding: 2rem;
+    background: rgba(26, 26, 26, 0.8);
+    backdrop-filter: blur(4px);
+  }
+
+  .header-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: bold;
+    color: var(--color-highlight-ivory);
+    text-shadow:
+      2px 2px 0 var(--color-shadow-deep),
+      0 0 20px var(--glow-divine);
+    letter-spacing: 0.2em;
+    margin: 0 0 1rem 0;
+    text-transform: uppercase;
+  }
+
+  .header-subtitle {
+    font-size: 1.1rem;
+    color: var(--color-metal-polished-brass);
+    margin: 0 0 1.5rem 0;
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  .header-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    color: var(--color-metal-antique-gold);
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Navigation */
+  .design-system__nav {
+    padding: 0 1rem 2rem;
+  }
+
+  .nav-frame {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .nav-content {
+    padding: 1.5rem;
+    background: rgba(26, 26, 26, 0.6);
+    backdrop-filter: blur(2px);
+  }
+
+  .nav-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--color-highlight-ivory);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0 0 1rem 0;
+    text-align: center;
+  }
+
+  .nav-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .nav-link {
+    color: var(--color-metal-polished-brass);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--color-metal-bronze-patina);
+    transition: all var(--transition-ember);
+  }
+
+  .nav-link:hover {
+    color: var(--color-highlight-ivory);
+    background: var(--color-metal-antique-gold);
+    box-shadow: var(--glow-aura);
+  }
+
+  /* Sections */
+  .design-system__section {
+    padding: 2rem 1rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .section-frame {
+    margin-bottom: 2rem;
+  }
+
+  .section-content {
+    padding: 2rem;
+    background: rgba(26, 26, 26, 0.7);
+    backdrop-filter: blur(3px);
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--color-highlight-ivory);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0 0 1rem 0;
+    text-align: center;
+    text-shadow: 0 0 15px var(--glow-aura);
+  }
+
+  .section-description {
+    font-size: 1rem;
+    color: var(--color-metal-polished-brass);
+    margin: 0 0 2rem 0;
+    text-align: center;
+    font-style: italic;
+  }
+
+  /* Buttons Showcase */
+  .buttons-showcase {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+  }
+
+  .button-demo {
+    height: 100%;
+  }
+
+  .demo-frame {
+    height: 100%;
+  }
+
+  .demo-content {
+    padding: 1.5rem;
+    height: 100%;
+  }
+
+  .demo-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--color-highlight-ivory);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 1rem 0;
+    text-align: center;
+  }
+
+  .button-examples {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .demo-button {
+    width: 100%;
+  }
+
+  .demo-assets {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .asset-preview {
+    text-align: center;
+  }
+
+  .asset-image {
+    width: 100%;
+    height: 40px;
+    object-fit: contain;
+    border: 1px solid var(--color-metal-bronze-patina);
+    border-radius: 4px;
+    padding: 4px;
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  .asset-label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--color-metal-polished-brass);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 0.25rem;
+  }
+
+  /* Frames Showcase */
+  .frames-showcase {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .frame-demo {
+    height: 100%;
+  }
+
+  .frame-example {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    border-radius: 8px;
+    transition: transform var(--transition-ghost);
+  }
+
+  .frame-example:hover {
+    transform: scale(1.05);
+  }
+
+  .frame-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .frame-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(26, 26, 26, 0.95));
+    padding: 1.5rem 1rem 1rem;
+    transform: translateY(calc(100% - 3rem));
+    transition: transform var(--transition-ghost);
+  }
+
+  .frame-example:hover .frame-overlay {
+    transform: translateY(0);
+  }
+
+  .frame-name {
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--color-highlight-ivory);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .frame-description {
+    font-size: 0.8rem;
+    color: var(--color-metal-polished-brass);
+    margin: 0;
+    font-style: italic;
+  }
+
+  /* Addons Showcase */
+  .addons-showcase {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .addon-demo {
+    height: 100%;
+  }
+
+  .addon-frame {
+    height: 100%;
+  }
+
+  .addon-content {
+    position: relative;
+    padding: 1rem;
+    height: 100%;
+    text-align: center;
+    transition: all var(--transition-ghost);
+  }
+
+  .addon-content:hover {
+    transform: translateY(-2px);
+  }
+
+  .addon-image {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+    filter: drop-shadow(var(--shadow-sanctuary));
+  }
+
+  .addon-name {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--color-highlight-ivory);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 1rem 0;
+  }
+
+  .addon-hover-effect {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all var(--transition-ember);
+  }
+
+  .addon-content:hover .addon-hover-effect {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Backgrounds Showcase */
+  .backgrounds-showcase {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .background-demo {
+    height: 100%;
+  }
+
+  .background-example {
+    position: relative;
+    aspect-ratio: 16/9;
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all var(--transition-ghost);
+  }
+
+  .background-example:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-sanctuary);
+  }
+
+  .background-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(26, 26, 26, 0.9));
+    padding: 2rem 1.5rem 1.5rem;
+    transform: translateY(calc(100% - 3.5rem));
+    transition: transform var(--transition-ghost);
+  }
+
+  .background-example:hover .background-overlay {
+    transform: translateY(0);
+  }
+
+  .background-name {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--color-highlight-ivory);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .background-description {
+    font-size: 0.9rem;
+    color: var(--color-metal-polished-brass);
+    margin: 0;
+    font-style: italic;
+  }
+
+  /* Products Showcase */
+  .products-showcase {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .relic-card {
+    height: 100%;
+  }
+
+  /* Main Menu Showcase */
+  .mainmenu-showcase {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .menu-demo {
+    height: 100%;
+  }
+
+  .menu-example {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    border-radius: 8px;
+    transition: transform var(--transition-ghost);
+  }
+
+  .menu-example:hover {
+    transform: scale(1.05);
+  }
+
+  .menu-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .menu-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(26, 26, 26, 0.95));
+    padding: 2rem 1.5rem 1.5rem;
+    transform: translateY(calc(100% - 3.5rem));
+    transition: transform var(--transition-ghost);
+    text-align: center;
+  }
+
+  .menu-example:hover .menu-overlay {
+    transform: translateY(0);
+  }
+
+  .menu-name {
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--color-highlight-ivory);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .menu-description {
+    font-size: 0.8rem;
+    color: var(--color-metal-polished-brass);
+    margin: 0 0 1rem 0;
+    font-style: italic;
+  }
+
+  /* Interactive Demo */
+  .interactive-demo {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .demo-sanctuary {
+    height: 100%;
+  }
+
+  .sanctuary-content {
+    padding: 2rem;
+    background: rgba(26, 26, 26, 0.8);
+    backdrop-filter: blur(4px);
+  }
+
+  .sanctuary-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--color-highlight-ivory);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0 0 1.5rem 0;
+    text-align: center;
+    text-shadow: 0 0 15px var(--glow-aura);
+  }
+
+  .sanctuary-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .control-label {
+    font-size: 0.9rem;
+    color: var(--color-metal-polished-brass);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .gothic-select {
+    background: var(--color-base-crypt);
+    color: var(--color-highlight-ivory);
+    border: 1px solid var(--color-metal-bronze-patina);
+    padding: 0.75rem;
+    border-radius: 4px;
+    font-family: "Times New Roman", serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all var(--transition-ember);
+  }
+
+  .gothic-select:focus {
+    outline: none;
+    border-color: var(--color-metal-antique-gold);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+  }
+
+  .sanctuary-preview {
+    text-align: center;
+  }
+
+  .preview-frame {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .preview-content {
+    padding: 2rem;
+    background: rgba(26, 26, 26, 0.6);
+    backdrop-filter: blur(2px);
+  }
+
+  .preview-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--color-highlight-ivory);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 1rem 0;
+  }
+
+  .preview-text {
+    font-size: 0.9rem;
+    color: var(--color-metal-polished-brass);
+    margin: 0 0 1.5rem 0;
+    font-style: italic;
+  }
+
+  /* Footer */
+  .design-system__footer {
+    padding: 2rem 1rem;
+  }
+
+  .footer-frame {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .footer-content {
+    padding: 2rem;
+    background: rgba(26, 26, 26, 0.8);
+    backdrop-filter: blur(4px);
+    text-align: center;
+  }
+
+  .footer-text {
+    font-size: 1.1rem;
+    color: var(--color-metal-bronze-patina);
+    font-style: italic;
+    margin: 0 0 1.5rem 0;
+    text-shadow: 1px 1px 0 var(--color-shadow-deep);
+  }
+
+  .footer-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .design-system__section {
+      padding: 1.5rem 0.5rem;
+    }
+
+    .section-content {
+      padding: 1.5rem;
+    }
+
+    .buttons-showcase {
+      grid-template-columns: 1fr;
+    }
+
+    .frames-showcase,
+    .addons-showcase,
+    .backgrounds-showcase,
+    .mainmenu-showcase {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
+    .products-showcase {
+      grid-template-columns: 1fr;
+    }
+
+    .sanctuary-controls {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .header-stats {
+      gap: 1rem;
+    }
+
+    .nav-links {
+      gap: 0.5rem;
+    }
+
+    .nav-link {
+      font-size: 0.8rem;
+      padding: 0.4rem 0.8rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .header-title {
+      font-size: 1.8rem;
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+    }
+
+    .demo-assets {
+      grid-template-columns: 1fr;
+    }
+
+    .footer-actions {
+      flex-direction: column;
+    }
+  }
+
+  /* High contrast and reduced motion */
+  @media (prefers-contrast: high) {
+    .header-title { text-shadow: none; }
+    .section-title { text-shadow: none; }
+    .sanctuary-title { text-shadow: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ember { animation: none; }
+    .design-system__background { background-attachment: scroll; }
+
+    * {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+
+  /* Custom scrollbars */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgba(26, 26, 26, 0.3);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-metal-bronze-patina);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-metal-antique-gold);
+  }
+</style>
+
+<script>
+  // Interactive sanctuary customization
+  const frameSelect = document.getElementById('frameSelect') as HTMLSelectElement;
+  const buttonSelect = document.getElementById('buttonSelect') as HTMLSelectElement;
+  const sanctuaryPreview = document.getElementById('sanctuaryPreview');
+
+  if (frameSelect && buttonSelect && sanctuaryPreview) {
+    const updatePreview = () => {
+      const selectedFrame = frameSelect.value;
+      const selectedButton = buttonSelect.value;
+
+      sanctuaryPreview.innerHTML = `
+        <div class="preview-frame" data-variant="${selectedFrame}">
+          <div class="preview-content">
+            <h4 class="preview-title">YOUR SANCTUARY</h4>
+            <p class="preview-text">Customize your sacred space</p>
+            <button class="preview-button gothic-button" data-variant="${selectedButton}">
+              CUSTOMIZE
+            </button>
+          </div>
+        </div>
+      `;
+    };
+
+    frameSelect.addEventListener('change', updatePreview);
+    buttonSelect.addEventListener('change', updatePreview);
+  }
+
+  // Background preview functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const backgroundExamples = document.querySelectorAll('.background-example');
+
+    backgroundExamples.forEach(example => {
+      example.addEventListener('click', () => {
+        const bgImage = example.style.backgroundImage;
+        if (bgImage) {
+          // Create fullscreen preview
+          const preview = document.createElement('div');
+          preview.className = 'fullscreen-preview';
+          preview.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: ${bgImage};
+            background-size: cover;
+            background-position: center;
+            z-index: 9999;
+            cursor: pointer;
+            backdrop-filter: blur(0px);
+          `;
+
+          preview.addEventListener('click', () => {
+            document.body.removeChild(preview);
+          });
+
+          document.body.appendChild(preview);
+        }
+      });
+    });
+
+    // Staggered reveal animations
+    const demoElements = document.querySelectorAll('.button-demo, .frame-demo, .addon-demo, .background-demo, .menu-demo');
+    demoElements.forEach((element, index) => {
+      (element as HTMLElement).style.animationDelay = `${index * 0.1}s`;
+      (element as HTMLElement).style.opacity = '0';
+      (element as HTMLElement).style.animation = 'fadeInUp 0.6s ease-out forwards';
+    });
+  });
+
+  // Add fadeInUp animation
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  `;
+  document.head.appendChild(style);
+</script>
