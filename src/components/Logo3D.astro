@@ -24,11 +24,6 @@ const { class: className = '' } = Astro.props;
     margin-bottom: 1rem;
     margin-inline: auto;
     cursor: pointer;
-    transition: transform 0.3s ease;
-  }
-
-  .logo-3d:hover {
-    transform: scale(1.05);
   }
 
   #logo-3d-canvas {
@@ -192,17 +187,24 @@ const { class: className = '' } = Astro.props;
 
     // Hover effect - disable dithering on hover for crystal clear view
     let isHovered = false;
+    let targetGridSize = 3.5;
+    let targetPixelSize = 1.2;
+    let currentGridSize = 3.5;
+    let currentPixelSize = 1.2;
+    let targetRotationY = 0;
+    let targetRotationX = 0;
+    let targetPositionY = 0;
     
     container.addEventListener('mouseenter', () => {
       isHovered = true;
-      ditheringPass.uniforms['gridSize'].value = 0.1;
-      ditheringPass.uniforms['pixelSizeRatio'].value = 0.1;
+      targetGridSize = 0.1;
+      targetPixelSize = 0.1;
     });
     
     container.addEventListener('mouseleave', () => {
       isHovered = false;
-      ditheringPass.uniforms['gridSize'].value = 3.5;
-      ditheringPass.uniforms['pixelSizeRatio'].value = 1.2;
+      targetGridSize = 3.5;
+      targetPixelSize = 1.2;
     });
 
     // Lighting - enhanced for better dithering effect
@@ -282,14 +284,33 @@ const { class: className = '' } = Astro.props;
       time += delta;
 
       if (model) {
-        model.position.y = Math.sin(time * 0.8) * 0.15;
-        model.rotation.y += delta * 0.3;
-        model.rotation.x = Math.sin(time * 0.5) * 0.1;
+        if (isHovered) {
+          // Smoothly rotate to face user (0, 0, 0) and center position
+          targetRotationY = 0;
+          targetRotationX = 0;
+          targetPositionY = 0;
+        } else {
+          // Normal animation
+          targetRotationY = time * 0.3;
+          targetRotationX = Math.sin(time * 0.5) * 0.1;
+          targetPositionY = Math.sin(time * 0.8) * 0.15;
+        }
+        
+        // Smooth interpolation for all transformations
+        model.rotation.y += (targetRotationY - model.rotation.y) * 0.1;
+        model.rotation.x += (targetRotationX - model.rotation.x) * 0.1;
+        model.position.y += (targetPositionY - model.position.y) * 0.1;
       }
 
       if (mixer) {
         mixer.update(delta);
       }
+
+      // Smooth transition for dithering values
+      currentGridSize += (targetGridSize - currentGridSize) * 0.1;
+      currentPixelSize += (targetPixelSize - currentPixelSize) * 0.1;
+      ditheringPass.uniforms['gridSize'].value = currentGridSize;
+      ditheringPass.uniforms['pixelSizeRatio'].value = currentPixelSize;
 
       // Render with post-processing
       composer.render();
