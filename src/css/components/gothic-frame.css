@@ -66,7 +66,7 @@
 
 /* Border-image configurations for each variant */
 [data-gothic-frame][data-variant="ornate"] {
-  border-image-slice: 95 72 92 78 fill;
+  border-image-slice: 100 72 92 72 fill;
   border-image-width: 20px 20px 20px 20px;
   border-image-outset: 1px 3px 3px 4px;
   border-image-repeat: stretch stretch;

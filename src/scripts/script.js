@@ -465,7 +465,7 @@ class FlipFluid {
     var h1 = this.fInvSpacing;
     var h2 = 0.5 * h;
 
-    var d = this.particleDensity;
+    var d = f.particleDensity;
 
     d.fill(0.0);
 
@@ -861,7 +861,6 @@ class FlipFluid {
 }
 // ----------------- end of simulator ------------------------------
 
-var f = null; // Global fluid reference
 var scene = {
   gravity: GRAVITY,
   dt: SPEED_BASE,
@@ -964,7 +963,7 @@ function setObstacle(x, y, reset) {
   scene.obstacleY = y;
   var r = scene.obstacleRadius;
   var f = scene.fluid;
-  var n = f.fNumY;
+  var n = f.numY;
   var cd = Math.sqrt(2) * f.h;
 
   for (var i = 1; i < f.numX - 2; i++) {

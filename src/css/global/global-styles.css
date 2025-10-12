@@ -10,4 +10,5 @@ body {
   font-size: var(--size-step-0);
   font-family: var(--font-base);
   line-height: var(--leading-standard);
+  position: relative;
 }

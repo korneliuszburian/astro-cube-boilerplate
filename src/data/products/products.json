@@ -1,0 +1,1271 @@
+[
+  {
+    "id": "2",
+    "name": "Pants #1",
+    "slug": "pants-1",
+    "description": "Pants #1",
+    "story": "",
+    "price": 350,
+    "comparePrice": 350,
+    "sku": "DOT-CARGO-002",
+    "status": "available",
+    "category": "pants",
+    "collection": "signature_collection",
+    "tags": ["cargo", "utility", "streetwear", "handmade", "warsaw"],
+    "materials": ["100% Heavyweight Cotton", "Reinforced Stitching", "YKK Zippers"],
+    "features": ["8 Utility Pockets", "Adjustable Waist", "Double Knee Reinforcement", "Tactical Design", "Water-Resistant Finish"],
+    "images": {
+      "hero": "/images/products/2/Website/1.webp",
+      "gallery": [
+        "/images/products/2/Website/1.webp",
+        "/images/products/2/Website/2.webp",
+        "/images/products/2/Website/3.webp"
+      ],
+      "details": [
+        "/images/products/2/Items/IMG_0779.png",
+        "/images/products/2/Items/IMG_0780.png",
+        "/images/products/2/Items/IMG_0781.png"
+      ],
+      "lifestyle": [
+        "/images/products/2/InstagramPost/2 First.png",
+        "/images/products/2/InstagramPost/2 Second.png"
+      ],
+      "sizeChart": "/images/products/2/InstagramPost/2 SizeChart.png"
+    },
+    "variants": [
+      {
+        "id": "2-S",
+        "name": "Small",
+        "sku": "DOT-CARGO-002-S",
+        "price": 350,
+        "inventory": 3,
+        "available": true,
+        "attributes": {
+          "size": "S",
+          "measurements": {
+            "waist": 76,
+            "length": 102,
+            "hip": 96
+          }
+        }
+      },
+      {
+        "id": "2-M",
+        "name": "Medium",
+        "sku": "DOT-CARGO-002-M",
+        "price": 350,
+        "inventory": 5,
+        "available": true,
+        "attributes": {
+          "size": "M",
+          "measurements": {
+            "waist": 81,
+            "length": 104,
+            "hip": 101
+          }
+        }
+      },
+      {
+        "id": "2-L",
+        "name": "Large",
+        "sku": "DOT-CARGO-002-L",
+        "price": 350,
+        "inventory": 0,
+        "available": false,
+        "attributes": {
+          "size": "L",
+          "measurements": {
+            "waist": 86,
+            "length": 106,
+            "hip": 106
+          }
+        }
+      },
+      {
+        "id": "2-XL",
+        "name": "X-Large",
+        "sku": "DOT-CARGO-002-XL",
+        "price": 350,
+        "inventory": 2,
+        "available": true,
+        "attributes": {
+          "size": "XL",
+          "measurements": {
+            "waist": 91,
+            "length": 108,
+            "hip": 111
+          }
+        }
+      }
+    ],
+    "seo": {
+      "title": "Pants #1",
+      "description": "Pants #1",
+      "keywords": ["pants"]
+    },
+    "inventory": {
+      "trackQuantity": true,
+      "allowBackorder": false,
+      "location": "Warsaw Store",
+      "restockDate": null
+    },
+    "craftsmanship": {
+      "technique": "Traditional tailoring with modern utility design",
+      "hoursSpent": 12,
+      "artisan": "Dawid Olek",
+      "madeIn": "Warsaw, Poland",
+      "sustainability": ["Heavyweight cotton", "Reinforced stitching", "Zero waste pattern cutting", "Local materials"],
+      "careInstructions": {
+        "washing": "Machine wash cold, inside out with similar colors",
+        "drying": "Tumble dry low or hang dry",
+        "ironing": "Medium heat, avoid zippers and buttons",
+        "storage": "Hang in cool, dry place"
+      }
+    },
+    "createdAt": "2024-01-15T00:00:00Z",
+    "updatedAt": "2024-10-01T00:00:00Z",
+    "publishedAt": "2024-01-20T00:00:00Z"
+  },
+  {
+    "id": "3",
+    "name": "Pants #2",
+    "slug": "pants-2",
+    "description": "Pants #2",
+    "story": "",
+    "price": 350,
+    "comparePrice": 350,
+    "sku": "DOT-HOODIE-003",
+    "status": "available",
+    "category": "pants",
+    "collection": "signature_collection",
+    "tags": ["hoodie", "oversized", "comfort", "handmade", "krakow"],
+    "materials": ["Organic Cotton Blend", "Ceremonial Thread", "French Terry", "Metal-Free Zippers"],
+    "features": ["Deep Hood", "Ritual Symbols", "Concealment Design", "Kangaroo Pocket", "Relaxed Fit"],
+    "images": {
+      "hero": "/images/products/3/Website/1.webp",
+      "gallery": [
+        "/images/products/3/Website/1.webp",
+        "/images/products/3/Website/2.webp",
+        "/images/products/3/Website/3.webp"
+      ],
+      "details": [
+        "/images/products/3/Items/IMG_0773.png",
+        "/images/products/3/Items/IMG_0774.png",
+        "/images/products/3/Items/IMG_0775.png"
+      ],
+      "lifestyle": [
+        "/images/products/3/InstagramPost/3 First.png",
+        "/images/products/3/InstagramPost/3 Second.png"
+      ],
+      "sizeChart": "/images/products/3/InstagramPost/3 SizeChart.png"
+    },
+    "variants": [
+      {
+        "id": "3-S",
+        "name": "Small",
+        "sku": "DOT-HOODIE-003-S",
+        "price": 350,
+        "inventory": 2,
+        "available": true,
+        "attributes": {
+          "size": "S",
+          "measurements": {
+            "chest": 96,
+            "length": 68,
+            "sleeve": 84
+          }
+        }
+      },
+      {
+        "id": "3-M",
+        "name": "Medium",
+        "sku": "DOT-HOODIE-003-M",
+        "price": 350,
+        "inventory": 3,
+        "available": true,
+        "attributes": {
+          "size": "M",
+          "measurements": {
+            "chest": 101,
+            "length": 70,
+            "sleeve": 86
+          }
+        }
+      },
+      {
+        "id": "3-L",
+        "name": "Large",
+        "sku": "DOT-HOODIE-003-L",
+        "price": 350,
+        "inventory": 0,
+        "available": false,
+        "attributes": {
+          "size": "L",
+          "measurements": {
+            "chest": 106,
+            "length": 72,
+            "sleeve": 88
+          }
+        }
+      }
+    ],
+    "seo": {
+      "title": "Pants #2",
+      "description": "Pants #2",
+      "keywords": ["pants"]
+    },
+    "inventory": {
+      "trackQuantity": true,
+      "allowBackorder": false,
+      "location": "Kraków Store",
+      "restockDate": null
+    },
+    "craftsmanship": {
+      "technique": "Modern comfort wear with attention to detail",
+      "hoursSpent": 8,
+      "artisan": "Dawid Olek",
+      "madeIn": "Kraków, Poland",
+      "sustainability": ["Organic cotton", "Eco-friendly dyes", "Recycled packaging", "Fair trade materials"],
+      "careInstructions": {
+        "washing": "Machine wash cold, gentle cycle",
+        "drying": "Tumble dry low",
+        "ironing": "Low heat if needed",
+        "storage": "Fold to maintain shape"
+      }
+    },
+    "createdAt": "2024-02-20T00:00:00Z",
+    "updatedAt": "2024-09-15T00:00:00Z",
+    "publishedAt": "2024-02-25T00:00:00Z"
+  },
+  {
+    "id": "4",
+    "name": "Pants #3",
+    "slug": "pants-3",
+    "description": "Pants #3",
+    "story": "",
+    "price": 350,
+    "comparePrice": 350,
+    "sku": "DOT-BOOTS-004",
+    "status": "available",
+    "category": "pants",
+    "collection": "workwear_collection",
+    "tags": ["boots", "combat", "leather", "handmade", "gdansk"],
+    "materials": ["Genuine Leather", "Iron Reinforcement", "Sacred Oils", "Solid Rubber Sole"],
+    "features": ["Steel Toes", "Combat Ready", "Soul Protection", "Reinforced Heel", "Waterproof"],
+    "images": {
+      "hero": "/images/products/4/Website/1.webp",
+      "gallery": [
+        "/images/products/4/Website/1.webp",
+        "/images/products/4/Website/2.webp",
+        "/images/products/4/Website/3.webp"
+      ],
+      "details": [
+        "/images/products/4/Items/IMG_0776.png",
+        "/images/products/4/Items/IMG_0777.png",
+        "/images/products/4/Items/IMG_0778.png"
+      ],
+      "lifestyle": [
+        "/images/products/4/InstagramPost/4 First.png",
+        "/images/products/4/InstagramPost/4 Second.png"
+      ],
+      "sizeChart": "/images/products/4/InstagramPost/4 SizeChart.png"
+    },
+    "variants": [
+      {
+        "id": "4-42",
+        "name": "EU 42",
+        "sku": "DOT-BOOTS-004-42",
+        "price": 350,
+        "inventory": 1,
+        "available": true,
+        "attributes": {
+          "size": "42",
+          "measurements": {
+            "eu": 42,
+            "uk": 8,
+            "us": 9
+          }
+        }
+      },
+      {
+        "id": "4-43",
+        "name": "EU 43",
+        "sku": "DOT-BOOTS-004-43",
+        "price": 350,
+        "inventory": 0,
+        "available": false,
+        "attributes": {
+          "size": "43",
+          "measurements": {
+            "eu": 43,
+            "uk": 8.5,
+            "us": 9.5
+          }
+        }
+      },
+      {
+        "id": "4-44",
+        "name": "EU 44",
+        "sku": "DOT-BOOTS-004-44",
+        "price": 350,
+        "inventory": 2,
+        "available": true,
+        "attributes": {
+          "size": "44",
+          "measurements": {
+            "eu": 44,
+            "uk": 9,
+            "us": 10
+          }
+        }
+      }
+    ],
+    "seo": {
+      "title": "Pants #3",
+      "description": "Pants #3",
+      "keywords": ["pants"]
+    },
+    "inventory": {
+      "trackQuantity": true,
+      "allowBackorder": false,
+      "location": "Gdańsk Store",
+      "restockDate": null
+    },
+    "craftsmanship": {
+      "technique": "Traditional bootmaking with modern reinforcement",
+      "hoursSpent": 20,
+      "artisan": "Dawid Olek",
+      "madeIn": "Gdańsk, Poland",
+      "sustainability": ["Genuine leather", "Steel reinforcement", "Natural oils", "Durable construction"],
+      "careInstructions": {
+        "washing": "Wipe with damp cloth",
+        "drying": "Air dry at room temperature",
+        "ironing": "Not applicable",
+        "storage": "Keep in cool, dry place away from direct sunlight"
+      }
+    },
+    "createdAt": "2024-03-10T00:00:00Z",
+    "updatedAt": "2024-10-10T00:00:00Z",
+    "publishedAt": "2024-03-15T00:00:00Z"
+  },
+  {
+    "id": "5",
+    "name": "Pants #4",
+    "slug": "pants-4",
+    "description": "Pants #4",
+    "story": "",
+    "price": 350,
+    "comparePrice": 350,
+    "sku": "DOT-SHIRT-005",
+    "status": "available",
+    "category": "pants",
+    "collection": "signature_collection",
+    "tags": ["shirt", "ceremonial", "linen", "handmade", "lodz"],
+    "materials": ["Linen Weave", "Ritual Dyes", "Silver Thread", "Natural Fibers"],
+    "features": ["Ceremonial Cut", "Ritual Symbols", "Sacred Weave", "Relaxed Fit", "Breathable Fabric"],
+    "images": {
+      "hero": "/images/products/5/Website/1.webp",
+      "gallery": [
+        "/images/products/5/Website/1.webp",
+        "/images/products/5/Website/2.webp",
+        "/images/products/5/Website/3.webp"
+      ],
+      "details": [
+        "/images/products/5/Items/IMG_0792.png",
+        "/images/products/5/Items/IMG_0793.png",
+        "/images/products/5/Items/IMG_0794.png"
+      ],
+      "lifestyle": [
+        "/images/products/5/InstagramPost/5 First.png",
+        "/images/products/5/InstagramPost/5 Second.png"
+      ],
+      "sizeChart": "/images/products/5/InstagramPost/5 SizeChart.png"
+    },
+    "variants": [
+      {
+        "id": "5-S",
+        "name": "Small",
+        "sku": "DOT-SHIRT-005-S",
+        "price": 350,
+        "inventory": 4,
+        "available": true,
+        "attributes": {
+          "size": "S",
+          "measurements": {
+            "chest": 96,
+            "length": 72,
+            "shoulder": 44
+          }
+        }
+      },
+      {
+        "id": "5-M",
+        "name": "Medium",
+        "sku": "DOT-SHIRT-005-M",
+        "price": 350,
+        "inventory": 6,
+        "available": true,
+        "attributes": {
+          "size": "M",
+          "measurements": {
+            "chest": 101,
+            "length": 74,
+            "shoulder": 46
+          }
+        }
+      },
+      {
+        "id": "5-L",
+        "name": "Large",
+        "sku": "DOT-SHIRT-005-L",
+        "price": 350,
+        "inventory": 3,
+        "available": true,
+        "attributes": {
+          "size": "L",
+          "measurements": {
+            "chest": 106,
+            "length": 76,
+            "shoulder": 48
+          }
+        }
+      }
+    ],
+    "seo": {
+      "title": "Pants #4",
+      "description": "Pants #4",
+      "keywords": ["pants"]
+    },
+    "inventory": {
+      "trackQuantity": true,
+      "allowBackorder": false,
+      "location": "Łódź Store",
+      "restockDate": null
+    },
+    "craftsmanship": {
+      "technique": "Traditional textile art with modern touches",
+      "hoursSpent": 15,
+      "artisan": "Dawid Olek",
+      "madeIn": "Łódź, Poland",
+      "sustainability": ["Natural linen", "Plant-based dyes", "Hand-loom techniques", "Biodegradable materials"],
+      "careInstructions": {
+        "washing": "Hand wash cold, gentle",
+        "drying": "Hang dry in shade",
+        "ironing": "Warm iron with cloth",
+        "storage": "Fold and store in dry place"
+      }
+    },
+    "createdAt": "2024-01-25T00:00:00Z",
+    "updatedAt": "2024-09-20T00:00:00Z",
+    "publishedAt": "2024-02-01T00:00:00Z"
+  },
+  {
+    "id": "6",
+    "name": "Pants #5",
+    "slug": "pants-5",
+    "description": "Pants #5",
+    "story": "",
+    "price": 350,
+    "comparePrice": 350,
+    "sku": "DOT-DENIM-006",
+    "status": "disabled",
+    "category": "pants",
+    "collection": "workwear_collection",
+    "tags": ["denim", "jeans", "dark", "handmade", "wroclaw"],
+    "materials": ["Dark Denim", "Obsidian Dust", "Shadow Weave", "Cotton Blend"],
+    "features": ["Midnight Black", "Comfort Fit", "Shadow Blessed", "Classic Cut", "Durable Construction"],
+    "images": {
+      "hero": "/images/products/6/Website/1.webp",
+      "gallery": [
+        "/images/products/6/Website/1.webp",
+        "/images/products/6/Website/2.webp",
+        "/images/products/6/Website/3.webp"
+      ],
+      "details": [
+        "/images/products/6/Items/IMG_0785.png",
+        "/images/products/6/Items/IMG_0786.png",
+        "/images/products/6/Items/IMG_0787.png"
+      ],
+      "lifestyle": [
+        "/images/products/6/InstagramPost/6 First.png",
+        "/images/products/6/InstagramPost/6 Second.png"
+      ],
+      "sizeChart": "/images/products/6/InstagramPost/6 SizeChart.png"
+    },
+    "variants": [
+      {
+        "id": "6-M",
+        "name": "Medium",
+        "sku": "DOT-DENIM-006-M",
+        "price": 350,
+        "inventory": 0,
+        "available": false,
+        "attributes": {
+          "size": "M",
+          "measurements": {
+            "waist": 81,
+            "length": 104,
+            "inseam": 84
+          }
+        }
+      },
+      {
+        "id": "6-L",
+        "name": "Large",
+        "sku": "DOT-DENIM-006-L",
+        "price": 350,
+        "inventory": 0,
+        "available": false,
+        "attributes": {
+          "size": "L",
+          "measurements": {
+            "waist": 86,
+            "length": 106,
+            "inseam": 86
+          }
+        }
+      }
+    ],
+    "seo": {
+      "title": "Pants #5",
+      "description": "Pants #5",
+      "keywords": ["pants"]
+    },
+    "inventory": {
+      "trackQuantity": true,
+      "allowBackorder": true,
+      "location": "Wrocław Store",
+      "restockDate": "2024-11-15T00:00:00Z"
+    },
+    "craftsmanship": {
+      "technique": "Modern denim processing with traditional techniques",
+      "hoursSpent": 10,
+      "artisan": "Dawid Olek",
+      "madeIn": "Wrocław, Poland",
+      "sustainability": ["Recycled denim", "Natural dyes", "Water conservation", "Energy efficient processes"],
+      "careInstructions": {
+        "washing": "Wash in cold water, inside out",
+        "drying": "Hang dry in shade",
+        "ironing": "Medium heat",
+        "storage": "Hang in dark place"
+      }
+    },
+    "createdAt": "2024-04-15T00:00:00Z",
+    "updatedAt": "2024-10-12T00:00:00Z",
+    "publishedAt": "2024-04-20T00:00:00Z"
+  },
+  {
+    "id": "7",
+    "name": "Pants #6",
+    "slug": "pants-6",
+    "description": "Pants #6",
+    "story": "",
+    "price": 350,
+    "comparePrice": 350,
+    "sku": "DOT-JACKET-007",
+    "status": "available",
+    "category": "pants",
+    "collection": "signature_collection",
+    "tags": ["jacket", "urban", "weatherproof", "handmade", "pockets"],
+    "materials": ["Water-Resistant Canvas", "Recycled Polyester", "YKK Zippers", "Reinforced Stitching"],
+    "features": ["Weather Resistant", "8 Hidden Pockets", "Detachable Hood", "Adjustable Cuffs", "Breathable Lining"],
+    "images": {
+      "hero": "/images/products/7/Website/1.webp",
+      "gallery": [
+        "/images/products/7/Website/1.webp",
+        "/images/products/7/Website/2.webp",
+        "/images/products/7/Website/3.webp"
+      ],
+      "details": [
+        "/images/products/7/Items/IMG_0788.png",
+        "/images/products/7/Items/IMG_0789.png",
+        "/images/products/7/Items/IMG_0790.png"
+      ],
+      "lifestyle": [
+        "/images/products/7/InstagramPost/7 First.png",
+        "/images/products/7/InstagramPost/7 Second.png"
+      ],
+      "sizeChart": "/images/products/7/InstagramPost/7 SizeChart.png"
+    },
+    "variants": [
+      {
+        "id": "7-S",
+        "name": "Small",
+        "sku": "DOT-JACKET-007-S",
+        "price": 350,
+        "inventory": 4,
+        "available": true,
+        "attributes": {
+          "size": "S",
+          "measurements": {
+            "chest": 100,
+            "length": 68,
+            "sleeve": 85
+          }
+        }
+      },
+      {
+        "id": "7-M",
+        "name": "Medium",
+        "sku": "DOT-JACKET-007-M",
+        "price": 350,
+        "inventory": 6,
+        "available": true,
+        "attributes": {
+          "size": "M",
+          "measurements": {
+            "chest": 105,
+            "length": 70,
+            "sleeve": 87
+          }
+        }
+      },
+      {
+        "id": "7-L",
+        "name": "Large",
+        "sku": "DOT-JACKET-007-L",
+        "price": 350,
+        "inventory": 3,
+        "available": true,
+        "attributes": {
+          "size": "L",
+          "measurements": {
+            "chest": 110,
+            "length": 72,
+            "sleeve": 89
+          }
+        }
+      }
+    ],
+    "seo": {
+      "title": "Pants #6",
+      "description": "Pants #6",
+      "keywords": ["pants"]
+    },
+    "inventory": {
+      "trackQuantity": true,
+      "allowBackorder": false,
+      "location": "Warsaw Store",
+      "restockDate": null
+    },
+    "craftsmanship": {
+      "technique": "Modern outerwear construction with utility focus",
+      "hoursSpent": 18,
+      "artisan": "Dawid Olek",
+      "madeIn": "Warsaw, Poland",
+      "sustainability": ["Recycled materials", "Water-resistant coating", "Durable construction", "Ethical production"],
+      "careInstructions": {
+        "washing": "Spot clean with damp cloth",
+        "drying": "Air dry away from direct heat",
+        "ironing": "Low heat if needed",
+        "storage": "Hang in cool, dry place"
+      }
+    },
+    "createdAt": "2024-05-01T00:00:00Z",
+    "updatedAt": "2024-10-05T00:00:00Z",
+    "publishedAt": "2024-05-05T00:00:00Z"
+  },
+  {
+    "id": "8",
+    "name": "Pants #7",
+    "slug": "pants-7",
+    "description": "Pants #7",
+    "story": "",
+    "price": 350,
+    "comparePrice": 350,
+    "sku": "DOT-HOODIE-008",
+    "status": "available",
+    "category": "pants",
+    "collection": "comfort_collection",
+    "tags": ["hoodie", "minimalist", "comfort", "handmade", "basic"],
+    "materials": ["Organic Cotton Fleece", "Cotton Drawstrings", "Minimal Branding"],
+    "features": ["Minimalist Design", "Premium Fleece", "Ribbed Cuffs", "Kangaroo Pocket", "Tag-free Label"],
+    "images": {
+      "hero": "/images/products/8/Website/1.webp",
+      "gallery": [
+        "/images/products/8/Website/1.webp",
+        "/images/products/8/Website/2.webp",
+        "/images/products/8/Website/3.webp"
+      ],
+      "details": [
+        "/images/products/8/Items/IMG_0770.png",
+        "/images/products/8/Items/IMG_0771.png",
+        "/images/products/8/Items/IMG_0772.png"
+      ],
+      "lifestyle": [
+        "/images/products/8/InstagramPost/8 First.png",
+        "/images/products/8/InstagramPost/8 Second.png"
+      ],
+      "sizeChart": "/images/products/8/InstagramPost/8 SizeChart.png"
+    },
+    "variants": [
+      {
+        "id": "8-S",
+        "name": "Small",
+        "sku": "DOT-HOODIE-008-S",
+        "price": 350,
+        "inventory": 8,
+        "available": true,
+        "attributes": {
+          "size": "S",
+          "measurements": {
+            "chest": 94,
+            "length": 66,
+            "sleeve": 82
+          }
+        }
+      },
+      {
+        "id": "8-M",
+        "name": "Medium",
+        "sku": "DOT-HOODIE-008-M",
+        "price": 350,
+        "inventory": 10,
+        "available": true,
+        "attributes": {
+          "size": "M",
+          "measurements": {
+            "chest": 99,
+            "length": 68,
+            "sleeve": 84
+          }
+        }
+      },
+      {
+        "id": "8-L",
+        "name": "Large",
+        "sku": "DOT-HOODIE-008-L",
+        "price": 350,
+        "inventory": 7,
+        "available": true,
+        "attributes": {
+          "size": "L",
+          "measurements": {
+            "chest": 104,
+            "length": 70,
+            "sleeve": 86
+          }
+        }
+      }
+    ],
+    "seo": {
+      "title": "Pants #7",
+      "description": "Pants #7",
+      "keywords": ["pants"]
+    },
+    "inventory": {
+      "trackQuantity": true,
+      "allowBackorder": false,
+      "location": "Kraków Store",
+      "restockDate": null
+    },
+    "craftsmanship": {
+      "technique": "Minimalist design with premium materials",
+      "hoursSpent": 6,
+      "artisan": "Dawid Olek",
+      "madeIn": "Kraków, Poland",
+      "sustainability": ["100% organic cotton", "Minimal waste", "Eco-friendly dyes", "Fair trade certified"],
+      "careInstructions": {
+        "washing": "Machine wash cold, gentle cycle",
+        "drying": "Tumble dry low",
+        "ironing": "Low heat if needed",
+        "storage": "Fold and store in dry place"
+      }
+    },
+    "createdAt": "2024-04-10T00:00:00Z",
+    "updatedAt": "2024-09-25T00:00:00Z",
+    "publishedAt": "2024-04-15T00:00:00Z"
+  },
+  {
+    "id": "9",
+    "name": "Pants #8",
+    "slug": "pants-8",
+    "description": "Pants #8",
+    "story": "",
+    "price": 350,
+    "comparePrice": 350,
+    "sku": "DOT-BACKPACK-009",
+    "status": "available",
+    "category": "pants",
+    "collection": "workwear_collection",
+    "tags": ["backpack", "artisan", "functional", "handmade", "creator"],
+    "materials": ["Waxed Canvas", "Leather Accents", "Brass Hardware", "Waterproof Lining"],
+    "features": ["Laptop Compartment", "Weather Resistant", "15+ Pockets", "Adjustable Straps", "Vintage Finish"],
+    "images": {
+      "hero": "/images/products/9/Website/1.webp",
+      "gallery": [
+        "/images/products/9/Website/1.webp",
+        "/images/products/9/Website/2.webp",
+        "/images/products/9/Website/3.webp"
+      ],
+      "details": [
+        "/images/products/9/Items/IMG_0798.png",
+        "/images/products/9/Items/IMG_0799.png",
+        "/images/products/9/Items/IMG_0800.png"
+      ],
+      "lifestyle": [
+        "/images/products/9/InstagramPost/9 First.png",
+        "/images/products/9/InstagramPost/9 Second.png"
+      ],
+      "sizeChart": "/images/products/9/InstagramPost/9 SizeChart.png"
+    },
+    "variants": [
+      {
+        "id": "9-OS",
+        "name": "One Size",
+        "sku": "DOT-BACKPACK-009-OS",
+        "price": 350,
+        "inventory": 5,
+        "available": true,
+        "attributes": {
+          "size": "OS",
+          "measurements": {
+            "capacity": "25L",
+            "laptop": "Up to 15 inch",
+            "weight": 1200
+          }
+        }
+      }
+    ],
+    "seo": {
+      "title": "Pants #8",
+      "description": "Pants #8",
+      "keywords": ["pants"]
+    },
+    "inventory": {
+      "trackQuantity": true,
+      "allowBackorder": false,
+      "location": "Gdańsk Store",
+      "restockDate": null
+    },
+    "craftsmanship": {
+      "technique": "Traditional leatherworking with modern materials",
+      "hoursSpent": 14,
+      "artisan": "Dawid Olek",
+      "madeIn": "Gdańsk, Poland",
+      "sustainability": ["Waxed canvas", "Vegetable-tanned leather", "Brass hardware", "Lifetime repair service"],
+      "careInstructions": {
+        "washing": "Spot clean with damp cloth",
+        "drying": "Air dry completely",
+        "ironing": "Not applicable",
+        "storage": "Store in dry place, avoid direct sunlight"
+      }
+    },
+    "createdAt": "2024-03-25T00:00:00Z",
+    "updatedAt": "2024-10-08T00:00:00Z",
+    "publishedAt": "2024-04-01T00:00:00Z"
+  },
+  {
+    "id": "10",
+    "name": "Pants #9",
+    "slug": "pants-9",
+    "description": "Pants #9",
+    "story": "",
+    "price": 350,
+    "comparePrice": 350,
+    "sku": "DOT-BELT-010",
+    "status": "available",
+    "category": "pants",
+    "collection": "workwear_collection",
+    "tags": ["belt", "utility", "industrial", "handmade", "tools"],
+    "materials": ["Heavyweight Canvas", "Steel Buckle", "Leather Reinforcement", "Riveted Construction"],
+    "features": ["4 Removable Pouches", "Steel buckle", "Adjustable Fit", "Tool Loops", "Quick Release"],
+    "images": {
+      "hero": "/images/products/10/Website/1.webp",
+      "gallery": [
+        "/images/products/10/Website/1.webp",
+        "/images/products/10/Website/2.webp",
+        "/images/products/10/Website/3.webp"
+      ],
+      "details": [
+        "/images/products/10/Items/IMG_0767.png",
+        "/images/products/10/Items/IMG_0768.png",
+        "/images/products/10/Items/IMG_0769.png"
+      ],
+      "lifestyle": [
+        "/images/products/10/InstagramPost/10 First.png",
+        "/images/products/10/InstagramPost/10 Second.png"
+      ],
+      "sizeChart": "/images/products/10/InstagramPost/10 SizeChart.png"
+    },
+    "variants": [
+      {
+        "id": "10-OS",
+        "name": "One Size",
+        "sku": "DOT-BELT-010-OS",
+        "price": 350,
+        "inventory": 12,
+        "available": true,
+        "attributes": {
+          "size": "OS",
+          "measurements": {
+            "waist": "70-120cm adjustable",
+            "weight": 450,
+            "pouch_capacity": "2L each"
+          }
+        }
+      }
+    ],
+    "seo": {
+      "title": "Pants #9",
+      "description": "Pants #9",
+      "keywords": ["pants"]
+    },
+    "inventory": {
+      "trackQuantity": true,
+      "allowBackorder": false,
+      "location": "Łódź Store",
+      "restockDate": null
+    },
+    "craftsmanship": {
+      "technique": "Industrial stitching with reinforced construction",
+      "hoursSpent": 8,
+      "artisan": "Dawid Olek",
+      "madeIn": "Łódź, Poland",
+      "sustainability": ["Heavyweight canvas", "Steel hardware", "Minimal waste", "Repairable design"],
+      "careInstructions": {
+        "washing": "Spot clean with damp cloth",
+        "drying": "Air dry completely",
+        "ironing": "Not applicable",
+        "storage": "Hang or roll when not in use"
+      }
+    },
+    "createdAt": "2024-06-01T00:00:00Z",
+    "updatedAt": "2024-10-03T00:00:00Z",
+    "publishedAt": "2024-06-05T00:00:00Z"
+  },
+  {
+    "id": "11",
+    "name": "Pants #10",
+    "slug": "pants-10",
+    "description": "Pants #10",
+    "story": "",
+    "price": 350,
+    "comparePrice": 350,
+    "sku": "DOT-NOMAD-011",
+    "status": "available",
+    "category": "pants",
+    "collection": "comfort_collection",
+    "tags": ["pants", "nomad", "lightweight", "handmade", "travel"],
+    "materials": ["Lightweight Cotton", "Stretch Fabric", "Quick-Dry Technology", "Anti-Odor Treatment"],
+    "features": ["4-Way Stretch", "Quick Dry", "UV Protection", "Secure Pockets", "Articulated Knees"],
+    "images": {
+      "hero": "/images/products/11/Website/1.webp",
+      "gallery": [
+        "/images/products/11/Website/1.webp",
+        "/images/products/11/Website/2.webp",
+        "/images/products/11/Website/3.webp"
+      ],
+      "details": [
+        "/images/products/11/Items/IMG_0764.png",
+        "/images/products/11/Items/IMG_0765.png",
+        "/images/products/11/Items/IMG_0766.png"
+      ],
+      "lifestyle": [
+        "/images/products/11/InstagramPost/11 First.png",
+        "/images/products/11/InstagramPost/11 Second.png"
+      ],
+      "sizeChart": "/images/products/11/InstagramPost/11 SizeChart.png"
+    },
+    "variants": [
+      {
+        "id": "11-28",
+        "name": "28",
+        "sku": "DOT-NOMAD-011-28",
+        "price": 350,
+        "inventory": 3,
+        "available": true,
+        "attributes": {
+          "size": "28",
+          "measurements": {
+            "waist": 71,
+            "length": 101,
+            "inseam": 81
+          }
+        }
+      },
+      {
+        "id": "11-30",
+        "name": "30",
+        "sku": "DOT-NOMAD-011-30",
+        "price": 350,
+        "inventory": 5,
+        "available": true,
+        "attributes": {
+          "size": "30",
+          "measurements": {
+            "waist": 76,
+            "length": 103,
+            "inseam": 83
+          }
+        }
+      },
+      {
+        "id": "11-32",
+        "name": "32",
+        "sku": "DOT-NOMAD-011-32",
+        "price": 350,
+        "inventory": 4,
+        "available": true,
+        "attributes": {
+          "size": "32",
+          "measurements": {
+            "waist": 81,
+            "length": 105,
+            "inseam": 85
+          }
+        }
+      },
+      {
+        "id": "11-34",
+        "name": "34",
+        "sku": "DOT-NOMAD-011-34",
+        "price": 350,
+        "inventory": 2,
+        "available": true,
+        "attributes": {
+          "size": "34",
+          "measurements": {
+            "waist": 86,
+            "length": 107,
+            "inseam": 87
+          }
+        }
+      }
+    ],
+    "seo": {
+      "title": "Pants #10",
+      "description": "Pants #10",
+      "keywords": ["pants"]
+    },
+    "inventory": {
+      "trackQuantity": true,
+      "allowBackorder": false,
+      "location": "Kraków Store",
+      "restockDate": null
+    },
+    "craftsmanship": {
+      "technique": "Technical garment construction with performance fabrics",
+      "hoursSpent": 10,
+      "artisan": "Anna Kowalczyk",
+      "madeIn": "Kraków, Poland",
+      "sustainability": ["Recycled polyester", "Water-saving dyes", "Durable construction", "Minimal packaging"],
+      "careInstructions": {
+        "washing": "Machine wash cold, gentle cycle",
+        "drying": "Tumble dry low or hang dry",
+        "ironing": "Low heat",
+        "storage": "Hang or fold, keep away from sharp objects"
+      }
+    },
+    "createdAt": "2024-05-15T00:00:00Z",
+    "updatedAt": "2024-09-28T00:00:00Z",
+    "publishedAt": "2024-05-20T00:00:00Z"
+  },
+  {
+    "id": "12",
+    "name": "Pants #11",
+    "slug": "pants-11",
+    "description": "Pants #11",
+    "story": "",
+    "price": 350,
+    "comparePrice": 350,
+    "sku": "DOT-SHIRT-012",
+    "status": "available",
+    "category": "pants",
+    "collection": "comfort_collection",
+    "tags": ["shirt", "studio", "professional", "handmade", "versatile"],
+    "materials": ["Organic Cotton Poplin", "Corozo Buttons", "Reinforced Collar", "Natural Fibers"],
+    "features": ["Wrinkle Resistant", "Breathable Fabric", "Hidden Pocket", "Professional Cut", "Easy Care"],
+    "images": {
+      "hero": "/images/products/12/Website/1.webp",
+      "gallery": [
+        "/images/products/12/Website/1.webp",
+        "/images/products/12/Website/2.webp",
+        "/images/products/12/Website/3.webp"
+      ],
+      "details": [
+        "/images/products/12/Items/IMG_0802.png",
+        "/images/products/12/Items/IMG_0803.png",
+        "/images/products/12/Items/IMG_0804.png"
+      ],
+      "lifestyle": [
+        "/images/products/12/InstagramPost/12 First.png",
+        "/images/products/12/InstagramPost/12 Second.png"
+      ],
+      "sizeChart": "/images/products/12/InstagramPost/12 SizeChart.png"
+    },
+    "variants": [
+      {
+        "id": "12-S",
+        "name": "Small",
+        "sku": "DOT-SHIRT-012-S",
+        "price": 350,
+        "inventory": 6,
+        "available": true,
+        "attributes": {
+          "size": "S",
+          "measurements": {
+            "chest": 94,
+            "length": 72,
+            "sleeve": 85
+          }
+        }
+      },
+      {
+        "id": "12-M",
+        "name": "Medium",
+        "sku": "DOT-SHIRT-012-M",
+        "price": 350,
+        "inventory": 8,
+        "available": true,
+        "attributes": {
+          "size": "M",
+          "measurements": {
+            "chest": 99,
+            "length": 74,
+            "sleeve": 87
+          }
+        }
+      },
+      {
+        "id": "12-L",
+        "name": "Large",
+        "sku": "DOT-SHIRT-012-L",
+        "price": 350,
+        "inventory": 5,
+        "available": true,
+        "attributes": {
+          "size": "L",
+          "measurements": {
+            "chest": 104,
+            "length": 76,
+            "sleeve": 89
+          }
+        }
+      },
+      {
+        "id": "12-XL",
+        "name": "X-Large",
+        "sku": "DOT-SHIRT-012-XL",
+        "price": 350,
+        "inventory": 3,
+        "available": true,
+        "attributes": {
+          "size": "XL",
+          "measurements": {
+            "chest": 109,
+            "length": 78,
+            "sleeve": 91
+          }
+        }
+      }
+    ],
+    "seo": {
+      "title": "Pants #11",
+      "description": "Pants #11",
+      "keywords": ["pants"]
+    },
+    "inventory": {
+      "trackQuantity": true,
+      "allowBackorder": false,
+      "location": "Warsaw Store",
+      "restockDate": null
+    },
+    "craftsmanship": {
+      "technique": "Traditional shirtmaking with modern fabrics",
+      "hoursSpent": 11,
+      "artisan": "Dawid Olek",
+      "madeIn": "Warsaw, Poland",
+      "sustainability": ["Organic cotton", "Natural buttons", "Water conservation", "Ethical production"],
+      "careInstructions": {
+        "washing": "Machine wash cold, gentle cycle",
+        "drying": "Tumble dry low, remove promptly",
+        "ironing": "Medium heat as needed",
+        "storage": "Hang or fold with care"
+      }
+    },
+    "createdAt": "2024-05-20T00:00:00Z",
+    "updatedAt": "2024-09-30T00:00:00Z",
+    "publishedAt": "2024-05-25T00:00:00Z"
+  },
+  {
+    "id": "13",
+    "name": "Pants #12",
+    "slug": "pants-12",
+    "description": "Pants #12",
+    "story": "",
+    "price": 350,
+    "comparePrice": 350,
+    "sku": "DOT-TOTE-013",
+    "status": "available",
+    "category": "pants",
+    "collection": "comfort_collection",
+    "tags": ["tote", "creator", "spacious", "handmade", "organization"],
+    "materials": ["Heavyweight Canvas", "Leather Handles", "Brass Hardware", "Water-Resistant Lining"],
+    "features": ["Laptop Sleeve", "Multiple Pockets", "Reinforced Bottom", "Adjustable Strap", "Professional Design"],
+    "images": {
+      "hero": "/images/products/13/Website/1.webp",
+      "gallery": [
+        "/images/products/13/Website/1.webp",
+        "/images/products/13/Website/2.webp",
+        "/images/products/13/Website/3.webp"
+      ],
+      "details": [
+        "/images/products/13/Items/DCIM 1122.png",
+        "/images/products/13/Items/DCIM 1123.png",
+        "/images/products/13/Items/DCIM 1124.png"
+      ],
+      "lifestyle": [
+        "/images/products/13/InstagramPost/13 First.png",
+        "/images/products/13/InstagramPost/13 Second.png"
+      ],
+      "sizeChart": "/images/products/13/InstagramPost/13 SizeChart.png"
+    },
+    "variants": [
+      {
+        "id": "13-OS",
+        "name": "One Size",
+        "sku": "DOT-TOTE-013-OS",
+        "price": 350,
+        "inventory": 15,
+        "available": true,
+        "attributes": {
+          "size": "OS",
+          "measurements": {
+            "capacity": "20L",
+            "laptop": "Up to 15 inch",
+            "dimensions": "45cm x 35cm x 15cm",
+            "weight": 800
+          }
+        }
+      }
+    ],
+    "seo": {
+      "title": "Pants #12",
+      "description": "Pants #12",
+      "keywords": ["pants"]
+    },
+    "inventory": {
+      "trackQuantity": true,
+      "allowBackorder": false,
+      "location": "Gdańsk Store",
+      "restockDate": null
+    },
+    "craftsmanship": {
+      "technique": "Heavy-duty bag construction with reinforced stitching",
+      "hoursSpent": 7,
+      "artisan": "Dawid Olek",
+      "madeIn": "Gdańsk, Poland",
+      "sustainability": ["Heavyweight canvas", "Vegetable-tanned leather", "Brass hardware", "Repairable design"],
+      "careInstructions": {
+        "washing": "Spot clean with damp cloth",
+        "drying": "Air dry completely",
+        "ironing": "Not applicable",
+        "storage": "Store in dry place, avoid overloading"
+      }
+    },
+    "createdAt": "2024-06-10T00:00:00Z",
+    "updatedAt": "2024-10-07T00:00:00Z",
+    "publishedAt": "2024-06-15T00:00:00Z"
+  }
+]

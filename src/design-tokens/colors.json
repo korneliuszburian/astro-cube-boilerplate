@@ -19,6 +19,10 @@
       "value": "#CD7F32"
     },
     {
+      "name": "Light",
+      "value": "#FFFFFF"
+    },
+    {
       "name": "Highlight Bone",
       "value": "#F5F5DC"
     },

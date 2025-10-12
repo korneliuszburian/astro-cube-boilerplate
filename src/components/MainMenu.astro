@@ -6,6 +6,7 @@
 
 import GothicFrame from "./GothicFrame.astro";
 import GothicButton from "./GothicButton.astro";
+import Logo3D from "./Logo3D.astro";
 
 // Polish navigation structure
 const menuItems = [
@@ -40,18 +41,6 @@ const menuItems = [
     description: "Kompletny system gotyckich elementów",
   },
   {
-    title: "WEBGL EFFECTS",
-    route: "/hero-effects",
-    status: "active",
-    description: "Święte efekty wizualne",
-  },
-  {
-    title: "FLUID SIMULATION",
-    route: "/fluid-simulation",
-    status: "active",
-    description: "Interaktywna symulacja płynów",
-  },
-  {
     title: "LOOKBOOK",
     route: "/lookbook",
     status: "active",
@@ -64,11 +53,16 @@ const menuItems = [
     description: "Sekcja fotograficzna",
   },
 ];
+
+// display the glass-like-logo-1.glb using three.js, it must interative with the background used inside of the main-menu__page-background, basically it must be a three.js scene with a background from the <source src="/assets/videos/testing-video-02.mp4" type="video/mp4" /> so the logo will be interactive with the background
+// and the background must be a video, so the logo will be interactive with the video background
+
 ---
 
 <div class="main-menu">
-  <!-- Full page background -->
   <div class="main-menu__page-background"></div>
+
+  <Logo3D class="main-menu__logo" />
 
   <div class="main-menu__container">
     <GothicFrame
@@ -92,6 +86,8 @@ const menuItems = [
         </video>
 
         <div class="main-menu__content">
+          <!-- 3D Logo -->
+
           <!-- Gothic Title -->
           <h1 class="main-menu__title">
             <!-- <span class="main-menu__title-main">BY DOT FOR YOU</span> -->
@@ -124,24 +120,11 @@ const menuItems = [
               }
             </ul>
           </nav>
-
-          <!-- Gothic Footer -->
-          <div class="main-menu__footer">
-            <p class="main-menu__tagline">
-              "Gdzie zakazane szaty stają się świętymi relikwiami"
-            </p>
-          </div>
         </div>
       </div>
     </GothicFrame>
   </div>
 
-  {/* Embers remain as page-level effects */}
-  <div class="main-menu__effects">
-    <div class="main-menu__ember main-menu__ember--1"></div>
-    <div class="main-menu__ember main-menu__ember--2"></div>
-    <div class="main-menu__ember main-menu__ember--3"></div>
-  </div>
 </div>
 
 <style>
@@ -152,6 +135,7 @@ const menuItems = [
     justify-content: center;
     position: relative;
     overflow: hidden;
+    flex-direction: column;
   }
 
   /* Fullscreen atmospheric background for the page */
@@ -168,16 +152,15 @@ const menuItems = [
 
   .main-menu__container {
     position: relative;
-    z-index: 1; /* Above page background */
-    max-width: 600px;
+    z-index: 1;
+    max-width: 500px;
     width: 90vw;
     animation: sanctuaryEntrance 1.5s ease-out;
   }
 
   .main-menu__frame {
-    /* This is the GothicFrame component instance */
-    position: relative; /* For absolute positioning of video and content wrapper */
-    overflow: hidden; /* To clip the video to the frame's bounds */
+    position: relative;
+    overflow: hidden;
   }
 
   .main-menu__frame-video {
@@ -187,8 +170,8 @@ const menuItems = [
     width: 100%;
     height: 100%;
     object-fit: cover;
-    z-index: -1; /* Sits behind content-wrapper, shows poster/video */
-    opacity: 1; /* Poster should be visible by default */
+    z-index: -1;
+    opacity: 1;
   }
 
   .main-menu__content-wrapper {
@@ -201,6 +184,10 @@ const menuItems = [
 
   .main-menu__content {
     text-align: center;
+  }
+
+  .main-menu__logo {
+    margin-bottom: 1rem;
   }
 
   @keyframes sanctuaryEntrance {
@@ -216,7 +203,6 @@ const menuItems = [
 
   .main-menu__title {
     margin: 0 0 2rem 0;
-    font-family: "Times New Roman", serif;
     text-align: center;
   }
 
@@ -249,6 +235,7 @@ const menuItems = [
   .main-menu__list {
     list-style: none;
     padding: 0;
+    gap: 16px;
     margin: 0;
     display: flex;
     flex-direction: column;

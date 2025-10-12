@@ -21,18 +21,19 @@ const {
 } = Astro.props;
 
 // Rarity styling mapping
-const rarityStyles = {
-  common: { border: 'simple' as const, glow: 'brass' },
-  rare: { border: 'carved' as const, glow: 'ember' },
-  legendary: { border: 'ornate' as const, glow: 'fire' },
-  artifact: { border: 'heavy' as const, glow: 'blood' }
+const style = {
+  border: product.rarity === 'common' ? 'frame1' :
+          product.rarity === 'uncommon' ? 'frame2' :
+          product.rarity === 'rare' ? 'frame3' :
+          product.rarity === 'epic' ? 'frame4' :
+          product.rarity === 'legendary' ? 'frame5' : 'frame1'
 };
 
-const style = rarityStyles[product.rarity];
+
 const isDisabled = product.status === 'disabled';
 ---
 
-<article class={`product-card product-card--${variant} product-card--${product.rarity} ${isDisabled ? 'product-card--disabled' : ''} ${className}`}>
+<article class={`product-card product-card--${variant} ${isDisabled ? 'product-card--disabled' : ''} ${className}`}>
   <GothicFrame variant={style.border} size="medium" background="stone" class="product-card__frame">
     <div class="product-card__content">
       <!-- Product Image -->
@@ -48,10 +49,6 @@ const isDisabled = product.status === 'disabled';
             <span class="product-card__status">RITUAL IN PROGRESS</span>
           </div>
         )}
-        <!-- Rarity indicator -->
-        <div class={`product-card__rarity product-card__rarity--${product.rarity}`}>
-          {product.rarity.toUpperCase()}
-        </div>
       </div>
       
       <!-- Product Information -->
@@ -60,14 +57,6 @@ const isDisabled = product.status === 'disabled';
         
         <p class="product-card__description">{product.description}</p>
         
-        <!-- Traits -->
-        <div class="product-card__traits">
-          {product.traits.slice(0, 3).map(trait => (
-            <span class="product-card__trait">{trait}</span>
-          ))}
-        </div>
-        
-        <!-- Materials -->
         <div class="product-card__materials">
           <strong>Sacred Materials:</strong>
           <span>{product.materials[0]}</span>
@@ -177,43 +166,7 @@ const isDisabled = product.status === 'disabled';
     font-size: 0.9rem;
     text-transform: uppercase;
   }
-  
-  /* Rarity Indicator */
-  .product-card__rarity {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 3px;
-    font-size: 0.7rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  
-  .product-card__rarity--common {
-    background: var(--color-base-granite);
-    color: var(--color-highlight-bone);
-  }
-  
-  .product-card__rarity--rare {
-    background: var(--color-highlight-brass);
-    color: var(--color-base-charcoal);
-  }
-  
-  .product-card__rarity--legendary {
-    background: var(--color-accent-fire);
-    color: var(--color-base-charcoal);
-    box-shadow: var(--glow-ember);
-  }
-  
-  .product-card__rarity--artifact {
-    background: var(--color-accent-blood);
-    color: var(--color-highlight-bone);
-    box-shadow: 0 0 12px rgba(153, 0, 0, 0.6);
-  }
-  
-  /* Product Information */
+
   .product-card__info {
     flex: 1;
     display: flex;

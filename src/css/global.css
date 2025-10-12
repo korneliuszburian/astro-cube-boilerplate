@@ -6,7 +6,6 @@
 @import 'tailwindcss/components';
 
 @import 'global/variables.css';
-@import 'global/gothic-colors.css';
 @import 'global/global-styles.css';
 /* 
 See issue: https://github.com/frankstallone/astro-cube-boilerplate/issues/1

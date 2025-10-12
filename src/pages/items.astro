@@ -1,154 +1,29 @@
 ---
-/**
- * Items Page - "PRZEDMIOTY" - VIEWPORT-OPTIMIZED MODULAR DESIGN
- * 100vw × 100vh efficient Gothic sanctuary for sacred relics
- */
-
 import Layout from "../layouts/Layout.astro";
-import GothicFrame from "../components/GothicFrame.astro";
-import GothicButton from "../components/GothicButton.astro";
-import ProductCard from "../components/ProductCard.astro";
-import { getAvailableProducts, GOTHIC_RELICS } from "../utils/products";
+import { getAvailableProducts } from "../utils/products";
 
 const availableProducts = getAvailableProducts();
-const allProducts = GOTHIC_RELICS;
-const disabledProducts = allProducts.filter(p => p.status === 'disabled');
-
-const stats = {
-  total: allProducts.length,
-  available: availableProducts.length,
-  artifacts: allProducts.filter(p => p.rarity === 'artifact').length,
-  legendary: allProducts.filter(p => p.rarity === 'legendary').length
-};
 ---
 
 <Layout title="PRZEDMIOTY - Katalog Świętych Reliktów" description="Katalog zakazanych artefaktów">
   <div class="items-viewport">
-    <!-- Fixed atmospheric background -->
-    <div class="items-viewport__background"></div>
-
-    <!-- Floating atmospheric effects -->
-    <div class="items-viewport__effects">
-      <div class="ember ember--1"></div>
-      <div class="ember ember--2"></div>
-      <div class="ember ember--3"></div>
+    <div class="items-viewport__background">
+      <video
+        id="header-video"
+        class="background-video"
+        autoplay
+        muted
+        loop
+        playsinline
+      >
+        <source src="/assets/videos/testing-video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
     </div>
 
-    <!-- Viewport Grid Layout -->
-    <div class="items-viewport__grid">
-      
-      <!-- Header Section - Top 25% -->
-      <header class="items-viewport__header">
-        <GothicFrame variant="heavy" size="medium" background="none" class="header-frame">
-          <video
-            class="header-video"
-            poster="/assets/videos/testing-video-poster.png"
-            preload="metadata"
-            loop
-            muted
-            playsinline
-          >
-            <source src="/assets/videos/testing-video.mp4" type="video/mp4" />
-          </video>
-
-          <div class="header-content" id="header-hover">
-            <div class="header-title-section">
-              <h1 class="header-title">ŚWIĘTE RELIKTY</h1>
-              <div class="header-stats">
-                <span class="stat">{stats.total} TOTAL</span>
-                <span class="stat">{stats.available} AVAILABLE</span>
-                <span class="stat">{stats.artifacts} ARTIFACTS</span>
-              </div>
-            </div>
-            <div class="header-nav">
-              <GothicButton variant="button1" size="small" href="/" class="nav-btn">← SANCTUARY</GothicButton>
-              <GothicButton variant="button2" size="small" href="/shop" class="nav-btn">SHOP →</GothicButton>
-            </div>
-          </div>
-        </GothicFrame>
-      </header>
-
-      <!-- Main Content Area - 75% -->
+    <div class="items-viewport__grid" id="header-hover">
       <main class="items-viewport__main">
-        
-        <!-- Available Items - Left Side -->
-        <section class="items-section items-section--available">
-          <div class="section-header">
-            <h2 class="section-title">DOSTĘPNE</h2>
-            <span class="section-count">{stats.available}</span>
-          </div>
-          
-          <div class="products-scroll">
-            <div class="products-compact-grid">
-              {availableProducts.map(product => (
-                <div class="product-compact">
-                  <GothicFrame variant="simple" size="thin" background="none" class="product-frame">
-                    <div class="product-video-container">
-                      <!-- AI-generated product video will go here -->
-                      <img 
-                        src={product.images.main} 
-                        alt={product.name}
-                        class="product-image"
-                      />
-                      <div class="product-overlay">
-                        <h3 class="product-name">{product.name}</h3>
-                        <div class="product-price">
-                          <span class="price-symbol">⚔</span>
-                          <span class="price-value">{product.price}</span>
-                        </div>
-                        <div class="product-rarity product-rarity--{product.rarity}">
-                          {product.rarity.toUpperCase()}
-                        </div>
-                      </div>
-                    </div>
-                  </GothicFrame>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <!-- Forbidden Items - Right Side (if any) -->
-        {disabledProducts.length > 0 && (
-          <section class="items-section items-section--forbidden">
-            <div class="section-header">
-              <h2 class="section-title section-title--forbidden">ZAKAZANE</h2>
-              <span class="section-count">{disabledProducts.length}</span>
-            </div>
-            
-            <div class="products-scroll">
-              <div class="products-compact-grid">
-                {disabledProducts.map(product => (
-                  <div class="product-compact product-compact--forbidden">
-                    <GothicFrame variant="heavy" size="thin" background="none" class="product-frame">
-                      <div class="product-video-container">
-                        <img 
-                          src={product.images.main} 
-                          alt={product.name}
-                          class="product-image"
-                        />
-                        <div class="product-overlay">
-                          <h3 class="product-name">{product.name}</h3>
-                          <div class="product-price">
-                            <span class="price-symbol">⚔</span>
-                            <span class="price-value">{product.price}</span>
-                          </div>
-                          <div class="product-rarity product-rarity--{product.rarity}">
-                            {product.rarity.toUpperCase()}
-                          </div>
-                          <div class="forbidden-warning">⚠ RITUAL IN PROGRESS</div>
-                        </div>
-                      </div>
-                    </GothicFrame>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
       </main>
-
     </div>
   </div>
 </Layout>
@@ -161,7 +36,17 @@ const stats = {
     overflow: hidden;
   }
 
-  /* Fixed atmospheric background */
+  .background-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    pointer-events: none;
+  }
+
   .items-viewport__background {
     background-image: url("/assets/videos/testing-video-poster.png");
     position: fixed;
@@ -174,437 +59,82 @@ const stats = {
     z-index: -2;
   }
 
-  /* Floating atmospheric effects */
-  .items-viewport__effects {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .ember {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    background: var(--color-accent-fire);
-    border-radius: 50%;
-    box-shadow: var(--glow-fire);
-    animation: emberFloat 8s infinite ease-in-out;
-  }
-
-  .ember--1 { top: 20%; left: 10%; animation-delay: 0s; }
-  .ember--2 { top: 60%; right: 15%; animation-delay: 3s; }
-  .ember--3 { bottom: 30%; left: 80%; animation-delay: 6s; }
-
-  @keyframes emberFloat {
-    0%, 100% { transform: translateY(0) scale(1); opacity: 0.6; }
-    50% { transform: translateY(-25px) scale(1.4); opacity: 1; }
-  }
-
-  /* Viewport Grid Layout */
-  .items-viewport__grid {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-rows: 25vh 75vh;
-    gap: 0;
-    padding: 1rem;
-    box-sizing: border-box;
-  }
-
-  /* Header Section - 25% of viewport */
-  .items-viewport__header {
-    position: relative;
-    min-height: 0; /* Allow shrinking */
-  }
-
-  .header-frame {
-    position: relative;
-    overflow: hidden;
-    height: 100%;
-  }
-
-  .header-video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: -1;
-  }
-
-  .header-content {
-    position: relative;
-    z-index: 1;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.5rem 2rem;
-    background: rgba(26, 26, 26, 0.3);
-  }
-
-  .header-title-section {
-    flex: 1;
-    text-align: center;
-  }
-
-  .header-title {
-    font-size: clamp(1.8rem, 4vw, 3rem);
-    font-weight: bold;
-    color: var(--color-highlight-bone);
-    text-shadow: 
-      2px 2px 0 var(--color-shadow-deep),
-      0 0 20px var(--color-accent-fire);
-    letter-spacing: 0.2em;
-    margin: 0 0 0.5rem 0;
-    text-transform: uppercase;
-  }
-
-  .header-stats {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    font-size: 0.9rem;
-  }
-
-  .stat {
-    color: var(--color-highlight-brass);
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  .header-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  /* Main Content Area - 75% of viewport */
-  .items-viewport__main {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    min-height: 0; /* Allow shrinking */
-  }
-
-  /* Single column when no forbidden items */
-  .items-viewport__main:has(.items-section--forbidden:empty) {
-    grid-template-columns: 1fr;
-  }
-
-  /* Section Styling */
-  .items-section {
-    position: relative;
-    background: rgba(26, 26, 26, 0.2);
-    border: 1px solid var(--color-highlight-brass);
-    border-radius: 8px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .items-section--forbidden {
-    border-color: var(--color-accent-blood);
-    background: rgba(153, 0, 0, 0.1);
-  }
-
-  .section-header {
-    padding: 1rem;
-    background: rgba(26, 26, 26, 0.7);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--color-highlight-brass);
-  }
-
-  .items-section--forbidden .section-header {
-    border-bottom-color: var(--color-accent-blood);
-  }
-
-  .section-title {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: var(--color-highlight-bone);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin: 0;
-  }
-
-  .section-title--forbidden {
-    color: var(--color-accent-blood);
-    text-shadow: 0 0 10px var(--color-accent-blood);
-  }
-
-  .section-count {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--color-accent-fire);
-    text-shadow: 0 0 8px var(--color-accent-fire);
-  }
-
-  /* Scrollable Products Area */
-  .products-scroll {
-    flex: 1;
-    overflow-y: auto;
-    padding: 1rem;
-  }
-
-  .products-compact-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-  }
-
-  /* Compact Product Cards */
-  .product-compact {
-    position: relative;
-    aspect-ratio: 3/4;
-    transition: all var(--transition-gothic);
-  }
-
-  .product-compact:hover {
-    transform: translateY(-3px) scale(1.02);
-  }
-
-  .product-compact--forbidden {
-    filter: grayscale(0.4) brightness(0.7);
-  }
-
-  .product-compact--forbidden:hover {
-    filter: grayscale(0.1) brightness(1);
-  }
-
-  .product-frame {
-    height: 100%;
-    overflow: hidden;
-  }
-
-  .product-video-container {
-    position: relative;
-    height: 100%;
-    overflow: hidden;
-  }
-
-  .product-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform var(--transition-ember);
-  }
-
-  .product-compact:hover .product-image {
-    transform: scale(1.05);
-  }
-
-  .product-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(transparent, rgba(26, 26, 26, 0.9));
-    padding: 1rem 0.75rem 0.75rem;
-    transform: translateY(calc(100% - 2rem));
-    transition: transform var(--transition-gothic);
-  }
-
-  .product-compact:hover .product-overlay {
-    transform: translateY(0);
-  }
-
-  .product-name {
-    font-size: 0.9rem;
-    font-weight: bold;
-    color: var(--color-highlight-bone);
-    text-transform: uppercase;
-    margin: 0 0 0.5rem 0;
-    line-height: 1.2;
-  }
-
-  .product-price {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .price-symbol {
-    color: var(--color-accent-fire);
-    font-size: 0.9rem;
-  }
-
-  .price-value {
-    color: var(--color-highlight-bone);
-    font-weight: bold;
-    font-size: 0.9rem;
-  }
-
-  .product-rarity {
-    font-size: 0.7rem;
-    font-weight: bold;
-    padding: 0.2rem 0.4rem;
-    border-radius: 3px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  .product-rarity--common { background: var(--color-base-granite); color: var(--color-highlight-bone); }
-  .product-rarity--rare { background: var(--color-highlight-brass); color: var(--color-base-charcoal); }
-  .product-rarity--legendary { background: var(--color-accent-fire); color: var(--color-base-charcoal); }
-  .product-rarity--artifact { background: var(--color-accent-blood); color: var(--color-highlight-bone); }
-
-  .forbidden-warning {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    font-size: 0.6rem;
-    font-weight: bold;
-    color: var(--color-accent-blood);
-    background: rgba(153, 0, 0, 0.3);
-    padding: 0.2rem 0.4rem;
-    border-radius: 3px;
-    text-transform: uppercase;
-    animation: warningPulse 2s infinite;
-  }
-
-  @keyframes warningPulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.6; }
-  }
-
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .items-viewport__grid {
-      grid-template-rows: 30vh 70vh;
-      padding: 0.5rem;
-    }
-
-    .items-viewport__main {
-      grid-template-columns: 1fr;
-    }
-
-    .header-content {
-      flex-direction: column;
-      gap: 1rem;
-      padding: 1rem;
-    }
-
-    .header-nav {
-      flex-direction: row;
-      justify-content: center;
-    }
-
-    .header-stats {
-      gap: 1rem;
-      font-size: 0.8rem;
-    }
-
-    .products-compact-grid {
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    }
-  }
-
-  @media (max-width: 480px) {
-    .items-viewport__grid {
-      grid-template-rows: 35vh 65vh;
-    }
-
-    .header-stats {
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .products-compact-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-
-  /* High contrast and reduced motion */
-  @media (prefers-contrast: high) {
-    .header-title { text-shadow: none; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .ember { animation: none; }
-    .product-compact { transition: none; }
-    .product-overlay { transition: none; }
-  }
-
-  /* Custom scrollbar for products areas */
-  .products-scroll::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  .products-scroll::-webkit-scrollbar-track {
-    background: rgba(26, 26, 26, 0.3);
-  }
-
-  .products-scroll::-webkit-scrollbar-thumb {
-    background: var(--color-highlight-brass);
-    border-radius: 3px;
-  }
-
-  .products-scroll::-webkit-scrollbar-thumb:hover {
-    background: var(--color-accent-fire);
-  }
 </style>
 
 <script>
-  // Header video hover effect
-  const headerHover = document.getElementById('header-hover');
-  const headerVideo = document.querySelector('.header-video') as HTMLVideoElement | null;
-  
-  if (headerHover && headerVideo) {
-    let videoPlayPromise: Promise<void> | null = null;
-
-    const playVideo = () => {
-      if (headerVideo.paused && headerVideo.readyState >= 3) {
-        videoPlayPromise = headerVideo.play();
-        if (videoPlayPromise) {
-          videoPlayPromise.catch((error) => {
-            console.error("Video play failed:", error);
-            videoPlayPromise = null;
-          });
-        }
-      }
-    };
-
-    const pauseVideo = async () => {
-      if (videoPlayPromise !== null) {
-        try {
-          await videoPlayPromise;
-        } catch (error) {
-          /* Already logged */
-        } finally {
-          videoPlayPromise = null;
-        }
-      }
-      if (!headerVideo.paused) {
-        headerVideo.pause();
-      }
-    };
-
-    headerHover.addEventListener('mouseenter', playVideo);
-    headerHover.addEventListener('mouseleave', pauseVideo);
-  }
-
-  // Future: Product video hover effects for AI-generated videos
   document.addEventListener('DOMContentLoaded', () => {
+    console.log('Items page loaded - ready for video implementations');
+
+    const headerHover = document.getElementById('header-hover');
+    const headerVideo = document.querySelector('.header-video') as HTMLVideoElement | null;
+
+    if (headerHover && headerVideo) {
+      let videoPlayPromise: Promise<void> | null = null;
+
+      const playVideo = () => {
+        if (headerVideo.paused && headerVideo.readyState >= 3) {
+          videoPlayPromise = headerVideo.play();
+          if (videoPlayPromise) {
+            videoPlayPromise.catch((error) => {
+              console.error("Video play failed:", error);
+              videoPlayPromise = null;
+            });
+          }
+        }
+      };
+
+      const pauseVideo = async () => {
+        if (videoPlayPromise !== null) {
+          try {
+            await videoPlayPromise;
+          } catch (error) {
+          } finally {
+            videoPlayPromise = null;
+          }
+        }
+        if (!headerVideo.paused) {
+          headerVideo.pause();
+        }
+      };
+
+      headerHover.addEventListener('mouseenter', playVideo);
+      headerHover.addEventListener('mouseleave', pauseVideo);
+    }
+
     const productContainers = document.querySelectorAll('.product-video-container');
-    
+
     productContainers.forEach((container, index) => {
-      // When AI-generated videos are implemented, add hover effects here
-      // const video = container.querySelector('video');
-      // if (video) { /* implement hover play/pause */ }
-      
-      // For now, just add staggered reveal animation
+      const video = container.querySelector('video') as HTMLVideoElement | null;
+      if (video) {
+        let playPromise: Promise<void> | null = null;
+
+        container.addEventListener('mouseenter', () => {
+          if (video.paused && video.readyState >= 3) {
+            playPromise = video.play();
+            if (playPromise) {
+              playPromise.catch((error) => {
+                console.error("Product video play failed:", error);
+                playPromise = null;
+              });
+            }
+          }
+        });
+
+        container.addEventListener('mouseleave', async () => {
+          if (playPromise !== null) {
+            try {
+              await playPromise;
+            } catch (error) {
+            } finally {
+              playPromise = null;
+            }
+          }
+          if (!video.paused) {
+            video.pause();
+          }
+        });
+      }
+
       (container as HTMLElement).style.animationDelay = `${index * 0.1}s`;
     });
   });

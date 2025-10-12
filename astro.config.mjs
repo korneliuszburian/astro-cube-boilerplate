@@ -21,4 +21,5 @@ export default defineConfig({
       include: ['three']
     }
   }
+  // View Transitions are now stable in Astro 5.x - no experimental flag needed
 });

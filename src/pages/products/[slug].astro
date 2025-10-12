@@ -1,0 +1,604 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import GothicButton from "../../components/GothicButton.astro";
+import GothicFrame from "../../components/GothicFrame.astro";
+import { products, getProductBySlug } from "../../data/products";
+import type { GetStaticPaths } from "astro";
+
+// Generate static paths for all products
+export const getStaticPaths = (async () => {
+  return products.map((product) => ({
+    params: { slug: product.slug },
+    props: { product },
+  }));
+}) satisfies GetStaticPaths;
+
+// Get product from props
+const { product } = Astro.props;
+
+// If product not found (shouldn't happen with static paths, but for safety)
+if (!product) {
+  return Astro.redirect("/shop");
+}
+
+// Calculate total stock
+const totalStock = product.variants.reduce((sum, v) => sum + v.inventory, 0);
+const isAvailable = product.status === "available" && totalStock > 0;
+const availableVariants = product.variants.filter(
+  (v) => v.available && v.inventory > 0
+);
+---
+
+<Layout
+  title={product.seo.title}
+  description={product.seo.description}
+  backgroundVideoFilter="brightness(0.5)"
+>
+  <div class="product-page">
+    <div class="product-page__background"></div>
+    <div class="region flow flow-space-xl" >
+      <section class="product-hero wrapper" data-layout="narrow">
+        <div class="product-images">
+          <div class="main-image">
+            <img
+              src={product.images.hero}
+              alt={product.name}
+              class="hero-image"
+              transition:name={`product-${product.id}`}
+            />
+          </div>
+
+          {
+            product.images.gallery.length > 0 && (
+              <div class="gallery-thumbnails">
+                {product.images.gallery.map((image, index) => (
+                  <button class="thumbnail" data-image={image}>
+                    <img
+                      src={image}
+                      alt={`${product.name} view ${index + 1}`}
+                    />
+                  </button>
+                ))}
+              </div>
+            )
+          }
+        </div>
+
+        <div class="product-info">
+          <h1 class="product-title">{product.name}</h1>
+
+          <p class="product-description">{product.description}</p>
+
+          <div class="product-price">
+            <span class="price">{product.price} ZŁ</span>
+            <span class="edition">1 of 1</span>
+          </div>
+
+          {
+            availableVariants.length > 0 && (
+              <div class="size-selection">
+                <span class="label">Size</span>
+                <div class="size-options">
+                  <span class="size-display">
+                    {availableVariants[0].attributes.size ||
+                      availableVariants[0].name}
+                  </span>
+                </div>
+              </div>
+            )
+          }
+
+          <div class="product-actions">
+            {
+              isAvailable ? (
+                <GothicButton
+                  variant="button4"
+                  size="medium"
+                  class="contact-btn"
+                  data-open-popup="true"
+                >
+                  Skontaktuj się
+                </GothicButton>
+              ) : (
+                <GothicButton
+                  variant="button4"
+                  size="medium"
+                  class="sold-out-btn"
+                  disabled
+                >
+                  Sold Out
+                </GothicButton>
+              )
+            }
+          </div>
+
+          <div class="product-footer">
+            <p class="made-by">By Dot For You</p>
+            <a href="/shop" class="back-link">← Back</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Additional Images -->
+      {
+        (product.images.details.length > 0 ||
+          product.images.lifestyle.length > 0) && (
+          <section class="additional-images">
+            <div class="images-grid">
+              {product.images.details.map((image) => (
+                <img src={image} alt={product.name} />
+              ))}
+              {product.images.lifestyle.map((image) => (
+                <img src={image} alt={product.name} />
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      <!-- Contact Popup -->
+      <div class="contact-popup" id="contact-popup">
+        <div class="contact-popup__overlay" id="popup-overlay"></div>
+        <div class="contact-popup__container">
+          <GothicFrame
+            variant="ornate"
+            size="thick"
+            background="none"
+            class="contact-popup__frame"
+          >
+            <div class="contact-popup__content">
+              <video
+                class="contact-popup__video"
+                autoplay
+                loop
+                muted
+                playsinline
+                poster="/assets/videos/testing-video-poster-02.png"
+              >
+                <source
+                  src="/assets/videos/testing-video-02.mp4"
+                  type="video/mp4"
+                />
+              </video>
+
+              <div class="contact-popup__inner">
+                <h2 class="contact-popup__title">DM ME</h2>
+                <p class="contact-popup__subtitle">
+                  {product.name} - {product.price} ZŁ
+                </p>
+
+                <div class="contact-popup__options">
+                  <GothicButton
+                    variant="button4"
+                    size="medium"
+                    href="mailto:kontakt@dotforyou.pl?subject=Zainteresowanie: {product.name}"
+                    class="contact-popup__option"
+                  >
+                    Email
+                  </GothicButton>
+
+                  <GothicButton
+                    variant="button4"
+                    size="medium"
+                    href="https://instagram.com/dotforyou"
+                    class="contact-popup__option contact-popup__instagram"
+                  >
+                    Instagram
+                  </GothicButton>
+
+                  <GothicButton
+                    variant="button4"
+                    size="medium"
+                    class="contact-popup__close"
+                    data-close-popup="true"
+                  >
+                    Zamknij
+                  </GothicButton>
+                </div>
+              </div>
+            </div>
+          </GothicFrame>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .product-page {
+    min-height: 100vh;
+    background: var(--color-background);
+    position: relative;
+    color: var(--color-highlight-bone);
+  }
+
+  .product-page__background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("/assets/videos/testing-video-poster-02.png");
+    background-size: cover;
+    background-position: center;
+    opacity: 0.3;
+    z-index: 0;
+  }
+
+  .product-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (max-width: 968px) {
+    .product-hero {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+
+  .product-images {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .main-image {
+    width: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+  }
+
+  .hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .gallery-thumbnails {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .thumbnail {
+    aspect-ratio: 1;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.3s;
+    background: none;
+  }
+
+  .thumbnail:hover {
+    border-color: var(--color-metal-polished-brass);
+  }
+
+  .thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .product-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .product-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin-bottom: 1rem;
+  }
+
+  .product-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    opacity: 0.9;
+  }
+
+  .product-price {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .price {
+    font-size: 2.5rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+  }
+
+  .edition {
+    font-size: 0.9rem;
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .size-selection {
+    margin: 1.5rem 0;
+  }
+
+  .label {
+    display: block;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.75rem;
+    opacity: 0.7;
+  }
+
+  .size-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .size-display {
+    padding: 0.75rem 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: transparent;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    display: inline-block;
+  }
+
+  .size-option {
+    padding: 0.75rem 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: transparent;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .product-actions {
+    margin: 2rem 0;
+  }
+
+  .contact-btn,
+  .sold-out-btn {
+    width: 100%;
+  }
+
+  .sold-out-btn :global(.gothic-button__content) {
+    opacity: 0.5;
+  }
+
+  /* Contact Popup Styles */
+  .contact-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .contact-popup.active {
+    display: flex;
+    opacity: 1;
+  }
+
+  .contact-popup__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: -1;
+  }
+
+  .contact-popup__container {
+    position: relative;
+    max-width: 500px;
+    width: 90vw;
+    animation: popupEntrance 0.5s ease-out;
+  }
+
+  @keyframes popupEntrance {
+    from {
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .contact-popup__frame {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact-popup__content {
+    position: relative;
+    padding: 2rem 1.5rem;
+  }
+
+  .contact-popup__video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    opacity: 0.6;
+  }
+
+  .contact-popup__inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .contact-popup__title {
+    font-size: clamp(2rem, 4vw, 2.5rem);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin: 0 0 0.5rem 0;
+    text-align: center;
+    color: var(--color-highlight-bone);
+    text-shadow: 2px 2px 0 var(--color-shadow-deep);
+  }
+
+  .contact-popup__subtitle {
+    font-size: 1rem;
+    margin: 0 0 2rem 0;
+    text-align: center;
+    color: var(--color-metal-antique-gold);
+    letter-spacing: 1px;
+  }
+
+  .contact-popup__options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .contact-popup__option,
+  .contact-popup__close {
+    width: 100%;
+  }
+
+  .contact-popup__instagram :global(a) {
+    pointer-events: auto;
+  }
+
+  .product-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+  }
+
+  .made-by {
+    font-size: 0.85rem;
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .back-link {
+    text-decoration: none;
+    font-size: 0.9rem;
+    opacity: 0.7;
+    color: var(--color-base-charcoal);
+    transition: opacity 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .back-link:hover {
+    opacity: 1;
+  }
+
+  .additional-images {
+    position: relative;
+    z-index: 1;
+  }
+
+  .images-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+
+  .images-grid img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
+</style>
+
+<script>
+  // Re-run on every page load (including View Transitions navigation)
+  function initializeGallery() {
+    // Image gallery functionality
+    const thumbnails = document.querySelectorAll(".thumbnail");
+    const heroImage = document.querySelector(".hero-image") as HTMLImageElement;
+
+    thumbnails.forEach((thumbnail) => {
+      thumbnail.addEventListener("click", () => {
+        const newImage = thumbnail.getAttribute("data-image");
+        if (newImage && heroImage) {
+          heroImage.src = newImage;
+        }
+      });
+    });
+  }
+
+  // Contact popup functionality
+  function initializeContactPopup() {
+    const openBtn = document.querySelector(".contact-btn");
+    const popup = document.querySelector("#contact-popup");
+    const overlay = document.querySelector("#popup-overlay");
+    const closeBtn = document.querySelector(".contact-popup__close");
+
+    if (openBtn && popup && overlay && closeBtn) {
+      const openPopup = (e: Event) => {
+        e.preventDefault();
+        popup.classList.add("active");
+        document.body.style.overflow = "hidden";
+      };
+
+      const closePopup = (e?: Event) => {
+        if (e) e.preventDefault();
+        popup.classList.remove("active");
+        document.body.style.overflow = "";
+      };
+
+      // Find the actual button element inside the GothicButton wrapper
+      const openBtnElement = openBtn.querySelector("button, a") || openBtn;
+      const closeBtnElement = closeBtn.querySelector("button, a") || closeBtn;
+
+      openBtnElement.addEventListener("click", openPopup);
+      closeBtnElement.addEventListener("click", closePopup);
+      overlay.addEventListener("click", () => closePopup());
+
+      // Close on Escape key
+      const handleEscape = (e: KeyboardEvent) => {
+        if (e.key === "Escape" && popup.classList.contains("active")) {
+          closePopup();
+        }
+      };
+
+      document.addEventListener("keydown", handleEscape);
+    }
+  }
+
+  // Run on initial page load
+  document.addEventListener("DOMContentLoaded", () => {
+    initializeGallery();
+    initializeContactPopup();
+  });
+
+  // Re-run after View Transitions navigation
+  document.addEventListener("astro:page-load", () => {
+    initializeGallery();
+    initializeContactPopup();
+  });
+</script>

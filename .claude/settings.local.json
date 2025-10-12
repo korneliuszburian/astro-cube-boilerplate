@@ -2,7 +2,16 @@
   "permissions": {
     "allow": [
       "mcp__zai-mcp-server__analyze_image",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "mcp__web-search-prime__webSearchPrime",
+      "WebSearch",
+      "WebFetch(domain:docs.astro.build)",
+      "Bash(find:*)",
+      "Bash(node:*)",
+      "Bash(npm update:*)",
+      "Bash(npm outdated:*)",
+      "Bash(npm install:*)",
+      "Bash(npm uninstall:*)"
     ],
     "deny": [],
     "ask": []

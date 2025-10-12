@@ -1,772 +1,408 @@
 ---
-/**
- * Shop Page - "SKLEP" - VIEWPORT-OPTIMIZED HARMONIC DESIGN
- * 100vw × 100vh Gothic sanctuary shopping experience
- */
-
 import Layout from "../layouts/Layout.astro";
-import GothicFrame from "../components/GothicFrame.astro";
+import { Image } from "astro:assets";
 import GothicButton from "../components/GothicButton.astro";
-import ProductCard from "../components/ProductCard.astro";
-import { getAvailableProducts, getProductsByRarity, getAllCollections } from "../utils/products";
+import { products, getCategoryCounts } from "../data/products";
 
-const allProducts = getAvailableProducts();
-const collections = getAllCollections();
+// Get all products and category counts
+const allProducts = products;
+const categoryCounts = getCategoryCounts();
 
-// Group products by rarity for quick access
-const rarityGroups = {
-  artifact: getProductsByRarity('artifact'),
-  legendary: getProductsByRarity('legendary'),
-  rare: getProductsByRarity('rare'),
-  common: getProductsByRarity('common')
-};
+// Get unique categories from products
+const categories = Array.from(new Set(products.map((p) => p.category)));
 
-// Featured product (highest rarity available)
-const featuredProduct = allProducts.find(p => p.rarity === 'artifact') || allProducts[0];
+// SEO metadata
+const title = "Dot For You - Handmade Clothing Collection";
+const description =
+  "Discover unique handmade clothing by Dawid Olek. Each piece crafted with care in Poland.";
 ---
 
-<Layout title="SKLEP - Gothic Sanctuary Shopping" description="Główne sanktuarium handlu - odkryj zakazane szaty">
-  <div class="shop-viewport">
-    <div class="shop-viewport__background"></div>
-
-    <div class="shop-viewport__grid">
-      
-      <!-- Header Section - Top 20% -->
-      <header class="shop-viewport__header">
-        <GothicFrame variant="ornate" size="medium" background="none" class="header-frame">
-          <video
-            class="header-video"
-            poster="/assets/videos/testing-video-poster-01.png"
-            preload="metadata"
-            loop
-            muted
-            playsinline
-          >
-            <source src="/assets/videos/testing-video-01.mp4" type="video/mp4" />
-          </video>
-
-          <div class="header-content" id="header-hover">
-            <div class="header-main">
-              <h1 class="header-title">SANKTUARIUM HANDLU</h1>
-              <div class="header-stats">
-                <span class="stat">{allProducts.length} RELIKTÓW</span>
-                <span class="stat">{rarityGroups.artifact.length} ARTEFAKTÓW</span>
-                <span class="stat">{rarityGroups.legendary.length} LEGENDARNYCH</span>
+<Layout title={title} description={description} backgroundVideoFilter="brightness(0.7)">
+  <div class="shop-container">
+    <!-- Hero Section -->
+    <section class="shop-hero">
+      <section class="filters-section">
+        <div class="filters-container flow flow-space-l">
+          <div class="flow flow-space-xs">
+            <div class="filter-group">
+              <span class="filter-label">Dostępność:</span>
+              <div class="filter-buttons">
+                <GothicButton
+                  variant="button4"
+                  size="medium"
+                  class="filter-btn active"
+                  data-filter="all"
+                >
+                  Wszystkie ({allProducts.length})
+                </GothicButton>
+                <GothicButton
+                  variant="button4"
+                  size="medium"
+                  class="filter-btn"
+                  data-filter="available"
+                >
+                  Dostępne ({
+                    allProducts.filter((p) => p.status === "available").length
+                  })
+                </GothicButton>
+                <GothicButton
+                  variant="button4"
+                  size="medium"
+                  class="filter-btn"
+                  data-filter="unavailable"
+                >
+                  Niedostępne ({
+                    allProducts.filter((p) => p.status === "disabled").length
+                  })
+                </GothicButton>
               </div>
             </div>
-            <div class="header-nav">
-              <GothicButton variant="button1" size="small" href="/" class="nav-btn">← SANCTUARY</GothicButton>
-              <GothicButton variant="button3" size="small" href="/items" class="nav-btn">ITEMS →</GothicButton>
+
+            <div class="filter-group">
+              <span class="filter-label">Kategoria:</span>
+              <div class="filter-buttons">
+                <GothicButton
+                  variant="button4"
+                  size="medium"
+                  class="category-btn active"
+                  data-category="all"
+                >
+                  Wszystkie ({allProducts.length})
+                </GothicButton>
+                {
+                  categories.map((category) => (
+                    <GothicButton
+                      variant="button4"
+                      size="medium"
+                      class="category-btn"
+                      data-category={category}
+                    >
+                      {category === "pants"
+                        ? "Spodnie"
+                        : category === "hoodies"
+                          ? "Bluzy"
+                          : category === "accessories"
+                            ? "Akcesoria"
+                            : category}
+                      ({categoryCounts[category] || 0})
+                    </GothicButton>
+                  ))
+                }
+              </div>
             </div>
           </div>
-        </GothicFrame>
-      </header>
+          <section class="products-section">
+            <div class="products-grid">
+              {
+                allProducts.map((product, index) => {
+                  const totalStock = product.variants.reduce(
+                    (sum, v) => sum + v.inventory,
+                    0
+                  );
+                  const isAvailable =
+                    product.status === "available" && totalStock > 0;
+                  
+                  // Eagerly load first 6 products (above the fold), lazy load the rest
+                  const loadingStrategy = index < 6 ? "eager" : "lazy";
 
-      <!-- Main Shop Area - 80% -->
-      <main class="shop-viewport__main">
-        
-        <!-- Featured Product - Left 40% -->
-        {featuredProduct && (
-          <section class="shop-featured">
-            <div class="featured-header">
-              <h2 class="featured-title">ARTEFAKT DNIA</h2>
-              <div class="featured-badge">NAJRZADSZY</div>
+                  return (
+                    <article
+                      class="product-card"
+                      data-status={product.status}
+                      data-category={product.category}
+                      data-available={isAvailable ? "true" : "false"}
+                    >
+                      <a
+                        href={`/products/${product.slug}`}
+                        class="product-link flow"
+                      >
+                        <div class="product-image-container">
+                          <Image
+                            src={product.images.hero}
+                            alt={product.name}
+                            class="product-image"
+                            loading={loadingStrategy}
+                            width={600}
+                            height={600}
+                            transition:name={`product-${product.id}`}
+                          />
+                          {!isAvailable && (
+                            <div class="product-overlay">
+                              <span class="overlay-text">NIEDOSTĘPNE</span>
+                            </div>
+                          )}
+                        </div>
+                        <div class="product-info">
+                          <h3 class="product-name">{product.name}</h3>
+                          <div class="product-meta">
+                            <span class="product-price">
+                              {product.price} ZŁ
+                            </span>
+                          </div>
+                        </div>
+                      </a>
+                    </article>
+                  );
+                })
+              }
             </div>
-            
-            <GothicFrame variant="heavy" size="medium" background="none" class="featured-frame">
-              <div class="featured-content">
-                <div class="featured-image-container">
-                  <!-- AI-generated featured product video will go here -->
-                  <img 
-                    src={featuredProduct.images.main} 
-                    alt={featuredProduct.name}
-                    class="featured-image"
-                  />
-                  <div class="featured-rarity">
-                    {featuredProduct.rarity.toUpperCase()}
-                  </div>
-                </div>
-                
-                <div class="featured-info">
-                  <h3 class="featured-name">{featuredProduct.name}</h3>
-                  <p class="featured-description">{featuredProduct.description}</p>
-                  
-                  <div class="featured-details">
-                    <div class="detail">
-                      <span class="detail-label">POCHODZENIE:</span>
-                      <span class="detail-value">{featuredProduct.origin}</span>
-                    </div>
-                    <div class="detail">
-                      <span class="detail-label">MATERIAŁY:</span>
-                      <span class="detail-value">{featuredProduct.materials[0]}</span>
-                    </div>
-                  </div>
-                  
-                  <div class="featured-price">
-                    <span class="price-symbol">⚔</span>
-                    <span class="price-value">{featuredProduct.price}</span>
-                    <span class="price-unit">GOLD</span>
-                  </div>
-                  
-                  <GothicButton variant="button4" size="medium" href={`/items/${featuredProduct.id}`} class="featured-button">
-                    ZBADAJ ARTEFAKT
-                  </GothicButton>
-                </div>
-              </div>
-            </GothicFrame>
+
+            <div class="no-results" style="display: none;">
+              <p>Nie znaleziono produktów spełniających kryteria.</p>
+            </div>
           </section>
-        )}
+        </div>
 
-        <!-- Product Categories - Right 60% -->
-        <section class="shop-categories">
-          <div class="categories-header">
-            <h2 class="categories-title">KATEGORIE RELIKTÓW</h2>
-          </div>
-          
-          <div class="categories-grid">
-            <!-- Artifact Category -->
-            <div class="category-section category-section--artifact">
-              <GothicFrame variant="runic" size="thin" background="none" class="category-frame">
-                <div class="category-content">
-                  <div class="category-header">
-                    <h3 class="category-name">ARTEFAKTY</h3>
-                    <span class="category-count">{rarityGroups.artifact.length}</span>
-                  </div>
-                  <div class="category-products">
-                    {rarityGroups.artifact.slice(0, 2).map(product => (
-                      <div class="category-product">
-                        <img src={product.images.main} alt={product.name} class="category-product-image" />
-                        <div class="category-product-overlay">
-                          <span class="category-product-name">{product.name}</span>
-                          <span class="category-product-price">⚔ {product.price}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <GothicButton variant="button2" size="small" href="/items#artifacts" class="category-button">
-                    ZOBACZ WSZYSTKIE
-                  </GothicButton>
-                </div>
-              </GothicFrame>
-            </div>
-
-            <!-- Legendary Category -->
-            <div class="category-section category-section--legendary">
-              <GothicFrame variant="carved" size="thin" background="none" class="category-frame">
-                <div class="category-content">
-                  <div class="category-header">
-                    <h3 class="category-name">LEGENDARNE</h3>
-                    <span class="category-count">{rarityGroups.legendary.length}</span>
-                  </div>
-                  <div class="category-products">
-                    {rarityGroups.legendary.slice(0, 2).map(product => (
-                      <div class="category-product">
-                        <img src={product.images.main} alt={product.name} class="category-product-image" />
-                        <div class="category-product-overlay">
-                          <span class="category-product-name">{product.name}</span>
-                          <span class="category-product-price">⚔ {product.price}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <GothicButton variant="button5" size="small" href="/items#legendary" class="category-button">
-                    ZOBACZ WSZYSTKIE
-                  </GothicButton>
-                </div>
-              </GothicFrame>
-            </div>
-
-            <!-- Rare Category -->
-            <div class="category-section category-section--rare">
-              <GothicFrame variant="simple" size="thin" background="none" class="category-frame">
-                <div class="category-content">
-                  <div class="category-header">
-                    <h3 class="category-name">RZADKIE</h3>
-                    <span class="category-count">{rarityGroups.rare.length}</span>
-                  </div>
-                  <div class="category-products">
-                    {rarityGroups.rare.slice(0, 2).map(product => (
-                      <div class="category-product">
-                        <img src={product.images.main} alt={product.name} class="category-product-image" />
-                        <div class="category-product-overlay">
-                          <span class="category-product-name">{product.name}</span>
-                          <span class="category-product-price">⚔ {product.price}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <GothicButton variant="button6" size="small" href="/items#rare" class="category-button">
-                    ZOBACZ WSZYSTKIE
-                  </GothicButton>
-                </div>
-              </GothicFrame>
-            </div>
-
-            <!-- Quick Actions -->
-            <div class="category-section category-section--actions">
-              <GothicFrame variant="ornate" size="thin" background="none" class="category-frame">
-                <div class="category-content category-content--actions">
-                  <h3 class="category-name">SZYBKIE AKCJE</h3>
-                  <div class="quick-actions">
-                    <GothicButton variant="button1" size="small" href="/items" class="action-button">
-                      WSZYSTKIE PRZEDMIOTY
-                    </GothicButton>
-                    <GothicButton variant="button3" size="small" href="/collections" class="action-button">
-                      KOLEKCJE
-                    </GothicButton>
-                    <GothicButton variant="button2" size="small" href="/contact" class="action-button">
-                      KONTAKT
-                    </GothicButton>
-                  </div>
-                </div>
-              </GothicFrame>
-            </div>
-
-          </div>
-        </section>
-
-      </main>
-
-    </div>
+        <!-- Filters Section -->
+      </section>
+    </section>
   </div>
 </Layout>
 
 <style>
-  .shop-viewport {
-    width: 100vw;
-    height: 100vh;
+  
+  .shop-hero {
     position: relative;
-    overflow: hidden;
+    min-height: 100vh;
   }
 
-  /* Fixed atmospheric background */
-  .shop-viewport__background {
-    background-image: url("/assets/videos/testing-video-poster-01.png");
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    z-index: -2;
+  .shop-container {
+    min-height: 100vh;
+    color: var(--color-highlight-bone);
   }
 
-  /* Floating atmospheric effects */
-  .shop-viewport__effects {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 0;
+  .products-section {
+    z-index: 999;
   }
 
-  .ember {
-    position: absolute;
-    width: 5px;
-    height: 5px;
-    background: var(--color-accent-fire);
-    border-radius: 50%;
-    box-shadow: var(--glow-fire);
-    animation: emberFloat 10s infinite ease-in-out;
-  }
-
-  .ember--1 { top: 15%; left: 20%; animation-delay: 0s; }
-  .ember--2 { top: 50%; right: 25%; animation-delay: 2.5s; }
-  .ember--3 { bottom: 20%; left: 70%; animation-delay: 5s; }
-  .ember--4 { top: 75%; left: 40%; animation-delay: 7.5s; }
-
-  @keyframes emberFloat {
-    0%, 100% { transform: translateY(0) scale(1); opacity: 0.7; }
-    50% { transform: translateY(-30px) scale(1.5); opacity: 1; }
-  }
-
-  /* Viewport Grid Layout */
-  .shop-viewport__grid {
+  .hero-content {
     position: relative;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-rows: 20vh 80vh;
-    gap: 0;
-    padding: 1rem;
-    box-sizing: border-box;
-  }
-
-  /* Header Section - 20% of viewport */
-  .shop-viewport__header {
-    position: relative;
-    min-height: 0;
-  }
-
-  .header-frame {
-    position: relative;
-    overflow: hidden;
-    height: 100%;
-  }
-
-  .header-video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: -1;
-  }
-
-  .header-content {
-    position: relative;
-    z-index: 1;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 2rem;
-    background: rgba(26, 26, 26, 0.3);
-  }
-
-  .header-main {
-    flex: 1;
+    z-index: 2;
     text-align: center;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
   }
 
-  .header-title {
-    font-size: clamp(1.5rem, 3.5vw, 2.5rem);
-    font-weight: bold;
-    color: var(--color-highlight-bone);
-    text-shadow:
-      2px 2px 0 var(--color-shadow-deep),
-      0 0 15px var(--color-accent-fire);
-    letter-spacing: 0.15em;
-    margin: 0 0 0.5rem 0;
-    text-transform: uppercase;
-  }
-
-  .header-stats {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    font-size: 0.8rem;
-  }
-
-  .stat {
-    color: var(--color-highlight-brass);
+  .hero-title {
     font-weight: bold;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 4px;
   }
 
-  .header-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+  .filters-container {
+    padding: var(--space-s);
   }
 
-  /* Main Shop Area - 80% of viewport */
-  .shop-viewport__main {
-    display: grid;
-    grid-template-columns: 2fr 3fr;
-    gap: 1rem;
-    min-height: 0;
-  }
-
-  /* Featured Product Section */
-  .shop-featured {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .featured-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 0.5rem;
-  }
-
-  .featured-title {
-    font-size: 1rem;
-    font-weight: bold;
-    color: var(--color-highlight-bone);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin: 0;
-  }
-
-  .featured-badge {
-    background: var(--color-accent-blood);
-    color: var(--color-highlight-bone);
-    padding: 0.25rem 0.75rem;
-    border-radius: 15px;
-    font-size: 0.7rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: 0 0 10px rgba(153, 0, 0, 0.6);
-  }
-
-  .featured-frame {
-    flex: 1;
-    min-height: 0;
-  }
-
-  .featured-content {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-    gap: 1rem;
-  }
-
-  .featured-image-container {
+  .filters-section {
+    z-index: 10;
     position: relative;
-    flex: 1;
-    min-height: 200px;
   }
 
-  .featured-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 6px;
-    transition: transform var(--transition-ember);
-  }
-
-  .featured-image:hover {
-    transform: scale(1.03);
-  }
-
-  .featured-rarity {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    background: var(--color-accent-blood);
-    color: var(--color-highlight-bone);
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    box-shadow: 0 0 8px rgba(153, 0, 0, 0.6);
-  }
-
-  .featured-info {
-    flex-shrink: 0;
-  }
-
-  .featured-name {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: var(--color-highlight-bone);
-    text-transform: uppercase;
-    margin: 0 0 0.5rem 0;
-    line-height: 1.2;
-  }
-
-  .featured-description {
-    color: var(--color-highlight-brass);
-    font-style: italic;
-    font-size: 0.8rem;
-    margin: 0 0 1rem 0;
-    line-height: 1.3;
-  }
-
-  .featured-details {
-    margin-bottom: 1rem;
-  }
-
-  .detail {
-    display: flex;
-    margin-bottom: 0.25rem;
-    font-size: 0.75rem;
-  }
-
-  .detail-label {
-    font-weight: bold;
-    color: var(--color-text-ember);
-    width: 80px;
-    flex-shrink: 0;
-  }
-
-  .detail-value {
-    color: var(--color-highlight-bone);
-  }
-
-  .featured-price {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-  }
-
-  .price-symbol {
-    color: var(--color-accent-fire);
-    font-size: 1.4rem;
-  }
-
-  .price-value {
-    color: var(--color-highlight-bone);
-  }
-
-  .price-unit {
-    color: var(--color-highlight-brass);
-    font-size: 0.8rem;
-  }
-
-  /* Categories Section */
-  .shop-categories {
+  .filter-group {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .categories-header {
-    padding: 0 0.5rem;
-  }
-
-  .categories-title {
-    font-size: 1rem;
-    font-weight: bold;
-    color: var(--color-highlight-bone);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin: 0;
-  }
-
-  .categories-grid {
-    flex: 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    min-height: 0;
-  }
-
-  .category-section {
-    min-height: 0;
-  }
-
-  .category-frame {
-    height: 100%;
-  }
-
-  .category-content {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    padding: 0.75rem;
     gap: 0.75rem;
-  }
-
-  .category-content--actions {
-    justify-content: center;
-    text-align: center;
-  }
-
-  .category-header {
-    display: flex;
-    justify-content: space-between;
     align-items: center;
   }
 
-  .category-name {
+  .filter-label {
     font-size: 0.9rem;
     font-weight: bold;
-    color: var(--color-highlight-bone);
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin: 0;
   }
 
-  .category-count {
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: var(--color-accent-fire);
-    text-shadow: 0 0 6px var(--color-accent-fire);
-  }
-
-  .category-products {
-    flex: 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+  .filter-buttons,
+  .category-buttons {
+    display: flex;
+    flex-wrap: wrap;
     gap: 0.5rem;
+    justify-content: center;
   }
 
-  .category-product {
+  /* Active state styling for Gothic buttons */
+  .filter-btn.active,
+  .category-btn.active {
+    opacity: 1;
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--space-m);
+  }
+
+  @media (max-width: 640px) {
+    .products-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Product Card */
+  .product-card {
     position: relative;
+    transition:
+      transform 0.3s,
+      box-shadow 0.3s;
+  }
+
+  .product-card.hidden {
+    display: none;
+  }
+
+  .product-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .product-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .product-image-container {
+    position: relative;
+    width: 100%;
     aspect-ratio: 1;
     overflow: hidden;
-    border-radius: 4px;
-    transition: transform var(--transition-gothic);
+    border-radius: 8px;
   }
 
-  .category-product:hover {
-    transform: scale(1.05);
-  }
-
-  .category-product-image {
+  .product-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.3s;
   }
 
-  .category-product-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(transparent, rgba(26, 26, 26, 0.9));
-    padding: 0.5rem 0.25rem 0.25rem;
-    transform: translateY(calc(100% - 1rem));
-    transition: transform var(--transition-gothic);
-  }
-
-  .category-product:hover .category-product-overlay {
-    transform: translateY(0);
-  }
-
-  .category-product-name {
-    display: block;
-    font-size: 0.65rem;
+  .overlay-text {
+    font-size: 1.5rem;
     font-weight: bold;
-    color: var(--color-highlight-bone);
     text-transform: uppercase;
-    line-height: 1.1;
-    margin-bottom: 0.25rem;
+    letter-spacing: 2px;
   }
 
-  .category-product-price {
-    font-size: 0.6rem;
-    color: var(--color-accent-fire);
-    font-weight: bold;
-  }
-
-  .category-button {
-    align-self: center;
-  }
-
-  .quick-actions {
+  .product-info {
+    --flow-space: var(--space-2xs);
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 6px;
     align-items: center;
   }
 
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .shop-viewport__grid {
-      grid-template-rows: 25vh 75vh;
-      padding: 0.5rem;
-    }
-
-    .shop-viewport__main {
-      grid-template-columns: 1fr;
-      grid-template-rows: auto 1fr;
-    }
-
-    .header-content {
-      flex-direction: column;
-      gap: 0.5rem;
-      padding: 0.75rem;
-    }
-
-    .header-nav {
-      flex-direction: row;
-      justify-content: center;
-    }
-
-    .categories-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .featured-content {
-      padding: 0.75rem;
-    }
+  .product-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
 
-  @media (max-width: 480px) {
-    .shop-viewport__grid {
-      grid-template-rows: 30vh 70vh;
-    }
-
-    .header-stats {
-      flex-direction: column;
-      gap: 0.25rem;
-      font-size: 0.7rem;
-    }
-
-    .category-products {
-      grid-template-columns: 1fr;
-    }
+  .product-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
-  /* High contrast and reduced motion */
-  @media (prefers-contrast: high) {
-    .header-title { text-shadow: none; }
+  .product-category {
+    font-size: 0.8rem;
+    color: var(--color-metal-bronze-patina);
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .ember { animation: none; }
-    .category-product { transition: none; }
-    .featured-image { transition: none; }
+  .product-price {
+    font-size: 1.1rem;
+    font-weight: bold;
   }
 </style>
 
 <script>
-  // Header video hover effect
-  const headerHover = document.getElementById('header-hover');
-  const headerVideo = document.querySelector('.header-video') as HTMLVideoElement | null;
-  
-  if (headerHover && headerVideo) {
-    let videoPlayPromise: Promise<void> | null = null;
+  function initializeShopFilters() {
+    console.log("Shop page loaded with filters");
 
-    const playVideo = () => {
-      if (headerVideo.paused && headerVideo.readyState >= 3) {
-        videoPlayPromise = headerVideo.play();
-        if (videoPlayPromise) {
-          videoPlayPromise.catch((error) => {
-            console.error("Video play failed:", error);
-            videoPlayPromise = null;
-          });
+    // Get all product cards
+    const productCards = document.querySelectorAll(
+      ".product-card"
+    ) as NodeListOf<HTMLElement>;
+    const noResultsMessage = document.querySelector(
+      ".no-results"
+    ) as HTMLElement;
+
+    // Filter state
+    let currentAvailabilityFilter = "all";
+    let currentCategoryFilter = "all";
+
+    // Filter buttons
+    const filterBtns = document.querySelectorAll(
+      ".filter-btn"
+    ) as NodeListOf<HTMLButtonElement>;
+    const categoryBtns = document.querySelectorAll(
+      ".category-btn"
+    ) as NodeListOf<HTMLButtonElement>;
+
+    // Apply filters function
+    function applyFilters() {
+      let visibleCount = 0;
+
+      productCards.forEach((card) => {
+        const cardStatus = card.getAttribute("data-status");
+        const cardCategory = card.getAttribute("data-category");
+        const cardAvailable = card.getAttribute("data-available") === "true";
+
+        let showCard = true;
+
+        // Availability filter
+        if (currentAvailabilityFilter === "available" && !cardAvailable) {
+          showCard = false;
+        } else if (
+          currentAvailabilityFilter === "unavailable" &&
+          cardAvailable
+        ) {
+          showCard = false;
         }
-      }
-    };
 
-    const pauseVideo = async () => {
-      if (videoPlayPromise !== null) {
-        try {
-          await videoPlayPromise;
-        } catch (error) {
-          /* Already logged */
-        } finally {
-          videoPlayPromise = null;
+        // Category filter
+        if (
+          currentCategoryFilter !== "all" &&
+          cardCategory !== currentCategoryFilter
+        ) {
+          showCard = false;
         }
-      }
-      if (!headerVideo.paused) {
-        headerVideo.pause();
-      }
-    };
 
-    headerHover.addEventListener('mouseenter', playVideo);
-    headerHover.addEventListener('mouseleave', pauseVideo);
+        if (showCard) {
+          card.classList.remove("hidden");
+          visibleCount++;
+        } else {
+          card.classList.add("hidden");
+        }
+      });
+
+      if (noResultsMessage) {
+        noResultsMessage.style.display = visibleCount === 0 ? "block" : "none";
+      }
+    }
+
+    filterBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        filterBtns.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentAvailabilityFilter = btn.getAttribute("data-filter") || "all";
+        applyFilters();
+      });
+    });
+
+    categoryBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        categoryBtns.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentCategoryFilter = btn.getAttribute("data-category") || "all";
+        applyFilters();
+      });
+    });
+
+    console.log("Filters initialized with", productCards.length, "products");
   }
 
-  // Category product hover effects and staggered animations
-  document.addEventListener('DOMContentLoaded', () => {
-    const categoryProducts = document.querySelectorAll('.category-product');
-    
-    categoryProducts.forEach((product, index) => {
-      // Staggered reveal animation
-      (product as HTMLElement).style.animationDelay = `${index * 0.1}s`;
-      
-      // Future: AI-generated product videos will be added here
-      // const container = product.querySelector('.category-product-image');
-      // if (container) { /* implement hover video effects */ }
-    });
-  });
+  document.addEventListener("DOMContentLoaded", initializeShopFilters);
+
+  document.addEventListener("astro:page-load", initializeShopFilters);
 </script>

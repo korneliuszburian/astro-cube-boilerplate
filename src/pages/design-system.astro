@@ -13,7 +13,6 @@ import { getAvailableProducts, getAllCollections } from "../utils/products";
 const products = getAvailableProducts();
 const collections = getAllCollections();
 
-// Asset collections for showcase
 const buttonAssets = [
   { id: 'button1', name: 'Ancient Stone', path: '/assets/graphics/buttons/Button 1/' },
   { id: 'button2', name: 'Sacred Bronze', path: '/assets/graphics/buttons/Button 2/' },
@@ -55,10 +54,8 @@ const mainMenuAssets = [
 
 <Layout title="Design System - Gothic Sanctuary" description="Complete showcase of Gothic design elements and components">
   <div class="design-system">
-    <!-- Atmospheric Background -->
     <div class="design-system__background"></div>
 
-    <!-- Floating Effects -->
     <div class="design-system__effects">
       <div class="ember ember--1"></div>
       <div class="ember ember--2"></div>
@@ -67,28 +64,10 @@ const mainMenuAssets = [
       <div class="ember ember--5"></div>
     </div>
 
-    <!-- Header -->
-    <header class="design-system__header">
-      <GothicFrame variant="ornate" size="thick" background="none" class="header-frame">
-        <div class="header-content">
-          <h1 class="header-title">GOTHIC SANCTUARY DESIGN SYSTEM</h1>
-          <p class="header-subtitle">Complete showcase of sacred design elements, components, and mystical assets</p>
-          <div class="header-stats">
-            <span class="stat">{buttonAssets.length} Button Variants</span>
-            <span class="stat">{frameAssets.length} Frame Styles</span>
-            <span class="stat">{addonAssets.length} Mystical Addons</span>
-            <span class="stat">{products.length} Sacred Relics</span>
-          </div>
-        </div>
-      </GothicFrame>
-    </header>
-
-    <!-- Main Content -->
     <main class="design-system__main">
 
-      <!-- Navigation -->
       <nav class="design-system__nav">
-        <GothicFrame variant="simple" size="thin" background="none" class="nav-frame">
+        <GothicFrame variant="ornate" size="thin" background="none" class="nav-frame">
           <div class="nav-content">
             <h2 class="nav-title">NAVIGATION</h2>
             <div class="nav-links">
@@ -113,7 +92,7 @@ const mainMenuAssets = [
             <div class="buttons-showcase">
               {buttonAssets.map((button, index) => (
                 <div class="button-demo">
-                  <GothicFrame variant="simple" size="thin" background="none" class="demo-frame">
+                  <GothicFrame variant="ornate" size="thin" background="none" class="demo-frame">
                     <div class="demo-content">
                       <h3 class="demo-title">{button.name}</h3>
                       <div class="button-examples">
@@ -187,7 +166,7 @@ const mainMenuAssets = [
             <div class="addons-showcase">
               {addonAssets.map((addon) => (
                 <div class="addon-demo">
-                  <GothicFrame variant="simple" size="thin" background="none" class="addon-frame">
+                  <GothicFrame variant="ornate" size="thin" background="none" class="addon-frame">
                     <div class="addon-content">
                       <img src={addon.path} alt={addon.name} class="addon-image" />
                       <h3 class="addon-name">{addon.name}</h3>
@@ -286,7 +265,7 @@ const mainMenuAssets = [
                     <div class="control-group">
                       <label class="control-label">Frame Style:</label>
                       <select class="gothic-select" id="frameSelect">
-                        <option value="simple">Simple Stone</option>
+                        <option value="ornate">ornate Stone</option>
                         <option value="carved">Carved Ancient</option>
                         <option value="ornate">Ornate Gold</option>
                         <option value="heavy">Heavy Iron</option>
@@ -306,7 +285,7 @@ const mainMenuAssets = [
                     </div>
                   </div>
                   <div class="sanctuary-preview" id="sanctuaryPreview">
-                    <GothicFrame variant="simple" size="medium" background="none" class="preview-frame">
+                    <GothicFrame variant="ornate" size="medium" background="none" class="preview-frame">
                       <div class="preview-content">
                         <h4 class="preview-title">YOUR SANCTUARY</h4>
                         <p class="preview-text">Customize your sacred space</p>
@@ -327,7 +306,7 @@ const mainMenuAssets = [
 
     <!-- Footer -->
     <footer class="design-system__footer">
-      <GothicFrame variant="simple" size="thin" background="none" class="footer-frame">
+      <GothicFrame variant="ornate" size="thin" background="none" class="footer-frame">
         <div class="footer-content">
           <p class="footer-text">"Gdzie zakazane szaty stają się świętymi relikwiami"</p>
           <div class="footer-actions">
@@ -426,7 +405,6 @@ const mainMenuAssets = [
 
   .header-subtitle {
     font-size: 1.1rem;
-    color: var(--color-metal-polished-brass);
     margin: 0 0 1.5rem 0;
     font-style: italic;
     line-height: 1.4;
@@ -481,7 +459,6 @@ const mainMenuAssets = [
   }
 
   .nav-link {
-    color: var(--color-metal-polished-brass);
     text-decoration: none;
     font-weight: bold;
     font-size: 0.9rem;
@@ -528,7 +505,6 @@ const mainMenuAssets = [
 
   .section-description {
     font-size: 1rem;
-    color: var(--color-metal-polished-brass);
     margin: 0 0 2rem 0;
     text-align: center;
     font-style: italic;
@@ -598,7 +574,6 @@ const mainMenuAssets = [
   .asset-label {
     display: block;
     font-size: 0.7rem;
-    color: var(--color-metal-polished-brass);
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-top: 0.25rem;

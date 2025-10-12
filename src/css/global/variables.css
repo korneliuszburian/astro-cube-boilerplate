@@ -6,41 +6,19 @@
  */
 
  :root {
-  /* Core spacing variables - adapted from the existing Astro Cube Boilerplate */
   --gutter: var(--space-s-l);
   --flow-space: var(--space-m);
 
-  /* Typography */
   --font-primary: 'Exo 2', var(--font-base);
   --font-secondary: 'Kode Mono', monospace;
   --leading-standard: 1.5;
 
-  /* Transitions & Animation */
   --transition-base: 250ms ease;
   --transition-movement: 200ms linear;
   --transition-fade: 300ms ease;
   --transition-bounce: 500ms cubic-bezier(0.5, 0.05, 0.2, 1.5);
   --leading-standard: 1.5;
 
-  /* Gothic Sanctuary specific transitions for heavy, weighty movements */
-  --transition-gothic: 300ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-stone: 500ms cubic-bezier(0.23, 1, 0.32, 1);
-  --transition-ember: 400ms cubic-bezier(0.19, 1, 0.22, 1);
-
-  /* Gothic frame border dimensions */
-  --gothic-border-thin: 15px;
-  --gothic-border-medium: 25px;
-  --gothic-border-thick: 35px;
-  --gothic-border-heavy: 45px;
-
-  /* Gothic shadow depths */
-  --shadow-ember: 0 4px 12px ;
-  --shadow-deep: 0 8px 24px var(--color-shadow-deep);
-  --shadow-inset-glow: inset 0 2px 8px rgba(245, 245, 220, 0.1);
-  --shadow-button-pressed: inset 0 4px 12px var(--color-shadow-deep);
-
-  /* Gothic glow effects */
-  --glow-ember: 0 0 20px rgba(255, 153, 0, 0.4);
-  --glow-brass: 0 0 16px rgba(205, 127, 50, 0.3);
-  --glow-fire: 0 0 24px rgba(255, 153, 0, 0.5);
+  --wrapper-max-width: 1566px;
+  --wrapper-max-width-narrow: 1110px;
 }
